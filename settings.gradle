@@ -1,1 +1,1 @@
-include ':app', ':roversdk'
+include ':demo', ':roversdk'
