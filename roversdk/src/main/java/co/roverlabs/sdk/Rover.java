@@ -1,6 +1,7 @@
 package co.roverlabs.sdk;
 
 import android.content.Context;
+import android.util.Log;
 
 /**
  * Created by SherryYang on 2015-01-21.
@@ -53,5 +54,10 @@ public class Rover {
     public void stopMonitoring() {
         
         RegionManager.getInstance(mContext).stopMonitoring();
+    }
+    
+    public void testMaven() {
+        
+        Log.d(TAG, "Making sure Maven is updated correctly");
     }
 }
