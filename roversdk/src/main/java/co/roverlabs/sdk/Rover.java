@@ -55,9 +55,4 @@ public class Rover {
         
         RegionManager.getInstance(mContext).stopMonitoring();
     }
-    
-    public void testMaven() {
-        
-        Log.d(TAG, "Making sure Maven is updated correctly");
-    }
 }
