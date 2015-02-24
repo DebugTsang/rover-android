@@ -1,4 +1,4 @@
-package co.roverlabs.sdk;
+package co.roverlabs.sdk.managers;
 
 import android.content.Context;
 import android.os.RemoteException;
@@ -9,6 +9,8 @@ import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
 
 import java.util.List;
+
+import co.roverlabs.sdk.Rover;
 
 /**
  * Created by SherryYang on 2015-01-21.

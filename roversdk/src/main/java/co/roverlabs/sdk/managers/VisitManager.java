@@ -1,10 +1,15 @@
-package co.roverlabs.sdk;
+package co.roverlabs.sdk.managers;
 
 import android.content.Context;
 
 import com.estimote.sdk.Region;
 
 import java.util.Calendar;
+
+import co.roverlabs.sdk.CardActivity;
+import co.roverlabs.sdk.Rover;
+import co.roverlabs.sdk.RoverUtils;
+import co.roverlabs.sdk.Visit;
 
 /**
  * Created by SherryYang on 2015-01-21.

@@ -17,7 +17,7 @@ public class Visit {
     private Calendar mLastBeaconDetectionTime;
     
     public Visit(Region region) {
-        
+
         mRegion = region;
         //Temporary (5 min)
         mAliveTimeInMillis = 300000;

@@ -1,7 +1,8 @@
 package co.roverlabs.sdk;
 
 import android.content.Context;
-import android.util.Log;
+
+import co.roverlabs.sdk.managers.RegionManager;
 
 /**
  * Created by SherryYang on 2015-01-21.
@@ -24,6 +25,16 @@ public class Rover {
             sRoverInstance = new Rover(con);
         }
         return sRoverInstance;
+    }
+    
+    public void setAppId(String appId) {
+
+        RoverUtils.writeToSharedPreferences(mContext, "appId", appId);
+    }
+    
+    public String getAppId() {
+
+        return RoverUtils.readFromSharedPreferences(mContext, "appId", null);
     }
     
     public void setUUID(String uuid) {

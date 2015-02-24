@@ -10,6 +10,11 @@ import android.view.MenuItem;
 
 import com.estimote.sdk.Region;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONObject;
+
+import java.util.List;
 
 import co.roverlabs.sdk.Rover;
 import co.roverlabs.sdk.RoverConstants;
@@ -25,9 +30,13 @@ public class DemoActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
         Rover.getInstance(this.getApplicationContext()).setUUID("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
+        Rover.getInstance(this.getApplicationContext()).setAppId("ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0");
         Rover.getInstance(this.getApplicationContext()).setIconResourceId(R.drawable.icon);
         Rover.getInstance(this.getApplicationContext()).startMonitoring();
+        
     }
+    
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

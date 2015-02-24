@@ -1,4 +1,4 @@
-package co.roverlabs.sdk;
+package co.roverlabs.sdk.managers;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
