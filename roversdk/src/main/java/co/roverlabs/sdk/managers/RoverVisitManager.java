@@ -8,30 +8,30 @@ import java.util.Calendar;
 
 import co.roverlabs.sdk.CardActivity;
 import co.roverlabs.sdk.Rover;
-import co.roverlabs.sdk.RoverUtils;
+import co.roverlabs.sdk.utilities.RoverUtils;
 import co.roverlabs.sdk.Visit;
 
 /**
  * Created by SherryYang on 2015-01-21.
  */
-public class VisitManager {
+public class RoverVisitManager {
     
-    private static final String TAG = VisitManager.class.getName();
-    private static VisitManager sVisitManagerInstance;
+    private static final String TAG = RoverVisitManager.class.getName();
+    private static RoverVisitManager sVisitManagerInstance;
     private Context mContext;
     private Visit mLatestVisit;
     private Region mRegion;
     
-    private VisitManager(Context con, Region region) {
+    private RoverVisitManager(Context con, Region region) {
         
         mContext = con;
         mRegion = region;
     }
 
-    public static VisitManager getInstance(Context con, Region region) {
+    public static RoverVisitManager getInstance(Context con, Region region) {
 
         if(sVisitManagerInstance == null) {
-            sVisitManagerInstance = new VisitManager(con, region);
+            sVisitManagerInstance = new RoverVisitManager(con, region);
         }
         return sVisitManagerInstance;
     }
@@ -43,7 +43,7 @@ public class VisitManager {
         }
         mLatestVisit = new Visit(mRegion);
         mLatestVisit.setEnteredTime(Calendar.getInstance());
-        NotificationsManager notificationsManager = new NotificationsManager(mContext);
+        RoverNotificationManager notificationsManager = new RoverNotificationManager(mContext);
         notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, "Rover Notification", "Welcome", CardActivity.class);
     }
 

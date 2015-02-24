@@ -9,14 +9,14 @@ import android.support.v4.app.NotificationCompat;
 /**
  * Created by SherryYang on 2015-01-26.
  */
-public class NotificationsManager {
+public class RoverNotificationManager {
     
-    private static final String TAG = NotificationsManager.class.getName();
+    private static final String TAG = RoverNotificationManager.class.getName();
     private Context mContext;
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
 
-    public NotificationsManager(Context con) {
+    public RoverNotificationManager(Context con) {
 
         mContext = con;
         mNotificationManager = (NotificationManager)con.getSystemService(Context.NOTIFICATION_SERVICE);

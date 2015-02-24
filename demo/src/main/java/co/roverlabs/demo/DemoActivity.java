@@ -1,24 +1,11 @@
 package co.roverlabs.demo;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.estimote.sdk.Region;
-import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
-
-import org.json.JSONObject;
-
-import java.util.List;
-
 import co.roverlabs.sdk.Rover;
-import co.roverlabs.sdk.RoverConstants;
-import co.roverlabs.sdk.Visit;
 
 
 public class DemoActivity extends ActionBarActivity {
@@ -33,10 +20,7 @@ public class DemoActivity extends ActionBarActivity {
         Rover.getInstance(this.getApplicationContext()).setAppId("ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0");
         Rover.getInstance(this.getApplicationContext()).setIconResourceId(R.drawable.icon);
         Rover.getInstance(this.getApplicationContext()).startMonitoring();
-        
     }
-    
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,4 +1,4 @@
-package co.roverlabs.sdk;
+package co.roverlabs.sdk.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;

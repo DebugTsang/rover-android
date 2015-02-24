@@ -2,7 +2,9 @@ package co.roverlabs.sdk;
 
 import android.content.Context;
 
-import co.roverlabs.sdk.managers.RegionManager;
+import co.roverlabs.sdk.managers.RoverRegionManager;
+import co.roverlabs.sdk.utilities.RoverConstants;
+import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
  * Created by SherryYang on 2015-01-21.
@@ -59,11 +61,11 @@ public class Rover {
     
     public void startMonitoring() {
         
-        RegionManager.getInstance(mContext).startMonitoring();
+        RoverRegionManager.getInstance(mContext).startMonitoring();
     }
     
     public void stopMonitoring() {
         
-        RegionManager.getInstance(mContext).stopMonitoring();
+        RoverRegionManager.getInstance(mContext).stopMonitoring();
     }
 }

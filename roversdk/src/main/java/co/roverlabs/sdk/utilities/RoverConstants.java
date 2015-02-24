@@ -1,4 +1,4 @@
-package co.roverlabs.sdk;
+package co.roverlabs.sdk.utilities;
 
 /**
  * Created by SherryYang on 2015-02-05.

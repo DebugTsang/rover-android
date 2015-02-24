@@ -15,15 +15,15 @@ import co.roverlabs.sdk.Rover;
 /**
  * Created by SherryYang on 2015-01-21.
  */
-public class RegionManager {
+public class RoverRegionManager {
     
-    private static final String TAG = RegionManager.class.getName();
-    private static RegionManager sRegionManagerInstance;
+    private static final String TAG = RoverRegionManager.class.getName();
+    private static RoverRegionManager sRegionManagerInstance;
     private Context mContext;
     private BeaconManager mBeaconManager;
     private Region mRegion;
     
-    public RegionManager(Context con) {
+    public RoverRegionManager(Context con) {
 
         mContext = con;
         mBeaconManager = new BeaconManager(con);
@@ -33,10 +33,10 @@ public class RegionManager {
         //mRegion = new Region("ID", Rover.getInstance(con).getUUID(), RoverConstants.TEST_MAJOR_ESTIMOTE, RoverConstants.TEST_MINOR_ESTIMOTE);
     }
 
-    public static RegionManager getInstance(Context con) {
+    public static RoverRegionManager getInstance(Context con) {
 
         if(sRegionManagerInstance == null) {
-            sRegionManagerInstance = new RegionManager(con);
+            sRegionManagerInstance = new RoverRegionManager(con);
         }
         return sRegionManagerInstance;
     }
@@ -47,12 +47,12 @@ public class RegionManager {
             
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
-                VisitManager.getInstance(mContext, mRegion).didEnterLocation();
+                RoverVisitManager.getInstance(mContext, mRegion).didEnterLocation();
             }
 
             @Override
             public void onExitedRegion(Region region) {
-                VisitManager.getInstance(mContext, mRegion).didExitLocation();
+                RoverVisitManager.getInstance(mContext, mRegion).didExitLocation();
             }
         }));
 
