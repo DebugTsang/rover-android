@@ -47,11 +47,13 @@ public class RoverRegionManager {
             
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
-                RoverVisitManager.getInstance(mContext, mRegion).didEnterLocation();
+
+                RoverVisitManager.getInstance(mContext, mRegion, beacons).didEnterLocation();
             }
 
             @Override
             public void onExitedRegion(Region region) {
+                
                 RoverVisitManager.getInstance(mContext, mRegion).didExitLocation();
             }
         }));
@@ -60,6 +62,7 @@ public class RoverRegionManager {
             
             @Override 
             public void onServiceReady() {
+                
                 try {
                     mBeaconManager.startMonitoring(mRegion);
                 } 

@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public class RoverCustomer extends RoverModel {
     
-    @SerializedName("customerId")
-    private String mId;
+    @SerializedName("customerId") private String mId;
+    
+    public String getId() { return mId; }
+    
+    public void setId(String id) { mId = id; }
 }

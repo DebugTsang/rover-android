@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by SherryYang on 2015-01-27.
  */
@@ -44,4 +47,11 @@ public class RoverUtils {
         editor.putString(key, json);
         editor.apply();
     }
+
+/*    public static Calendar DateToCalendar(Date date){
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
+    }*/
 }

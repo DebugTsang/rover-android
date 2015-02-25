@@ -9,16 +9,9 @@ import co.roverlabs.sdk.Rover;
  */
 public class RoverVisitWrapper {
     
-    @SerializedName("visit")
-    private RoverVisit mVisit;
+    @SerializedName("visit") private RoverVisit mVisit;
 
-    public RoverVisit getVisit() {
-
-        return mVisit;
-    }
+    public RoverVisit getVisit() { return mVisit; }
     
-    public void setVisit(RoverVisit visit) {
-        
-        mVisit = visit;
-    }
+    public void setVisit(RoverVisit visit) { mVisit = visit; }
 }

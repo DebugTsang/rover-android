@@ -9,55 +9,18 @@ import java.util.List;
  */
 public class RoverTouchPoint {
     
-    @SerializedName("title")
-    private String mTitle;
+    @SerializedName("title") private String mTitle;
+    @SerializedName("notification") private String mNotification;
+    @SerializedName("minorNumber") private int mMinorNumber;
+    @SerializedName("cards") private List<RoverCard> mCards;
     
-    @SerializedName("notification")
-    private String mNotification;
+    public String getTitle() { return mTitle; }
+    public String getNotification() { return mNotification; }
+    public int getMinorNumber() { return mMinorNumber; }
+    public List<RoverCard> getCards() { return mCards; }
     
-    @SerializedName("minorNumber")
-    private int mMinorNumber;
-    
-    @SerializedName("cards")
-    private List<RoverCard> mCards;
-    
-    public String getTitle() {
-        
-        return mTitle;
-    }
-    
-    public void setTitle(String title) {
-        
-        mTitle = title;
-    }
-    
-    public String getNotification() {
-        
-        return mNotification;
-    }
-    
-    public void setNotification(String notification) {
-        
-        mNotification = notification;
-    }
-    
-    public int getMinorNumber() {
-        
-        return mMinorNumber;
-    }
-    
-    public void setMinorNumber(int minorNumber) {
-        
-        mMinorNumber = minorNumber;
-    }
-    
-    public List<RoverCard> getCards() {
-        
-        return mCards;
-    }
-    
-    public void setCards(List<RoverCard> cards) {
-        
-        mCards = cards;
-    }
+    public void setTitle(String title) { mTitle = title; }
+    public void setNotification(String notification) { mNotification = notification; }
+    public void setMinorNumber(int minorNumber) { mMinorNumber = minorNumber; }
+    public void setCards(List<RoverCard> cards) { mCards = cards; }
 }

@@ -7,29 +7,12 @@ import com.google.gson.annotations.SerializedName;
  */
 public class RoverOrganization extends RoverModel {
     
-    @SerializedName("meta")
-    private Object mMetaData;
+    @SerializedName("meta") private Object mMetaData;
+    @SerializedName("titla") private String mTitle;
     
-    @SerializedName("titla")
-    private String mTitle;
+    public Object getMetaData() { return mMetaData; }
+    public String getTitle() { return mTitle; }
     
-    public Object getMetaData() {
-        
-        return mMetaData;
-    }
-    
-    public void setMetaData(Object metaData) {
-        
-        mMetaData = metaData;
-    }
-    
-    public String getTitle() {
-        
-        return mTitle;
-    }
-    
-    public void setTitle(String title) {
-        
-        mTitle = title;
-    }
+    public void setMetaData(Object metaData) { mMetaData = metaData; }
+    public void setTitle(String title) { mTitle = title; }
 }

@@ -39,6 +39,11 @@ public class Rover {
         return RoverUtils.readFromSharedPreferences(mContext, "appId", null);
     }
     
+    public String getAuthToken() {
+        
+        return "Bearer " + getAppId();
+    }
+    
     public void setUUID(String uuid) {
 
         RoverUtils.writeToSharedPreferences(mContext, "UUID", uuid);

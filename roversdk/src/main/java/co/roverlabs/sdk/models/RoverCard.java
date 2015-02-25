@@ -7,18 +7,11 @@ import com.google.gson.annotations.SerializedName;
  */
 public class RoverCard {
 
-    @SerializedName("title")
-    private String mTitle;
+    @SerializedName("title") private String mTitle;
 
-    public String getTitle() {
+    public String getTitle() { return mTitle; }
 
-        return mTitle;
-    }
-
-    public void setTitle(String title) {
-
-        mTitle = title;
-    }
+    public void setTitle(String title) { mTitle = title; }
 }
 /*            "detailView":{  },
             "id":"54dc0ab206489ada572dc472",

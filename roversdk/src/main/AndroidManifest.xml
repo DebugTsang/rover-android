@@ -1,5 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="co.roverlabs.sdk">
 
+    <!-- Needed permission for network calls -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
     <!-- Needed permissions for beacon scanning -->
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>

@@ -7,16 +7,9 @@ import com.google.gson.annotations.SerializedName;
  */
 public abstract class RoverModel {
 
-    @SerializedName("id")
-    protected String mId;
+    @SerializedName("id") protected String mId;
     
-    public String getId() {
-        
-        return mId;
-    }
+    public String getId() { return mId; }
     
-    public void setId(String id) {
-        
-        mId = id;
-    }
+    public void setId(String id) { mId = id; }
 }
