@@ -1,13 +1,9 @@
 package co.roverlabs.sdk.networks;
 
-import org.json.JSONObject;
-
-import co.roverlabs.sdk.models.RoverVisit;
-import co.roverlabs.sdk.models.RoverVisitWrapper;
+import co.roverlabs.sdk.models.RoverObjectWrapper;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.Header;
-import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
@@ -20,13 +16,13 @@ public interface RoverNetworkInterface {
     @PUT("/visits/{id}")
     void updateVisit(@Header("Authorization") String appId,
                      @Path("id") String visitId,
-                     @Body RoverVisitWrapper visit,
-                     Callback<RoverVisitWrapper> callback);
+                     @Body RoverObjectWrapper visit,
+                     Callback<RoverObjectWrapper> callback);
 
     @POST("/visits")
     void createVisit(@Header("Authorization") String appId,
-                     @Body RoverVisitWrapper visit,
-                     Callback<RoverVisitWrapper> callback);
+                     @Body RoverObjectWrapper visit,
+                     Callback<RoverObjectWrapper> callback);
 }
 
 /*    //Create

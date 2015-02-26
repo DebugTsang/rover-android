@@ -6,18 +6,14 @@ import android.util.Log;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Region;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import co.roverlabs.sdk.CardActivity;
 import co.roverlabs.sdk.Rover;
+import co.roverlabs.sdk.models.RoverObjectWrapper;
 import co.roverlabs.sdk.models.RoverVisit;
-import co.roverlabs.sdk.models.RoverVisitWrapper;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 import co.roverlabs.sdk.utilities.RoverUtils;
 import retrofit.Callback;
@@ -82,7 +78,7 @@ public class RoverVisitManager {
 //            e.printStackTrace();
 //        }
 
-        RoverVisitWrapper visit = new RoverVisitWrapper();
+        RoverObjectWrapper visit = new RoverObjectWrapper();
         RoverVisit innerVisit = new RoverVisit(mRegion);
         
         innerVisit.customer_id ="1234";
@@ -92,14 +88,16 @@ public class RoverVisitManager {
 
         visit.setVisit(innerVisit);
         
-        mNetWorkManager.makeCall().createVisit(Rover.getInstance(mContext).getAuthToken(), visit, new Callback<RoverVisitWrapper>() {
+        mNetWorkManager.makeCall().createVisit(Rover.getInstance(mContext).getAuthToken(), visit, new Callback<RoverObjectWrapper>() {
 
                     @Override
-                    public void success(RoverVisitWrapper roverVisitWrapper, Response response) {
-                        Log.d(TAG, roverVisitWrapper.getVisit().getEnteredTime().toString());
+                    public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
+                        Log.d(TAG, roverObjectWrapper.getVisit().getEnteredTime().toString());
                         RoverNotificationManager notificationsManager = new RoverNotificationManager(mContext);
-                        String title = roverVisitWrapper.getVisit().getTouchPoints().get(0).getTitle();
-                        String message = roverVisitWrapper.getVisit().getTouchPoints().get(0).getNotification();
+                        String meta = roverObjectWrapper.getVisit().getOrganization().getMetaData().toString();
+                        Log.d(TAG, "meta data is " + meta);
+                        String title = roverObjectWrapper.getVisit().getTouchPoints().get(0).getTitle();
+                        String message = roverObjectWrapper.getVisit().getTouchPoints().get(0).getNotification();
                         notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, title, message, CardActivity.class);
                         Log.d(TAG, "response is good");
                     }

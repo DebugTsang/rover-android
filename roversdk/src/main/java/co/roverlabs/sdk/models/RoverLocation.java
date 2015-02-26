@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class RoverLocation extends RoverModel {
     
+    //JSON members
     @SerializedName("title") private String mTitle;
     @SerializedName("address") private String mAddress;
     @SerializedName("city") private String mCity;
@@ -16,7 +17,11 @@ public class RoverLocation extends RoverModel {
     @SerializedName("longitude") private float mLongitude;
     @SerializedName("latitude") private float mLatitude;
     @SerializedName("radius") private int mRadius;
+    
+    //Constructor
+    public RoverLocation() { mModelName = "location"; }
 
+    //Getters
     public String getTitle() { return mTitle; }
     public String getAddress() { return mAddress; }
     public String getCity() { return mCity; }
@@ -27,6 +32,7 @@ public class RoverLocation extends RoverModel {
     public float getLatitude() { return mLatitude; }
     public int getRadius() { return mRadius; }
     
+    //Setters
     public void setTitle(String title) { mTitle = title; }
     public void setAddress(String address) { mAddress = address; }
     public void setCity(String city) { mCity = city; }

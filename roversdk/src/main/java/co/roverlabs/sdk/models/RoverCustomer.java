@@ -7,9 +7,15 @@ import com.google.gson.annotations.SerializedName;
  */
 public class RoverCustomer extends RoverModel {
     
+    //JSON members
     @SerializedName("customerId") private String mId;
     
+    //Constructor
+    public RoverCustomer() { mModelName = "customer"; }
+    
+    //Getters
     public String getId() { return mId; }
     
+    //Setters
     public void setId(String id) { mId = id; }
 }

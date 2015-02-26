@@ -16,6 +16,7 @@ import co.roverlabs.sdk.utilities.RoverUtils;
  */
 public class RoverVisit extends RoverModel {
     
+    //JSON members
     @SerializedName("customer") private RoverCustomer mCustomer;
     @SerializedName("enteredAt") private Date mEnteredTime;
     @SerializedName("exitedAt") private Date mExitedTime;
@@ -24,6 +25,7 @@ public class RoverVisit extends RoverModel {
     @SerializedName("organization") private RoverOrganization mOrganization;
     @SerializedName("touchpoints") private List<RoverTouchPoint> mTouchPoints;
 
+    //Local members
     private static final String TAG = RoverVisit.class.getName();
     private Region mRegion;
     private Calendar mLastBeaconDetectionTime;
@@ -33,11 +35,14 @@ public class RoverVisit extends RoverModel {
     public String uuid;
     public int major;
     
+    //Constructor
     public RoverVisit(Region region) {
         
+        mModelName = "visit";
         mRegion = region;
     }
     
+    //Getters
     public RoverCustomer getCustomer() { return mCustomer; }
     public Date getEnteredTime() { return mEnteredTime; }
     public Date getExitedTime() { return mExitedTime; }
@@ -47,6 +52,7 @@ public class RoverVisit extends RoverModel {
     public List<RoverTouchPoint> getTouchPoints() { return mTouchPoints; }
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
     
+    //Setters
     public void setCustomer(RoverCustomer customer) { mCustomer = customer; }
     public void setEnteredTime(Date enteredTime) { mEnteredTime = enteredTime; }
     public void setExitedTime(Date exitedTime) { mExitedTime = exitedTime; }
@@ -58,13 +64,11 @@ public class RoverVisit extends RoverModel {
 
     public boolean isInRegion(Region region) {
 
-        Log.d(TAG, "beacon is in region?");
         return mRegion.equals(region);
     }
 
     public boolean isAlive() {
 
-        Log.d(TAG, "beacon is alive?");
         //Temp, 5 minutes
         mKeepAliveTime = 300000;
         Calendar now = Calendar.getInstance();

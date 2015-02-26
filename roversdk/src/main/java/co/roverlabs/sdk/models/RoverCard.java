@@ -5,12 +5,18 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by SherryYang on 2015-02-20.
  */
-public class RoverCard {
+public class RoverCard extends RoverModel {
 
+    //JSON members
     @SerializedName("title") private String mTitle;
+    
+    //Constructor
+    public RoverCard() { mModelName = "card"; }
 
+    //Getters
     public String getTitle() { return mTitle; }
 
+    //Setters
     public void setTitle(String title) { mTitle = title; }
 }
 /*            "detailView":{  },
