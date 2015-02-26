@@ -65,52 +65,41 @@ public class RoverVisitManager {
         mLatestVisit = new RoverVisit(mRegion);
         mLatestVisit.setEnteredTime(Calendar.getInstance().getTime());
         
-        
-//        JSONObject json = new JSONObject();
-//        JSONObject mainjson = new JSONObject();
-//        try {
-//            json.put("uuid", "F352DB29-6A05-4EA2-A356-9BFAC2BB3316");
-//            json.put("major", 52643);
-//            json.put("customer_id", "1234");
-//            mainjson.put("visit", json);
-//        } 
-//        catch (JSONException e) {
-//            e.printStackTrace();
-//        }
+        mLatestVisit.save();
 
-        RoverObjectWrapper visit = new RoverObjectWrapper();
-        RoverVisit innerVisit = new RoverVisit(mRegion);
-        
-        innerVisit.customer_id ="1234";
-        innerVisit.major = mBeacons.get(0).getMajor();
-        Log.d(TAG, "the major I got is " + innerVisit.major);
-        innerVisit.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
-
-        visit.setVisit(innerVisit);
-        
-        mNetWorkManager.makeCall().createVisit(Rover.getInstance(mContext).getAuthToken(), visit, new Callback<RoverObjectWrapper>() {
-
-                    @Override
-                    public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
-                        Log.d(TAG, roverObjectWrapper.getVisit().getEnteredTime().toString());
-                        RoverNotificationManager notificationsManager = new RoverNotificationManager(mContext);
-                        String meta = roverObjectWrapper.getVisit().getOrganization().getMetaData().toString();
-                        Log.d(TAG, "meta data is " + meta);
-                        String title = roverObjectWrapper.getVisit().getTouchPoints().get(0).getTitle();
-                        String message = roverObjectWrapper.getVisit().getTouchPoints().get(0).getNotification();
-                        notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, title, message, CardActivity.class);
-                        Log.d(TAG, "response is good");
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-
-
-                        Log.d(TAG, error.toString());
-                        Log.d(TAG, "response is bad and you should feel bad");
-                    }
-                }
-        );
+//        RoverObjectWrapper visit = new RoverObjectWrapper();
+//        RoverVisit innerVisit = new RoverVisit(mRegion);
+//        
+//        innerVisit.customer_id ="1234";
+//        innerVisit.major = mBeacons.get(0).getMajor();
+//        Log.d(TAG, "the major I got is " + innerVisit.major);
+//        innerVisit.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
+//
+//        visit.setVisit(innerVisit);
+//        
+//        mNetWorkManager.makeCall().createVisit(Rover.getInstance(mContext).getAuthToken(), visit, new Callback<RoverObjectWrapper>() {
+//
+//                    @Override
+//                    public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
+//                        Log.d(TAG, roverObjectWrapper.getVisit().getEnteredTime().toString());
+//                        RoverNotificationManager notificationsManager = new RoverNotificationManager(mContext);
+//                        String meta = roverObjectWrapper.getVisit().getOrganization().getMetaData().toString();
+//                        Log.d(TAG, "meta data is " + meta);
+//                        String title = roverObjectWrapper.getVisit().getTouchPoints().get(0).getTitle();
+//                        String message = roverObjectWrapper.getVisit().getTouchPoints().get(0).getNotification();
+//                        notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, title, message, CardActivity.class);
+//                        Log.d(TAG, "response is good");
+//                    }
+//
+//                    @Override
+//                    public void failure(RetrofitError error) {
+//
+//
+//                        Log.d(TAG, error.toString());
+//                        Log.d(TAG, "response is bad and you should feel bad");
+//                    }
+//                }
+//        );
         
 //        RoverNotificationManager notificationsManager = new RoverNotificationManager(mContext);
 //        notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, "Rover Notification", "Welcome", CardActivity.class);
