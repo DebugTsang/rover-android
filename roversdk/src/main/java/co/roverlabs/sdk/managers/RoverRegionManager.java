@@ -23,7 +23,7 @@ public class RoverRegionManager {
     private BeaconManager mBeaconManager;
     private Region mRegion;
     
-    public RoverRegionManager(Context con) {
+    private RoverRegionManager(Context con) {
 
         mContext = con;
         mBeaconManager = new BeaconManager(con);
@@ -48,13 +48,13 @@ public class RoverRegionManager {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
-                RoverVisitManager.getInstance(mContext, mRegion, beacons).didEnterLocation();
+                RoverVisitManager.getInstance(mContext).didEnterLocation(region, beacons);
             }
 
             @Override
             public void onExitedRegion(Region region) {
                 
-                RoverVisitManager.getInstance(mContext, mRegion).didExitLocation();
+                RoverVisitManager.getInstance(mContext).didExitLocation(region);
             }
         }));
 

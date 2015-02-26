@@ -58,17 +58,21 @@ public class RoverNetworkManager {
     }
     
     public void sendPostRequest(RoverModel object) {
-        //Callback for retrofit
-        if(object.getModelName().equals("visit")) {
-            RoverObjectWrapper visit = new RoverObjectWrapper();
-            Region region = new Region("ID", "B9407F30-F5F8-466E-AFF9-25556B57FE6D", null, null);
-            RoverVisit innerVisit = new RoverVisit(region);
-            innerVisit.customer_id ="1234";
-            innerVisit.major = 52643;
-            innerVisit.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
-            visit.setVisit(innerVisit);
+        
+        RoverObjectWrapper wrapper = new RoverObjectWrapper();
+
+        //if(object.getModelName().equals("visit")) {
             
-            makeCall().createVisit("Bearer ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0", visit, new Callback<RoverObjectWrapper>() {
+            //Region region = new Region("ID", "B9407F30-F5F8-466E-AFF9-25556B57FE6D", null, null);
+            //RoverVisit visit = new RoverVisit(region);
+            //visit.customer_id ="1234";
+            //visit.major = 52643;
+            //visit.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
+            
+        wrapper.set(object);
+
+
+        makeCall().create("Bearer ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0", object.getModelName(), wrapper, new Callback<RoverObjectWrapper>() {
 
                     @Override
                     public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
@@ -85,7 +89,7 @@ public class RoverNetworkManager {
                     }
                 }
         );
-        }
+        //}
     }
     
     public void sendPutRequest(RoverModel object) {

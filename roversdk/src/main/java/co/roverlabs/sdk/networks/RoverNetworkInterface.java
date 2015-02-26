@@ -13,16 +13,18 @@ import retrofit.http.Path;
  */
 public interface RoverNetworkInterface {
     
-    @PUT("/visits/{id}")
-    void updateVisit(@Header("Authorization") String appId,
-                     @Path("id") String visitId,
-                     @Body RoverObjectWrapper visit,
-                     Callback<RoverObjectWrapper> callback);
+    @PUT("{object}s/{id}")
+    void update(@Header("Authorization") String authToken,
+                @Path("id") String objectId,
+                @Path("object") String objectPath,
+                @Body RoverObjectWrapper object,
+                Callback<RoverObjectWrapper> callback);
 
-    @POST("/visits")
-    void createVisit(@Header("Authorization") String appId,
-                     @Body RoverObjectWrapper visit,
-                     Callback<RoverObjectWrapper> callback);
+    @POST("/{object}s")
+    void create(@Header("Authorization") String authToken,
+                @Path("object") String objectPath,
+                @Body RoverObjectWrapper object,
+                Callback<RoverObjectWrapper> callback);
 }
 
 /*    //Create

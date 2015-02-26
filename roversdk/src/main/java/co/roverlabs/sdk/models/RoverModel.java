@@ -18,8 +18,8 @@ public abstract class RoverModel {
     
     //Local members
     private static final String TAG = RoverModel.class.getName();
-    protected String mModelName;
-    protected RoverNetworkManager mNetworkManager;
+    protected transient String mModelName;
+    protected transient RoverNetworkManager mNetworkManager;
     
     //Constructor
     public RoverModel() { mNetworkManager = new RoverNetworkManager(); }
@@ -30,9 +30,18 @@ public abstract class RoverModel {
     
     //Setters
     public void setId(String id) { mId = id; }
+
     
     public void save() {
         
+        String method;
+        
+        if(mId == null) {
+            method = "POST";
+        }
+        else {
+            method = "PUT";
+        }
         
         mNetworkManager.setNetworkListener(new RoverNetworkListener() {
             
@@ -47,6 +56,7 @@ public abstract class RoverModel {
             }
         });
         
-        mNetworkManager.sendRequest("POST", this);
+        Log.d(TAG, "using the method " + method);
+        mNetworkManager.sendRequest(method, this);
     }
 }

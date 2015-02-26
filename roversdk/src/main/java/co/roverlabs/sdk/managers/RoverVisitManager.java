@@ -27,44 +27,29 @@ public class RoverVisitManager {
     
     private static final String TAG = RoverVisitManager.class.getName();
     private static RoverVisitManager sVisitManagerInstance;
-    private RoverNetworkManager mNetWorkManager;
     private Context mContext;
     private RoverVisit mLatestVisit;
-    private Region mRegion;
-    private ArrayList<Beacon> mBeacons;
+    //private Region mRegion;
+    //private ArrayList<Beacon> mBeacons;
     
-    private RoverVisitManager(Context con, Region region, List<Beacon> beacons) {
-        
-        mNetWorkManager = new RoverNetworkManager();
-        mContext = con;
-        mRegion = region;
-        mBeacons = new ArrayList<Beacon>(beacons);
-    }
+    //Constructor
+    private RoverVisitManager(Context con) { mContext = con; }
 
-    public static RoverVisitManager getInstance(Context con, Region region, List<Beacon> beacons) {
+    public static RoverVisitManager getInstance(Context con) {
 
         if(sVisitManagerInstance == null) {
-            sVisitManagerInstance = new RoverVisitManager(con, region, beacons);
-        }
-        return sVisitManagerInstance;
-    }
-   
-    public static RoverVisitManager getInstance(Context con, Region region) {
-
-        if(sVisitManagerInstance == null) {
-            sVisitManagerInstance = new RoverVisitManager(con, region, new ArrayList<Beacon>());
+            sVisitManagerInstance = new RoverVisitManager(con);
         }
         return sVisitManagerInstance;
     }
     
-    public void didEnterLocation() {
+    public void didEnterLocation(Region region, List<Beacon> beacons) {
 
-        if(getLatestVisit() != null && mLatestVisit.isInRegion(mRegion) && mLatestVisit.isAlive()) {
+        if(getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
             return;
         }
-        mLatestVisit = new RoverVisit(mRegion);
+        mLatestVisit = new RoverVisit(region);
         mLatestVisit.setEnteredTime(Calendar.getInstance().getTime());
-        
         mLatestVisit.save();
 
 //        RoverObjectWrapper visit = new RoverObjectWrapper();
@@ -105,7 +90,7 @@ public class RoverVisitManager {
 //        notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, "Rover Notification", "Welcome", CardActivity.class);
     }
 
-    public void didExitLocation() {
+    public void didExitLocation(Region region) {
         
         Calendar now = Calendar.getInstance();
         mLatestVisit.setLastBeaconDetection(now);

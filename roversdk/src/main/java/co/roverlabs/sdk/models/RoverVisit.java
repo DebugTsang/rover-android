@@ -75,4 +75,13 @@ public class RoverVisit extends RoverModel {
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
         return elapsedTime < mKeepAliveTime;
     }
+    
+    public void save() {
+
+        mRegion = new Region("ID", "B9407F30-F5F8-466E-AFF9-25556B57FE6D", null, null);
+        this.customer_id ="1234";
+        this.major = 52643;
+        this.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
+        super.save();
+    }
 }

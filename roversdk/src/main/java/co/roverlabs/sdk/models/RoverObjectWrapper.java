@@ -1,5 +1,7 @@
 package co.roverlabs.sdk.models;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
 import co.roverlabs.sdk.Rover;
@@ -12,6 +14,9 @@ public class RoverObjectWrapper {
     //JSON members
     @SerializedName("visit") private RoverVisit mVisit;
     @SerializedName("touchpoint") private RoverTouchPoint mTouchPoint;
+    
+    //Local members
+    public static final String TAG = RoverObjectWrapper.class.getName();
 
     //Getters
     public RoverVisit getVisit() { return mVisit; }
@@ -20,4 +25,23 @@ public class RoverObjectWrapper {
     //Setters
     public void setVisit(RoverVisit visit) { mVisit = visit; }
     public void setTouchPoint(RoverTouchPoint touchPoint) { mTouchPoint = touchPoint; }
+    
+    public void set(RoverModel object) {
+
+        String objectType = object.getModelName();
+        
+        switch (objectType) {
+
+            case "visit":
+                setVisit((RoverVisit)object);
+                break;
+
+            case "touchpoint":
+                setTouchPoint((RoverTouchPoint)object);
+                break;
+
+            default:
+                Log.e(TAG, "Object type cannot be wrapped");
+        }
+    }
 }
