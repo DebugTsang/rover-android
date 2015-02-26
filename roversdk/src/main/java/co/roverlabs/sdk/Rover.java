@@ -16,10 +16,8 @@ public class Rover {
     private Context mContext;
     private int mIconResourceId;
 
-    private Rover(Context con) {
-        
-        mContext = con;
-    }
+    //Constructor
+    private Rover(Context con) { mContext = con; }
     
     public static Rover getInstance(Context con) {
         
@@ -29,48 +27,24 @@ public class Rover {
         return sRoverInstance;
     }
     
-    public void setAppId(String appId) {
-
-        RoverUtils.writeToSharedPreferences(mContext, "appId", appId);
-    }
+    //Getters
+    public String getAppId() { return RoverUtils.readFromSharedPreferences(mContext, "appId", null); }
+    public String getAuthToken() { return "Bearer " + getAppId(); }
+    public String getUUID() { return RoverUtils.readFromSharedPreferences(mContext, "UUID", RoverConstants.ESTIMOTE_DEFAULT_UUID); }
+    public int getIconResourceId() { return mIconResourceId; }
     
-    public String getAppId() {
-
-        return RoverUtils.readFromSharedPreferences(mContext, "appId", null);
-    }
+    //Setters
+    public void setAppId(String appId) { RoverUtils.writeToSharedPreferences(mContext, "appId", appId); }
+    public void setUUID(String uuid) { RoverUtils.writeToSharedPreferences(mContext, "UUID", uuid); }
+    public void setIconResourceId(int resourceId) { mIconResourceId = resourceId; }
     
-    public String getAuthToken() {
+    public void startMonitoring() { 
         
-        return "Bearer " + getAppId();
+        RoverRegionManager.getInstance(mContext).startMonitoring(); 
     }
     
-    public void setUUID(String uuid) {
-
-        RoverUtils.writeToSharedPreferences(mContext, "UUID", uuid);
-    }
-    
-    public String getUUID() {
-
-        return RoverUtils.readFromSharedPreferences(mContext, "UUID", RoverConstants.ESTIMOTE_DEFAULT_UUID);
-    }
-    
-    public void setIconResourceId(int resourceId) {
-
-        mIconResourceId = resourceId;
-    }
-    
-    public int getIconResourceId() {
+    public void stopMonitoring() { 
         
-        return mIconResourceId;
-    }
-    
-    public void startMonitoring() {
-        
-        RoverRegionManager.getInstance(mContext).startMonitoring();
-    }
-    
-    public void stopMonitoring() {
-        
-        RoverRegionManager.getInstance(mContext).stopMonitoring();
+        RoverRegionManager.getInstance(mContext).stopMonitoring(); 
     }
 }

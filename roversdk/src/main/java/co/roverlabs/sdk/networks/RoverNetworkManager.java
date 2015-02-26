@@ -47,19 +47,19 @@ public class RoverNetworkManager {
         return call;
     }
     
-    public void sendRequest(String method, String modelName, RoverModel object) {
+    public void sendRequest(String method, RoverModel object) {
         
         if(method.equals("POST")) {
-            sendPostRequest(modelName, object);
+            sendPostRequest(object);
         }
         else if(method.equals("PUT")) {
-            sendPutRequest(modelName, object);
+            sendPutRequest(object);
         }
     }
     
-    public void sendPostRequest(String modelName, RoverModel object) {
+    public void sendPostRequest(RoverModel object) {
         //Callback for retrofit
-        if(modelName.equals("visit")) {
+        if(object.getModelName().equals("visit")) {
             RoverObjectWrapper visit = new RoverObjectWrapper();
             Region region = new Region("ID", "B9407F30-F5F8-466E-AFF9-25556B57FE6D", null, null);
             RoverVisit innerVisit = new RoverVisit(region);
@@ -88,7 +88,7 @@ public class RoverNetworkManager {
         }
     }
     
-    public void sendPutRequest(String modelName, RoverModel object) {
+    public void sendPutRequest(RoverModel object) {
         
         //Callback for retrofit
     }

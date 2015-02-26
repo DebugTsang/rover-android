@@ -47,6 +47,6 @@ public abstract class RoverModel {
             }
         });
         
-        mNetworkManager.sendRequest("POST", mModelName, this);
+        mNetworkManager.sendRequest("POST", this);
     }
 }
