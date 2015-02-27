@@ -3,8 +3,6 @@ package co.roverlabs.sdk;
 import android.content.Context;
 
 import co.roverlabs.sdk.managers.RoverRegionManager;
-import co.roverlabs.sdk.utilities.RoverConstants;
-import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
  * Created by SherryYang on 2015-01-21.
@@ -14,7 +12,9 @@ public class Rover {
     private static final String TAG = Rover.class.getName();
     private static Rover sRoverInstance;
     private Context mContext;
-    private int mIconResourceId;
+    private static String mUuid;
+    private static String mAppId;
+    private static int mIconResourceId;
 
     //Constructor
     private Rover(Context con) { mContext = con; }
@@ -28,14 +28,14 @@ public class Rover {
     }
     
     //Getters
-    public String getAppId() { return RoverUtils.readFromSharedPreferences(mContext, "appId", null); }
-    public String getAuthToken() { return "Bearer " + getAppId(); }
-    public String getUUID() { return RoverUtils.readFromSharedPreferences(mContext, "UUID", RoverConstants.ESTIMOTE_DEFAULT_UUID); }
-    public int getIconResourceId() { return mIconResourceId; }
+    public static String getAppId() { return mAppId; }
+    public static String getAuthToken() { return "Bearer " + mAppId; }
+    public static String getUuid() { return mUuid; }
+    public static int getIconResourceId() { return mIconResourceId; }
     
     //Setters
-    public void setAppId(String appId) { RoverUtils.writeToSharedPreferences(mContext, "appId", appId); }
-    public void setUUID(String uuid) { RoverUtils.writeToSharedPreferences(mContext, "UUID", uuid); }
+    public void setAppId(String appId) { mAppId = appId; }
+    public void setUuid(String uuid) { mUuid = uuid; }
     public void setIconResourceId(int resourceId) { mIconResourceId = resourceId; }
     
     public void startMonitoring() { 

@@ -1,5 +1,6 @@
 package co.roverlabs.sdk.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.estimote.sdk.Beacon;
@@ -31,19 +32,15 @@ public class RoverVisit extends RoverModel {
     private static final String TAG = RoverVisit.class.getName();
     private Region mRegion;
     private Calendar mLastBeaconDetectionTime;
-    private ArrayList<Beacon> mBeacons;
+    private List<Beacon> mBeacons;
 
-    //Temp, for sending to server
+    //TODO: Get rid of these members
     public String customer_id;
     public String uuid;
     public int major;
     
     //Constructor
-    public RoverVisit(Region region) {
-        
-        mModelName = "visit";
-        mRegion = region;
-    }
+    public RoverVisit() { mModelName = "visit"; }
     
     //Getters
     public RoverCustomer getCustomer() { return mCustomer; }
@@ -54,6 +51,8 @@ public class RoverVisit extends RoverModel {
     public RoverOrganization getOrganization() { return mOrganization; }
     public List<RoverTouchPoint> getTouchPoints() { return mTouchPoints; }
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
+    public List<Beacon> getBeacons() { return mBeacons; }
+    public Region getRegion() { return mRegion; }
     
     //Setters
     public void setCustomer(RoverCustomer customer) { mCustomer = customer; }
@@ -64,6 +63,8 @@ public class RoverVisit extends RoverModel {
     public void setOrganization(RoverOrganization organization) { mOrganization = organization; }
     public void setTouchPoints(List<RoverTouchPoint> touchPoints) { mTouchPoints = touchPoints; }
     public void setLastBeaconDetection(Calendar time) { mLastBeaconDetectionTime = time; }
+    public void setBeacons(List<Beacon> beacons) { mBeacons = beacons; }
+    public void setRegion(Region region) { mRegion = region; }
 
     public boolean isInRegion(Region region) {
 
@@ -72,7 +73,7 @@ public class RoverVisit extends RoverModel {
 
     public boolean isAlive() {
 
-        //Temp, 5 minutes
+        //TODO: Get rid of temporary keep alive time of 5 minutes
         mKeepAliveTime = 300000;
         Calendar now = Calendar.getInstance();
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
@@ -81,7 +82,7 @@ public class RoverVisit extends RoverModel {
     
     public void save() {
 
-        mRegion = new Region("ID", "B9407F30-F5F8-466E-AFF9-25556B57FE6D", null, null);
+        //TODO: Change these hard coded values, should be grabbed from the list of beacons (mBeacons)
         this.customer_id ="1234";
         this.major = 52643;
         this.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
@@ -90,7 +91,6 @@ public class RoverVisit extends RoverModel {
     
     public void update(RoverModel object) {
         
-        Log.d(TAG, "rover visit update has been called");
         RoverVisit visit = (RoverVisit)object;
         super.update(visit);
         mCustomer = visit.getCustomer();
@@ -101,9 +101,9 @@ public class RoverVisit extends RoverModel {
         mOrganization = visit.getOrganization();
         mTouchPoints = visit.getTouchPoints();
     }
-    
+
     public String toString() {
-        
+
         return "ID: " + mId + " " +
                 "Customer: " + mCustomer + " " +
                 "Entered At: " + mEnteredTime + " " +

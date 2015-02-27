@@ -10,6 +10,7 @@ import com.estimote.sdk.Region;
 
 import java.util.List;
 
+import co.roverlabs.sdk.CardActivity;
 import co.roverlabs.sdk.Rover;
 
 /**
@@ -27,7 +28,7 @@ public class RoverRegionManager {
 
         mContext = con;
         mBeaconManager = new BeaconManager(con);
-        mRegion = new Region("ID", Rover.getInstance(con).getUUID(), null, null);
+        mRegion = new Region("ID", Rover.getUuid(), null, null);
     }
 
     public static RoverRegionManager getInstance(Context con) {
@@ -51,7 +52,7 @@ public class RoverRegionManager {
             @Override
             public void onExitedRegion(Region region) {
                 
-                RoverVisitManager.getInstance(mContext).didExitLocation(region);
+                RoverVisitManager.getInstance(mContext).didExitLocation();
             }
         }));
 

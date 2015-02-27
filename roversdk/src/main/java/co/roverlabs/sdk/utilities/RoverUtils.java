@@ -47,11 +47,4 @@ public class RoverUtils {
         editor.putString(key, json);
         editor.apply();
     }
-
-/*    public static Calendar DateToCalendar(Date date){
-        
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal;
-    }*/
 }

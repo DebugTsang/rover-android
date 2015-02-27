@@ -1,6 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
@@ -18,7 +17,7 @@ public abstract class RoverModel {
     
     //Local members
     private static final String TAG = RoverModel.class.getName();
-    protected transient String mModelName;
+    protected String mModelName;
     protected transient RoverNetworkManager mNetworkManager;
     
     //Constructor
@@ -35,6 +34,7 @@ public abstract class RoverModel {
     public void save() {
         
         String method;
+        final RoverModel self = this;
         
         if(mId == null) {
             method = "POST";
@@ -43,24 +43,22 @@ public abstract class RoverModel {
             method = "PUT";
         }
         
-        final RoverModel self = this;
-        
         mNetworkManager.setNetworkListener(new RoverNetworkListener() {
             
             @Override
             public void onSuccess(RoverModel object) {
+                
                 self.update(object);
-                Log.d(TAG, "network call successful");
-                Log.d(TAG, self.toString());
+                Log.d(TAG, "Network call from " + self.getModelName() + " ID " + self.getId() + " has succeeded");
             }
 
             @Override
             public void onFailure() {
-                Log.d(TAG, "network call failed");
+                
+                Log.d(TAG, "Network call from " + self.getModelName() + " ID " + self.getId() + " has failed");
             }
         });
         
-        Log.d(TAG, "using the method " + method);
         mNetworkManager.sendRequest(method, this);
     }
     
