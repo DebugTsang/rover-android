@@ -21,6 +21,7 @@ public abstract class RoverObject {
     private static final String TAG = RoverObject.class.getName();
     protected String mObjectName;
     protected transient RoverNetworkManager mNetworkManager;
+    //TODO: Best place to put the notification manager?
     protected transient RoverNotificationManager mNotificationManager;
     
     //Constructor
