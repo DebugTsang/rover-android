@@ -38,7 +38,7 @@ public class RoverVisitManager {
         if (getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
             return;
         }
-        mLatestVisit = new RoverVisit();
+        mLatestVisit = new RoverVisit(mContext);
         mLatestVisit.setRegion(region);
         mLatestVisit.setEnteredTime(Calendar.getInstance().getTime());
         mLatestVisit.setBeacons(beacons);

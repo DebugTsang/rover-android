@@ -1,5 +1,6 @@
 package co.roverlabs.sdk.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.estimote.sdk.Beacon;
@@ -9,6 +10,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import co.roverlabs.sdk.CardActivity;
 
 /**
  * Created by SherryYang on 2015-02-20.
@@ -36,7 +39,11 @@ public class RoverVisit extends RoverObject {
     public int major;
     
     //Constructor
-    public RoverVisit() { mObjectName = "visit"; }
+    public RoverVisit(Context con) { 
+        
+        super(con);
+        mObjectName = "visit"; 
+    }
     
     //Getters
     public RoverCustomer getCustomer() { return mCustomer; }
@@ -96,5 +103,17 @@ public class RoverVisit extends RoverObject {
         mLocation = visit.getLocation();
         mOrganization = visit.getOrganization();
         mTouchPoints = visit.getTouchPoints();
+        //TODO: Better place to put this call?
+        sendNotification();
+    }
+    
+    public void sendNotification() {
+
+        //TODO: Filter which touchpoint to use for notification based on server result
+        RoverTouchPoint touchPoint = mTouchPoints.get(0);
+        String title = touchPoint.getTitle();
+        String message = touchPoint.getNotification();
+        //TODO: Better system for notification IDs
+        mNotificationManager.sendNotification(1, title, message, CardActivity.class);
     }
 }

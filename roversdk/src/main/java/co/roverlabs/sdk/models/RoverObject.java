@@ -1,9 +1,11 @@
 package co.roverlabs.sdk.models;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
+import co.roverlabs.sdk.managers.RoverNotificationManager;
 import co.roverlabs.sdk.networks.RoverNetworkListener;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 
@@ -19,9 +21,14 @@ public abstract class RoverObject {
     private static final String TAG = RoverObject.class.getName();
     protected String mObjectName;
     protected transient RoverNetworkManager mNetworkManager;
+    protected transient RoverNotificationManager mNotificationManager;
     
     //Constructor
-    public RoverObject() { mNetworkManager = new RoverNetworkManager(); }
+    public RoverObject(Context con) { 
+        
+        mNotificationManager = new RoverNotificationManager(con);
+        mNetworkManager = new RoverNetworkManager(); 
+    }
     
     //Getters
     public String getId() { return mId; }

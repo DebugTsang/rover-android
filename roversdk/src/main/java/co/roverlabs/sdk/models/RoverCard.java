@@ -1,5 +1,7 @@
 package co.roverlabs.sdk.models;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -11,7 +13,11 @@ public class RoverCard extends RoverObject {
     @SerializedName("title") private String mTitle;
     
     //Constructor
-    public RoverCard() { mObjectName = "card"; }
+    public RoverCard(Context con) { 
+        
+        super(con);
+        mObjectName = "card"; 
+    }
 
     //Getters
     public String getTitle() { return mTitle; }

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
+import co.roverlabs.sdk.Rover;
+
 /**
  * Created by SherryYang on 2015-01-26.
  */
@@ -22,7 +24,7 @@ public class RoverNotificationManager {
         mNotificationManager = (NotificationManager)con.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public void sendNotification(int iconResourceId, int id, String title, String message, Class intentClass) {
+    public void sendNotification(int id, String title, String message, Class intentClass) {
 
         Intent intent = new Intent(mContext, intentClass);
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -30,7 +32,7 @@ public class RoverNotificationManager {
         //intent.setAction(Intent.ACTION_MAIN);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mNotificationBuilder = new NotificationCompat.Builder(mContext)
-                .setSmallIcon(iconResourceId)
+                .setSmallIcon(Rover.getIconResourceId())
                 .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
