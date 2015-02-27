@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by SherryYang on 2015-02-20.
  */
-public class RoverLocation extends RoverModel {
+public class RoverLocation extends RoverObject {
     
     //JSON members
     @SerializedName("title") private String mTitle;
@@ -19,7 +19,7 @@ public class RoverLocation extends RoverModel {
     @SerializedName("radius") private int mRadius;
     
     //Constructor
-    public RoverLocation() { mModelName = "location"; }
+    public RoverLocation() { mObjectName = "location"; }
 
     //Getters
     public String getTitle() { return mTitle; }

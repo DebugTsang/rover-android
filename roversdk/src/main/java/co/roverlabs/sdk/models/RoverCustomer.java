@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by SherryYang on 2015-02-20.
  */
-public class RoverCustomer extends RoverModel {
+public class RoverCustomer extends RoverObject {
     
     //JSON members
     @SerializedName("customerId") private String mId;
     
     //Constructor
-    public RoverCustomer() { mModelName = "customer"; }
+    public RoverCustomer() { mObjectName = "customer"; }
     
     //Getters
     public String getId() { return mId; }

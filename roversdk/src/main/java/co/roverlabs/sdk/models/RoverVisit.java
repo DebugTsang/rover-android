@@ -1,23 +1,19 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Region;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import co.roverlabs.sdk.utilities.RoverUtils;
-
 /**
  * Created by SherryYang on 2015-02-20.
  */
-public class RoverVisit extends RoverModel {
+public class RoverVisit extends RoverObject {
     
     //JSON members
     @SerializedName("customer") private RoverCustomer mCustomer;
@@ -40,7 +36,7 @@ public class RoverVisit extends RoverModel {
     public int major;
     
     //Constructor
-    public RoverVisit() { mModelName = "visit"; }
+    public RoverVisit() { mObjectName = "visit"; }
     
     //Getters
     public RoverCustomer getCustomer() { return mCustomer; }
@@ -89,7 +85,7 @@ public class RoverVisit extends RoverModel {
         super.save();
     }
     
-    public void update(RoverModel object) {
+    public void update(RoverObject object) {
         
         RoverVisit visit = (RoverVisit)object;
         super.update(visit);
@@ -100,14 +96,5 @@ public class RoverVisit extends RoverModel {
         mLocation = visit.getLocation();
         mOrganization = visit.getOrganization();
         mTouchPoints = visit.getTouchPoints();
-    }
-
-    public String toString() {
-
-        return "ID: " + mId + " " +
-                "Customer: " + mCustomer + " " +
-                "Entered At: " + mEnteredTime + " " +
-                "Exited At: " + mExitedTime + " " +
-                "Keep Alive: " + mKeepAliveTime;
     }
 }

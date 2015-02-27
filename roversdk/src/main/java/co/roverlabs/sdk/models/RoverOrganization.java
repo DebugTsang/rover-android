@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by SherryYang on 2015-02-20.
  */
-public class RoverOrganization extends RoverModel {
+public class RoverOrganization extends RoverObject {
     
     //JSON members
     @SerializedName("meta") private Object mMetaData;
     @SerializedName("titla") private String mTitle;
     
     //Constructor
-    public RoverOrganization() { mModelName = "organization"; }
+    public RoverOrganization() { mObjectName = "organization"; }
     
     //Getters
     public Object getMetaData() { return mMetaData; }

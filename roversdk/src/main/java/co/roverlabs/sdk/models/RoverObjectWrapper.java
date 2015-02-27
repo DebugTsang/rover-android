@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
-import co.roverlabs.sdk.Rover;
-
 /**
  * Created by SherryYang on 2015-02-23.
  */
@@ -22,7 +20,7 @@ public class RoverObjectWrapper {
     public RoverVisit getVisit() { return mVisit; }
     public RoverTouchPoint getTouchPoint() { return mTouchPoint; }
     
-    public RoverModel get() {
+    public RoverObject get() {
 
         if(mVisit != null) {
             return mVisit;
@@ -37,9 +35,9 @@ public class RoverObjectWrapper {
     public void setVisit(RoverVisit visit) { mVisit = visit; }
     public void setTouchPoint(RoverTouchPoint touchPoint) { mTouchPoint = touchPoint; }
     
-    public void set(RoverModel object) {
+    public void set(RoverObject object) {
 
-        String objectType = object.getModelName();
+        String objectType = object.getObjectName();
         
         switch (objectType) {
 
