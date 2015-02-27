@@ -29,8 +29,6 @@ public class RoverVisitManager {
     private static RoverVisitManager sVisitManagerInstance;
     private Context mContext;
     private RoverVisit mLatestVisit;
-    //private Region mRegion;
-    //private ArrayList<Beacon> mBeacons;
     
     //Constructor
     private RoverVisitManager(Context con) { mContext = con; }
@@ -54,14 +52,14 @@ public class RoverVisitManager {
 
 //        RoverObjectWrapper visit = new RoverObjectWrapper();
 //        RoverVisit innerVisit = new RoverVisit(mRegion);
-//        
+//
 //        innerVisit.customer_id ="1234";
 //        innerVisit.major = mBeacons.get(0).getMajor();
 //        Log.d(TAG, "the major I got is " + innerVisit.major);
 //        innerVisit.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
 //
 //        visit.setVisit(innerVisit);
-//        
+//
 //        mNetWorkManager.makeCall().createVisit(Rover.getInstance(mContext).getAuthToken(), visit, new Callback<RoverObjectWrapper>() {
 //
 //                    @Override
@@ -85,7 +83,7 @@ public class RoverVisitManager {
 //                    }
 //                }
 //        );
-        
+
 //        RoverNotificationManager notificationsManager = new RoverNotificationManager(mContext);
 //        notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, "Rover Notification", "Welcome", CardActivity.class);
     }
@@ -95,10 +93,11 @@ public class RoverVisitManager {
         Calendar now = Calendar.getInstance();
         mLatestVisit.setLastBeaconDetection(now);
         mLatestVisit.setExitedTime(now.getTime());
+        Log.d(TAG, mLatestVisit.toString());
         RoverUtils.writeToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
 
         RoverNotificationManager notificationsManager = new RoverNotificationManager(mContext);
-        notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, "Good bye", "You have exited", CardActivity.class);
+        notificationsManager.sendNotification(Rover.getInstance(mContext).getIconResourceId(), 1, "Good bye", mLatestVisit.toString(), CardActivity.class);
     }
     
     public RoverVisit getLatestVisit() {

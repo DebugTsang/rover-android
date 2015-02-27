@@ -43,11 +43,15 @@ public abstract class RoverModel {
             method = "PUT";
         }
         
+        final RoverModel self = this;
+        
         mNetworkManager.setNetworkListener(new RoverNetworkListener() {
             
             @Override
-            public void onSuccess() {
+            public void onSuccess(RoverModel object) {
+                self.update(object);
                 Log.d(TAG, "network call successful");
+                Log.d(TAG, self.toString());
             }
 
             @Override
@@ -58,5 +62,10 @@ public abstract class RoverModel {
         
         Log.d(TAG, "using the method " + method);
         mNetworkManager.sendRequest(method, this);
+    }
+    
+    public void update(RoverModel object) {
+        
+        mId = object.getId();
     }
 }

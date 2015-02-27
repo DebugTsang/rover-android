@@ -28,9 +28,6 @@ public class RoverRegionManager {
         mContext = con;
         mBeaconManager = new BeaconManager(con);
         mRegion = new Region("ID", Rover.getInstance(con).getUUID(), null, null);
-        
-        //Test
-        //mRegion = new Region("ID", Rover.getInstance(con).getUUID(), RoverConstants.TEST_MAJOR_ESTIMOTE, RoverConstants.TEST_MINOR_ESTIMOTE);
     }
 
     public static RoverRegionManager getInstance(Context con) {

@@ -2,9 +2,11 @@ package co.roverlabs.sdk.models;
 
 import android.util.Log;
 
+import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Region;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +31,7 @@ public class RoverVisit extends RoverModel {
     private static final String TAG = RoverVisit.class.getName();
     private Region mRegion;
     private Calendar mLastBeaconDetectionTime;
+    private ArrayList<Beacon> mBeacons;
 
     //Temp, for sending to server
     public String customer_id;
@@ -83,5 +86,28 @@ public class RoverVisit extends RoverModel {
         this.major = 52643;
         this.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
         super.save();
+    }
+    
+    public void update(RoverModel object) {
+        
+        Log.d(TAG, "rover visit update has been called");
+        RoverVisit visit = (RoverVisit)object;
+        super.update(visit);
+        mCustomer = visit.getCustomer();
+        mEnteredTime = visit.getEnteredTime();
+        mExitedTime = visit.getExitedTime();
+        mKeepAliveTime = visit.getKeepAliveTime();
+        mLocation = visit.getLocation();
+        mOrganization = visit.getOrganization();
+        mTouchPoints = visit.getTouchPoints();
+    }
+    
+    public String toString() {
+        
+        return "ID: " + mId + " " +
+                "Customer: " + mCustomer + " " +
+                "Entered At: " + mEnteredTime + " " +
+                "Exited At: " + mExitedTime + " " +
+                "Keep Alive: " + mKeepAliveTime;
     }
 }

@@ -21,6 +21,17 @@ public class RoverObjectWrapper {
     //Getters
     public RoverVisit getVisit() { return mVisit; }
     public RoverTouchPoint getTouchPoint() { return mTouchPoint; }
+    
+    public RoverModel get() {
+
+        if(mVisit != null) {
+            return mVisit;
+        }
+        else if(mTouchPoint != null) {
+            return mTouchPoint;
+        }
+        return null;
+    }
 
     //Setters
     public void setVisit(RoverVisit visit) { mVisit = visit; }

@@ -71,14 +71,13 @@ public class RoverNetworkManager {
             
         wrapper.set(object);
 
-
         makeCall().create("Bearer ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0", object.getModelName(), wrapper, new Callback<RoverObjectWrapper>() {
 
                     @Override
                     public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
-                        Log.d(TAG, roverObjectWrapper.getVisit().toString());
+                        Log.d(TAG, roverObjectWrapper.get().toString());
                         Log.d(TAG, "response is good");
-                        mNetworkListener.onSuccess();
+                        mNetworkListener.onSuccess(roverObjectWrapper.get());
                     }
 
                     @Override
