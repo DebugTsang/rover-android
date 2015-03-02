@@ -1,7 +1,6 @@
 package co.roverlabs.sdk.managers;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Region;

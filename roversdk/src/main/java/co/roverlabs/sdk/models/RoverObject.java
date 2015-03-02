@@ -51,6 +51,7 @@ public abstract class RoverObject {
             method = "PUT";
         }
         
+        //TODO: Should network callback be here or in RoverVisitManager?
         mNetworkManager.setNetworkListener(new RoverNetworkListener() {
             
             @Override
