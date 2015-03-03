@@ -1,5 +1,6 @@
 package co.roverlabs.sdk.networks;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -21,7 +22,13 @@ import retrofit.converter.GsonConverter;
 public class RoverNetworkManager {
     
     public static final String TAG = RoverNetworkManager.class.getName();
+    private Context mContext;
     private RoverNetworkListener mNetworkListener;
+    
+    public RoverNetworkManager(Context con) {
+        
+        mContext = con;
+    }
 
     public void setNetworkListener(RoverNetworkListener networkListener) {
 
@@ -59,7 +66,7 @@ public class RoverNetworkManager {
         RoverObjectWrapper wrapper = new RoverObjectWrapper();
         wrapper.set(object);
         
-        makeCall().create(Rover.getAuthToken(), object.getObjectName(), wrapper, new Callback<RoverObjectWrapper>() {
+        makeCall().create(Rover.getInstance(mContext).getAuthToken(), object.getObjectName(), wrapper, new Callback<RoverObjectWrapper>() {
 
                     @Override
                     public void success(RoverObjectWrapper roverObjectWrapper, Response response) {

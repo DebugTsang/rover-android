@@ -32,7 +32,7 @@ public class RoverNotificationManager {
         //intent.setAction(Intent.ACTION_MAIN);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mNotificationBuilder = new NotificationCompat.Builder(mContext)
-                .setSmallIcon(Rover.getIconResourceId())
+                .setSmallIcon(Rover.getInstance(mContext).getNotificationIconId())
                 .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)

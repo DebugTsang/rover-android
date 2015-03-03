@@ -28,7 +28,7 @@ public abstract class RoverObject {
     public RoverObject(Context con) { 
         
         mNotificationManager = new RoverNotificationManager(con);
-        mNetworkManager = new RoverNetworkManager(); 
+        mNetworkManager = new RoverNetworkManager(con);
     }
     
     //Getters

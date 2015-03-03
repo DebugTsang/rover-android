@@ -16,13 +16,13 @@ public class RoverUtils {
     private static final String TAG = RoverUtils.class.getName();
     private static final String SHARED_PREFS_NAME = "RoverPrefs";
     
-    public static String readFromSharedPreferences(Context con, String key, String defaultValue) {
+    public static String readStringFromSharedPreferences(Context con, String key, String defaultValue) {
 
         SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
         return sharedPreferences.getString(key, defaultValue);
     }
     
-    public static void writeToSharedPreferences(Context con, String key, String value) {
+    public static void writeStringToSharedPreferences(Context con, String key, String value) {
         
         SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -30,7 +30,21 @@ public class RoverUtils {
         editor.apply();
     }
     
-    public static Object readFromSharedPreferences(Context con, Class customObjectClass, String defaultValue) {
+    public static int readIntFromSharedPreferences(Context con, String key, int defaultValue) {
+
+        SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
+        return sharedPreferences.getInt(key, defaultValue);
+    }
+
+    public static void writeIntToSharedPreferences(Context con, String key, int value) {
+
+        SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+    
+    public static Object readObjectFromSharedPreferences(Context con, Class customObjectClass, String defaultValue) {
         
         SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
         Gson gson = new Gson();
@@ -38,7 +52,7 @@ public class RoverUtils {
         return gson.fromJson(json, customObjectClass);
     }
     
-    public static void writeToSharedPreferences(Context con, String key, Object customObject) {
+    public static void writeObjectToSharedPreferences(Context con, String key, Object customObject) {
 
         SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();

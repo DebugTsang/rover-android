@@ -1,6 +1,7 @@
 package co.roverlabs.sdk.managers;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Region;
@@ -33,7 +34,8 @@ public class RoverVisitManager {
     }
     
     public void didEnterLocation(Region region, List<Beacon> beacons) {
-
+        
+        Log.d(TAG, "Entered location being called");
         if (getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
             return;
         }
@@ -49,14 +51,18 @@ public class RoverVisitManager {
         Calendar now = Calendar.getInstance();
         mLatestVisit.setLastBeaconDetection(now);
         mLatestVisit.setExitedTime(now.getTime());
-        RoverUtils.writeToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
+        RoverUtils.writeObjectToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
         //TODO: mLatestVisit.save() to be tested
     }
     
     public RoverVisit getLatestVisit() {
         
         if(mLatestVisit == null) {
-            mLatestVisit = (RoverVisit)RoverUtils.readFromSharedPreferences(mContext, RoverVisit.class, null);
+            Log.d(TAG, "latest visit is null");
+            mLatestVisit = (RoverVisit)RoverUtils.readObjectFromSharedPreferences(mContext, RoverVisit.class, null);
+        }
+        else {
+            Log.d(TAG, "latest visit is not null");
         }
         return mLatestVisit;
     }

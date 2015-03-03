@@ -1,5 +1,7 @@
 package co.roverlabs.demo;
 
+import android.app.Activity;
+import android.app.Application;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,10 +19,12 @@ public class DemoActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        Rover.getInstance(this.getApplicationContext()).setUuid("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
-        Rover.getInstance(this.getApplicationContext()).setAppId("ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0");
-        Rover.getInstance(this.getApplicationContext()).setIconResourceId(R.drawable.icon);
-        Rover.getInstance(this.getApplicationContext()).startMonitoring();
+        if(Rover.getInstance(this.getApplicationContext()).getUuid() == null /* TODO: replace with Rover.getInstance().isSetup() */) {
+            Rover.getInstance(this.getApplicationContext()).setUuid("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
+            Rover.getInstance(this.getApplicationContext()).setAppId("ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0");
+            Rover.getInstance(this.getApplicationContext()).setNotificationIconId(R.drawable.icon);
+            Rover.getInstance(this.getApplicationContext()).startMonitoring();
+        }
     }
     
     @Override
