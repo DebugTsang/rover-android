@@ -46,27 +46,40 @@ public abstract class RoverObject {
         
         if(mId == null) {
             method = "POST";
+            //TODO: Should network callback be here or in RoverVisitManager?
+            mNetworkManager.setPostListener(new RoverNetworkListener.PostListener() {
+
+                @Override
+                public void onSuccess(RoverObject object) {
+
+                    self.update(object);
+                    Log.d(TAG, "POST call from " + self.getObjectName() + " ID " + self.getId() + " has succeeded");
+                }
+
+                @Override
+                public void onFailure() {
+
+                    Log.d(TAG, "POST call from " + self.getObjectName() + " ID " + self.getId() + " has failed");
+                }
+            });
         }
         else {
             method = "PUT";
-        }
-        
-        //TODO: Should network callback be here or in RoverVisitManager?
-        mNetworkManager.setNetworkListener(new RoverNetworkListener() {
-            
-            @Override
-            public void onSuccess(RoverObject object) {
-                
-                self.update(object);
-                Log.d(TAG, "Network call from " + self.getObjectName() + " ID " + self.getId() + " has succeeded");
-            }
+            mNetworkManager.setPutListener(new RoverNetworkListener.PutListener() {
 
-            @Override
-            public void onFailure() {
-                
-                Log.d(TAG, "Network call from " + self.getObjectName() + " ID " + self.getId() + " has failed");
-            }
-        });
+                @Override
+                public void onSuccess() {
+
+                    Log.d(TAG, "PUT call from " + self.getObjectName() + " ID " + self.getId() + " has succeeded");
+                }
+
+                @Override
+                public void onFailure() {
+
+                    Log.d(TAG, "PUT call from " + self.getObjectName() + " ID " + self.getId() + " has failed");
+                }
+            });
+        }
         
         mNetworkManager.sendRequest(method, this);
     }

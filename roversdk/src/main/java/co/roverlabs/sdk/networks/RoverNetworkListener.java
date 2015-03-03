@@ -5,9 +5,18 @@ import co.roverlabs.sdk.models.RoverObject;
 /**
  * Created by SherryYang on 2015-02-26.
  */
-public interface RoverNetworkListener {
+public class RoverNetworkListener {
     
-    public void onSuccess(RoverObject object);
+    public interface PostListener {
+
+        public void onSuccess(RoverObject object);
+        public void onFailure();
+    }
     
-    public void onFailure();
+    public interface PutListener {
+        
+        public void onSuccess();
+        public void onFailure();
+    }
+   
 }

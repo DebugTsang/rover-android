@@ -28,7 +28,7 @@ public class RoverRegionManager {
 
         mContext = con;
         mBeaconManager = new BeaconManager(con);
-        mRegion = new Region("ID", Rover.getInstance(mContext).getUuid(), null, null);
+        mRegion = new Region("General Region", Rover.getInstance(mContext).getUuid(), null, null);
     }
 
     public static RoverRegionManager getInstance(Context con) {

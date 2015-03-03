@@ -23,16 +23,23 @@ public class RoverNetworkManager {
     
     public static final String TAG = RoverNetworkManager.class.getName();
     private Context mContext;
-    private RoverNetworkListener mNetworkListener;
+    private RoverNetworkListener.PostListener mPostListener;
+    private RoverNetworkListener.PutListener mPutListener;
+    
     
     public RoverNetworkManager(Context con) {
         
         mContext = con;
     }
 
-    public void setNetworkListener(RoverNetworkListener networkListener) {
+    public void setPostListener(RoverNetworkListener.PostListener postListener) {
 
-        mNetworkListener = networkListener;
+        mPostListener = postListener;
+    }
+    
+    public void setPutListener(RoverNetworkListener.PutListener putListener) {
+        
+        mPutListener = putListener;
     }
     
     public RoverNetworkInterface makeCall() {
@@ -71,15 +78,15 @@ public class RoverNetworkManager {
                     @Override
                     public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
 
-                        Log.d(TAG, "Retrofit call successful");
-                        mNetworkListener.onSuccess(roverObjectWrapper.get());
+                        Log.d(TAG, "Retrofit POST call successful");
+                        mPostListener.onSuccess(roverObjectWrapper.get());
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         
-                        Log.d(TAG, "Retrofit encountered an error - " + error);
-                        mNetworkListener.onFailure();
+                        Log.d(TAG, "Retrofit encountered an error during POST - " + error);
+                        mPostListener.onFailure();
                     }
                 }
         );
@@ -87,6 +94,25 @@ public class RoverNetworkManager {
     
     public void sendPutRequest(RoverObject object) {
         
-        //TODO: PUT request
+        //TODO: Test PUT request
+        RoverObjectWrapper wrapper = new RoverObjectWrapper();
+        wrapper.set(object);
+        
+        makeCall().update(Rover.getInstance(mContext).getAuthToken(), object.getId(), object.getObjectName(), wrapper, new Callback() {
+
+            @Override
+            public void success(Object o, Response response) {
+
+                Log.d(TAG, "Retrofit PUT call successful");
+                mPutListener.onSuccess();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+                Log.d(TAG, "Retrofit encountered an error during PUT - " + error);
+                mPutListener.onFailure();
+            }
+        });
     }
 }

@@ -20,9 +20,15 @@ public class Rover {
     private String mUuid;
     private String mAppId;
     private int mNotificationIconId;
+    //TODO: Get rid of temp fix
+    private static boolean sSetUp = false;
 
     //Constructor
-    private Rover(Context con) { mContext = con; }
+    private Rover(Context con) { 
+        
+        mContext = con;
+        sSetUp = true;
+    }
 
     public static Rover getInstance(Context con) {
 
@@ -30,6 +36,11 @@ public class Rover {
             sRoverInstance = new Rover(con);
         }
         return sRoverInstance;
+    }
+    
+    public static boolean isSetUp() {
+        
+        return sSetUp;
     }
 
     //Getters

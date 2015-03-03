@@ -1,5 +1,6 @@
 package co.roverlabs.sdk.networks;
 
+import co.roverlabs.sdk.models.RoverObject;
 import co.roverlabs.sdk.models.RoverObjectWrapper;
 import retrofit.Callback;
 import retrofit.http.Body;
@@ -18,7 +19,7 @@ public interface RoverNetworkInterface {
                 @Path("id") String objectId,
                 @Path("object") String objectPath,
                 @Body RoverObjectWrapper object,
-                Callback<RoverObjectWrapper> callback);
+                Callback callback);
 
     @POST("/{object}s")
     void create(@Header("Authorization") String authToken,

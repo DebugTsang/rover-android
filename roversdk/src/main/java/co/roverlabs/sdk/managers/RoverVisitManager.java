@@ -35,7 +35,6 @@ public class RoverVisitManager {
     
     public void didEnterLocation(Region region, List<Beacon> beacons) {
         
-        Log.d(TAG, "Entered location being called");
         if (getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
             return;
         }
@@ -58,11 +57,7 @@ public class RoverVisitManager {
     public RoverVisit getLatestVisit() {
         
         if(mLatestVisit == null) {
-            Log.d(TAG, "latest visit is null");
             mLatestVisit = (RoverVisit)RoverUtils.readObjectFromSharedPreferences(mContext, RoverVisit.class, null);
-        }
-        else {
-            Log.d(TAG, "latest visit is not null");
         }
         return mLatestVisit;
     }

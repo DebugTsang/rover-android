@@ -68,20 +68,6 @@ public class RoverVisit extends RoverObject {
     public void setLastBeaconDetection(Calendar time) { mLastBeaconDetectionTime = time; }
     public void setBeacons(List<Beacon> beacons) { mBeacons = beacons; }
     public void setRegion(Region region) { mRegion = region; }
-
-    public boolean isInRegion(Region region) {
-
-        return mRegion.equals(region);
-    }
-
-    public boolean isAlive() {
-
-        //TODO: Get rid of temporary keep alive time of 5 minutes
-        mKeepAliveTime = 300000;
-        Calendar now = Calendar.getInstance();
-        long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
-        return elapsedTime < mKeepAliveTime;
-    }
     
     public void save() {
 
@@ -105,6 +91,20 @@ public class RoverVisit extends RoverObject {
         mTouchPoints = visit.getTouchPoints();
         //TODO: Better place to put this call?
         sendNotification();
+    }
+
+    public boolean isInRegion(Region region) {
+
+        return mRegion.equals(region);
+    }
+
+    public boolean isAlive() {
+
+        //TODO: Get rid of temporary keep alive time of 5 minutes
+        mKeepAliveTime = 300000;
+        Calendar now = Calendar.getInstance();
+        long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
+        return elapsedTime < mKeepAliveTime;
     }
     
     public void sendNotification() {
