@@ -24,6 +24,8 @@ public abstract class RoverObject {
     //TODO: Best place to put the notification manager?
     protected transient RoverNotificationManager mNotificationManager;
     
+    //Should have instance of save successful/failed callback
+    
     //Constructor
     public RoverObject(Context con) { 
         
@@ -39,7 +41,7 @@ public abstract class RoverObject {
     public void setId(String id) { mId = id; }
 
     
-    public void save() {
+    public void save(/* successCallback, failureCallback */) {
         
         String method;
         final RoverObject self = this;
@@ -54,12 +56,23 @@ public abstract class RoverObject {
 
                     self.update(object);
                     Log.d(TAG, "POST call from " + self.getObjectName() + " ID " + self.getId() + " has succeeded");
+                    /*
+                    * if successCallback
+                    *  successCallback();
+                    *  *  * 
+                    * * * */
                 }
 
                 @Override
                 public void onFailure() {
 
                     Log.d(TAG, "POST call from " + self.getObjectName() + " ID " + self.getId() + " has failed");
+                    
+                                        /*
+                    * if failureCallback
+                    *  failureCallback();
+                    *  *  * 
+                    * * * */
                 }
             });
         }

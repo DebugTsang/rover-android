@@ -27,6 +27,7 @@ public class CardListActivity extends Activity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
+        //TODO: Shallow copy of the RoverVisit object, need to implement deep copy
         RoverVisit latestVisit = RoverVisitManager.getInstance(this.getApplicationContext()).getLatestVisit();
         List<RoverCard> latestCards = latestVisit.getTouchPoints().get(0).getCards();
         CardListAdapter cardListAdapter = new CardListAdapter(createImageInCardList(latestCards), this);

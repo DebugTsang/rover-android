@@ -45,12 +45,15 @@ public class RoverRegionManager {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
-                RoverVisitManager.getInstance(mContext).didEnterLocation(region, beacons);
+                RoverVisitManager.getInstance(mContext).didEnterLocation(region, beacons); //Remove
+                // broadcast event: 'RoverDidEnterRegion'(region, grab major number put it here)
+                //Set region with uuid, major, minor from list of beacons detected and pass to didEnterLocation
             }
 
             @Override
             public void onExitedRegion(Region region) {
                 
+                //Same changes as as onEnteredRegion()
                 RoverVisitManager.getInstance(mContext).didExitLocation();
             }
         }));

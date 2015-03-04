@@ -22,6 +22,7 @@ public class RoverNotificationManager {
 
         mContext = con;
         mNotificationManager = (NotificationManager)con.getSystemService(Context.NOTIFICATION_SERVICE);
+        // listen for RoverDidEnterTouchpoint -> sendNotification
     }
 
     public void sendNotification(int id, String title, String message, Class intentClass) {

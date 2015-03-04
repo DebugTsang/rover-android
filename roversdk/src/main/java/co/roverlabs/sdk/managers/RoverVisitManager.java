@@ -22,7 +22,10 @@ public class RoverVisitManager {
     private RoverVisit mLatestVisit;
     
     //Constructor
-    private RoverVisitManager(Context con) { mContext = con; }
+    private RoverVisitManager(Context con) { 
+        mContext = con; 
+        // listen for RoverDidEnterRegion -> didEnterLocation
+    }
 
     public static RoverVisitManager getInstance(Context con) {
 
@@ -32,9 +35,20 @@ public class RoverVisitManager {
         return sVisitManagerInstance;
     }
     
+    //Rename to didEnterRegion
+    //Delete list of beacons argument
     public void didEnterLocation(Region region, List<Beacon> beacons) {
         
+        //Double check if region has all values passed in
+        
         if (getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
+            
+            /*
+            if(latestvisit.currenttouchoint is not null || !latestvisit.currenttouchpoint.isinregion(region)) {
+                movedToSubRegion(region)
+            }
+             */
+            
             return;
         }
         Calendar now = Calendar.getInstance();
@@ -43,8 +57,28 @@ public class RoverVisitManager {
         mLatestVisit.setEnteredTime(now.getTime());
         mLatestVisit.setLastBeaconDetection(now);
         mLatestVisit.setBeacons(beacons);
-        mLatestVisit.save();
+        mLatestVisit.save(); // success callback -> broadcast RoverDidEnterLocation (only after successful server call and mapping)
+                                                /// after that -> movedToSubRegion(region)
     }
+    
+    /*
+    void movedToSubRegion(region) {
+        touchpoint = latestVisit.getTouchPoint(region)
+        if(touchpoint is not null) {
+          if (! latestvisit.visitedTouchpoints.contain(touchpoint)) {
+            latestvisit.setcurrenttouchpoint(touchpoint)
+            broadcast 'RoverDidEnterTouchpoint' - have not seen the touchpoint before
+          
+            return
+          }
+          
+          latestvisit.setcurrenttouchpoint(touchpoint)
+        } else {
+            // log "invalid touchpoint"
+            Does not correspond to any set up touchpoint on the server
+        }
+        
+     */
 
     public void didExitLocation() {
 

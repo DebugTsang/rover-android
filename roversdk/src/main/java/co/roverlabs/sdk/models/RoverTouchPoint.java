@@ -35,4 +35,11 @@ public class RoverTouchPoint extends RoverObject {
     public void setNotification(String notification) { mNotification = notification; }
     public void setMinorNumber(int minorNumber) { mMinorNumber = minorNumber; }
     public void setCards(List<RoverCard> cards) { mCards = cards; }
+    
+    /*
+    boolean isInRegion(region) {
+        if this.minor == region.minor return true;
+        else false;
+    }
+     */
 }
