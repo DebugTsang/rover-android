@@ -5,9 +5,6 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
-import java.util.Calendar;
-import java.util.Date;
-
 /**
  * Created by SherryYang on 2015-01-27.
  */

@@ -1,10 +1,6 @@
 package co.roverlabs.sdk;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 
 import co.roverlabs.sdk.managers.RoverRegionManager;
 import co.roverlabs.sdk.utilities.RoverUtils;

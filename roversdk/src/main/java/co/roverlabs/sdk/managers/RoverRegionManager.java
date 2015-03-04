@@ -10,7 +10,6 @@ import com.estimote.sdk.Region;
 
 import java.util.List;
 
-import co.roverlabs.sdk.CardActivity;
 import co.roverlabs.sdk.Rover;
 
 /**

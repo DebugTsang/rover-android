@@ -1,14 +1,12 @@
-package co.roverlabs.sdk;
+package co.roverlabs.sdk.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverVisit;
 

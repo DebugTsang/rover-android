@@ -1,7 +1,6 @@
 package co.roverlabs.sdk.models;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.Region;
@@ -11,7 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import co.roverlabs.sdk.CardActivity;
+import co.roverlabs.sdk.ui.CardListActivity;
 
 /**
  * Created by SherryYang on 2015-02-20.
@@ -114,6 +113,6 @@ public class RoverVisit extends RoverObject {
         String title = touchPoint.getTitle();
         String message = touchPoint.getNotification();
         //TODO: Better system for notification IDs
-        mNotificationManager.sendNotification(1, title, message, CardActivity.class);
+        mNotificationManager.sendNotification(1, title, message, CardListActivity.class);
     }
 }

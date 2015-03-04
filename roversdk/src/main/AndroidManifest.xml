@@ -14,7 +14,13 @@
     <application>
 
         <activity
-            android:name="co.roverlabs.sdk.CardActivity"
+            android:name=".ui.CardActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Transparent">
+        </activity>
+
+        <activity
+            android:name=".ui.CardListActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Transparent">
         </activity>
