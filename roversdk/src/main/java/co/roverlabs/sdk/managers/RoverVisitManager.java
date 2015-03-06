@@ -1,9 +1,15 @@
 package co.roverlabs.sdk.managers;
 
 import android.content.Context;
+import android.util.Log;
+
+import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
 
+import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
+import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.utilities.RoverUtils;
@@ -21,7 +27,8 @@ public class RoverVisitManager {
     //Constructor
     private RoverVisitManager(Context con) { 
         
-        mContext = con; 
+        mContext = con;
+        RoverEventBus.getInstance().register(this);
         // listen for RoverDidEnterRegion -> didEnterLocation
     }
 
@@ -32,21 +39,22 @@ public class RoverVisitManager {
         }
         return sVisitManagerInstance;
     }
-    
-    //Rename to didEnterRegion
-    //Delete list of beacons argument
-    public void didEnterRegion(RoverRegion region) {
+
+    @Subscribe
+    public void didEnterRegion(RoverEnteredRegionEvent event) {
         
-        //Double check if region has all values passed in
-        
+        RoverRegion region = event.getRegion();
+
+        Log.d(TAG, "DID ENTER REGION BROUGHT BY OTTO " + region.toString());
+
         if (getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
-            
+
             /*
             if(latestvisit.currenttouchoint is not null || !latestvisit.currenttouchpoint.isinregion(region)) {
                 movedToSubRegion(region)
             }
              */
-            
+
             return;
         }
         Calendar now = Calendar.getInstance();
@@ -55,8 +63,33 @@ public class RoverVisitManager {
         mLatestVisit.setEnteredTime(now.getTime());
         mLatestVisit.setLastBeaconDetection(now);
         mLatestVisit.save(); // success callback -> broadcast RoverDidEnterLocation (only after successful server call and mapping)
-                                                /// after that -> movedToSubRegion(region)
+        /// after that -> movedToSubRegion(region)
     }
+    
+//    //Rename to didEnterRegion
+//    //Delete list of beacons argument
+//    public void didEnterRegion(RoverRegion region) {
+//
+//        //Double check if region has all values passed in
+//
+//        if (getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
+//
+//            /*
+//            if(latestvisit.currenttouchoint is not null || !latestvisit.currenttouchpoint.isinregion(region)) {
+//                movedToSubRegion(region)
+//            }
+//             */
+//
+//            return;
+//        }
+//        Calendar now = Calendar.getInstance();
+//        mLatestVisit = new RoverVisit(mContext);
+//        mLatestVisit.setRegion(region);
+//        mLatestVisit.setEnteredTime(now.getTime());
+//        mLatestVisit.setLastBeaconDetection(now);
+//        mLatestVisit.save(); // success callback -> broadcast RoverDidEnterLocation (only after successful server call and mapping)
+//                                                /// after that -> movedToSubRegion(region)
+//    }
     
     /*
     void movedToSubRegion(region) {
@@ -77,14 +110,25 @@ public class RoverVisitManager {
         
      */
 
-    public void didExitRegion() {
+    @Subscribe
+    public void didExitRegion(RoverExitedRegionEvent event) {
 
+        Log.d(TAG, "DID EXIT REGION BROUGHT BY OTTO");
         Calendar now = Calendar.getInstance();
         mLatestVisit.setLastBeaconDetection(now);
         mLatestVisit.setExitedTime(now.getTime());
         RoverUtils.writeObjectToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
         //TODO: mLatestVisit.save() to be tested
     }
+
+//    public void didExitRegion() {
+//
+//        Calendar now = Calendar.getInstance();
+//        mLatestVisit.setLastBeaconDetection(now);
+//        mLatestVisit.setExitedTime(now.getTime());
+//        RoverUtils.writeObjectToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
+//        //TODO: mLatestVisit.save() to be tested
+//    }
     
     public RoverVisit getLatestVisit() {
         

@@ -23,11 +23,11 @@ public class RoverVisit extends RoverObject {
     @SerializedName("location") private RoverLocation mLocation;
     @SerializedName("organization") private RoverOrganization mOrganization;
     @SerializedName("touchpoints") private List<RoverTouchPoint> mTouchPoints;
-    
+
     //New members
     //variable - currentTouchPoint
     //variable - Array<touchpoints> visitedTouchPoints
-    
+
     /*
     setCurrentTouchPoint(touchpoint) {
         if(!this.visitedTouchPoint.contains(touchpoints) {
@@ -35,7 +35,7 @@ public class RoverVisit extends RoverObject {
         }
         this.currentTouchPoint = touchpoint;
     }
-    
+
     getTouchPoint(region) {
         returns the touchpoint associated with the region passed in
     }

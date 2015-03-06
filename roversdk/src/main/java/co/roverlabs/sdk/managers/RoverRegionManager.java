@@ -10,6 +10,9 @@ import com.estimote.sdk.Region;
 
 import java.util.List;
 
+import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
+import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.models.RoverRegion;
 
 /**
@@ -19,14 +22,12 @@ public class RoverRegionManager {
     
     private static final String TAG = RoverRegionManager.class.getName();
     private static RoverRegionManager sRegionManagerInstance;
-    private RoverVisitManager mVisitManager;
     private BeaconManager mBeaconManager;
     private RoverRegion mRegion;
     private Region mEstimoteRegion;
     
     private RoverRegionManager(Context con) {
 
-        mVisitManager = RoverVisitManager.getInstance(con);
         mBeaconManager = new BeaconManager(con);
     }
 
@@ -52,19 +53,16 @@ public class RoverRegionManager {
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
                 mRegion.setUuid(region.getProximityUUID());
-                mRegion.setMajor(region.getMajor());
                 //TODO: Grab the actual nearest beacon instead of just the first in the list of beacons
+                mRegion.setMajor(beacons.get(0).getMajor());
                 mRegion.setMinor(beacons.get(0).getMinor());
-                mVisitManager.didEnterRegion(mRegion); //Remove
-                // broadcast event: 'RoverDidEnterRegion'(region, grab major number put it here)
-                //Set region with uuid, major, minor from list of beacons detected and pass to didEnterLocation
+                RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(mRegion));
             }
 
             @Override
             public void onExitedRegion(Region region) {
                 
-                //Same changes as as onEnteredRegion()
-                mVisitManager.didExitRegion();
+                RoverEventBus.getInstance().post(new RoverExitedRegionEvent());
             }
         }));
 

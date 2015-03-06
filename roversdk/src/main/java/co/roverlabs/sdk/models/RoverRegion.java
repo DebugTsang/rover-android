@@ -73,4 +73,14 @@ public class RoverRegion implements Parcelable {
         dest.writeInt(mMajor == null ? -1 : mMajor.intValue());
         dest.writeInt(mMinor == null ? -1 : mMinor.intValue());
     }
+
+    @Override
+    public String toString() {
+        
+        return "{REGION:{" +
+                "ID:" + mId + "," +
+                "UUID:" + mUuid + "," +
+                "Major:" + mMajor + "," +
+                "Minor:" + mMinor + "}}";
+    }
 }
