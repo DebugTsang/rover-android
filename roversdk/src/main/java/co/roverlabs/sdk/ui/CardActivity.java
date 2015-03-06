@@ -16,6 +16,7 @@ import co.roverlabs.sdk.models.RoverVisit;
 public class CardActivity extends Activity {
     
     private static final String TAG = CardActivity.class.getName();
+    private RoverVisitManager mVisitManager;
     private TextView mTitleView;
     private TextView mMessageView;
     private Button mButton;
@@ -27,11 +28,13 @@ public class CardActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card);
         
+        mVisitManager = RoverVisitManager.getInstance(this.getApplicationContext());
+        
         mTitleView = (TextView)findViewById(R.id.cardTitle);
         mMessageView = (TextView)findViewById(R.id.cardMessage);
         mButton = (Button)findViewById(R.id.cardButton);
         
-        mLatestVisit = RoverVisitManager.getInstance(this.getApplicationContext()).getLatestVisit();
+        mLatestVisit = mVisitManager.getLatestVisit();
         mTitleView.setText(mLatestVisit.getTouchPoints().get(0).getCards().get(0).getTitle());
         mMessageView.setText("This is card ID " + mLatestVisit.getTouchPoints().get(0).getCards().get(0).getId());
         mButton.setText("OK");
@@ -50,6 +53,6 @@ public class CardActivity extends Activity {
     protected void onResume() {
         
         super.onResume();
-        mLatestVisit = RoverVisitManager.getInstance(this.getApplicationContext()).getLatestVisit();
+        mLatestVisit = mVisitManager.getLatestVisit();
     }
 }

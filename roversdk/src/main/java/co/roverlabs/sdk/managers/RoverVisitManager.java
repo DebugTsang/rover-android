@@ -2,12 +2,9 @@ package co.roverlabs.sdk.managers;
 
 import android.content.Context;
 
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.Region;
-
 import java.util.Calendar;
-import java.util.List;
 
+import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
@@ -23,6 +20,7 @@ public class RoverVisitManager {
     
     //Constructor
     private RoverVisitManager(Context con) { 
+        
         mContext = con; 
         // listen for RoverDidEnterRegion -> didEnterLocation
     }
@@ -37,7 +35,7 @@ public class RoverVisitManager {
     
     //Rename to didEnterRegion
     //Delete list of beacons argument
-    public void didEnterLocation(Region region, List<Beacon> beacons) {
+    public void didEnterRegion(RoverRegion region) {
         
         //Double check if region has all values passed in
         
@@ -56,7 +54,6 @@ public class RoverVisitManager {
         mLatestVisit.setRegion(region);
         mLatestVisit.setEnteredTime(now.getTime());
         mLatestVisit.setLastBeaconDetection(now);
-        mLatestVisit.setBeacons(beacons);
         mLatestVisit.save(); // success callback -> broadcast RoverDidEnterLocation (only after successful server call and mapping)
                                                 /// after that -> movedToSubRegion(region)
     }
@@ -80,7 +77,7 @@ public class RoverVisitManager {
         
      */
 
-    public void didExitLocation() {
+    public void didExitRegion() {
 
         Calendar now = Calendar.getInstance();
         mLatestVisit.setLastBeaconDetection(now);

@@ -2,7 +2,10 @@ package co.roverlabs.sdk;
 
 import android.content.Context;
 
+import co.roverlabs.sdk.managers.RoverNotificationManager;
 import co.roverlabs.sdk.managers.RoverRegionManager;
+import co.roverlabs.sdk.managers.RoverVisitManager;
+import co.roverlabs.sdk.networks.RoverNetworkManager;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
@@ -13,6 +16,10 @@ public class Rover {
     private static final String TAG = Rover.class.getName();
     private static Rover sRoverInstance;
     private Context mContext;
+    private RoverRegionManager mRegionManager;
+    private RoverVisitManager mVisitManager;
+    private RoverNetworkManager mNetworkManager;
+    private RoverNotificationManager mNotificationManager;
     private String mUuid;
     private String mAppId;
     private int mNotificationIconId;
@@ -23,6 +30,10 @@ public class Rover {
     private Rover(Context con) { 
         
         mContext = con;
+        setRegionManager();
+        setVisitManager();
+        setNetworkManager();
+        setNotificationManager();
         sSetUp = true;
     }
 
@@ -32,6 +43,29 @@ public class Rover {
             sRoverInstance = new Rover(con);
         }
         return sRoverInstance;
+    }
+    
+    private void setRegionManager() {
+        
+        mRegionManager = RoverRegionManager.getInstance(mContext);
+        mRegionManager.setMonitorRegion(getUuid());
+    }
+    
+    private void setVisitManager() {
+        
+        mVisitManager = RoverVisitManager.getInstance(mContext);
+    }
+    
+    private void setNetworkManager() {
+        
+        mNetworkManager = RoverNetworkManager.getInstance();
+        mNetworkManager.setAuthToken(getAuthToken());
+    }
+    
+    private void setNotificationManager() {
+        
+        mNotificationManager = RoverNotificationManager.getInstance(mContext);
+        mNotificationManager.setNotificationIconId(getNotificationIconId());
     }
     
     public static boolean isSetUp() {
@@ -93,11 +127,11 @@ public class Rover {
 
     public void startMonitoring() {
 
-        RoverRegionManager.getInstance(mContext).startMonitoring();
+        mRegionManager.startMonitoring();
     }
 
     public void stopMonitoring() {
 
-        RoverRegionManager.getInstance(mContext).stopMonitoring();
+        mRegionManager.stopMonitoring();
     }
 }

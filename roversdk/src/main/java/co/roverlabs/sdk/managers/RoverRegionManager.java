@@ -10,7 +10,7 @@ import com.estimote.sdk.Region;
 
 import java.util.List;
 
-import co.roverlabs.sdk.Rover;
+import co.roverlabs.sdk.models.RoverRegion;
 
 /**
  * Created by SherryYang on 2015-01-21.
@@ -19,15 +19,15 @@ public class RoverRegionManager {
     
     private static final String TAG = RoverRegionManager.class.getName();
     private static RoverRegionManager sRegionManagerInstance;
-    private Context mContext;
+    private RoverVisitManager mVisitManager;
     private BeaconManager mBeaconManager;
-    private Region mRegion;
+    private RoverRegion mRegion;
+    private Region mEstimoteRegion;
     
     private RoverRegionManager(Context con) {
 
-        mContext = con;
+        mVisitManager = RoverVisitManager.getInstance(con);
         mBeaconManager = new BeaconManager(con);
-        mRegion = new Region("General Region", Rover.getInstance(mContext).getUuid(), null, null);
     }
 
     public static RoverRegionManager getInstance(Context con) {
@@ -38,6 +38,12 @@ public class RoverRegionManager {
         return sRegionManagerInstance;
     }
     
+    public void setMonitorRegion(String uuid) {
+        
+        mRegion = new RoverRegion("Current Region", uuid, null, null);
+        mEstimoteRegion = new Region("Monitor Region", uuid, null, null);
+    }
+    
     public void startMonitoring() {
 
         mBeaconManager.setMonitoringListener((new BeaconManager.MonitoringListener() {
@@ -45,7 +51,11 @@ public class RoverRegionManager {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
-                RoverVisitManager.getInstance(mContext).didEnterLocation(region, beacons); //Remove
+                mRegion.setUuid(region.getProximityUUID());
+                mRegion.setMajor(region.getMajor());
+                //TODO: Grab the actual nearest beacon instead of just the first in the list of beacons
+                mRegion.setMinor(beacons.get(0).getMinor());
+                mVisitManager.didEnterRegion(mRegion); //Remove
                 // broadcast event: 'RoverDidEnterRegion'(region, grab major number put it here)
                 //Set region with uuid, major, minor from list of beacons detected and pass to didEnterLocation
             }
@@ -54,7 +64,7 @@ public class RoverRegionManager {
             public void onExitedRegion(Region region) {
                 
                 //Same changes as as onEnteredRegion()
-                RoverVisitManager.getInstance(mContext).didExitLocation();
+                mVisitManager.didExitRegion();
             }
         }));
 
@@ -64,7 +74,7 @@ public class RoverRegionManager {
             public void onServiceReady() {
                 
                 try {
-                    mBeaconManager.startMonitoring(mRegion);
+                    mBeaconManager.startMonitoring(mEstimoteRegion);
                 } 
                 catch (RemoteException e) {
                     Log.e(TAG, "Cannot start monitoring", e);
@@ -76,7 +86,7 @@ public class RoverRegionManager {
     public void stopMonitoring() {
 
         try {
-            mBeaconManager.stopMonitoring(mRegion);
+            mBeaconManager.stopMonitoring(mEstimoteRegion);
         } 
         catch (RemoteException e) {
             Log.d(TAG, "Cannot stop monitoring", e);

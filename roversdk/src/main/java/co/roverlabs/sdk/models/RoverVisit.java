@@ -2,8 +2,6 @@ package co.roverlabs.sdk.models;
 
 import android.content.Context;
 
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.Region;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Calendar;
@@ -45,9 +43,9 @@ public class RoverVisit extends RoverObject {
 
     //Local members
     private static final String TAG = RoverVisit.class.getName();
-    private Region mRegion;
+    private RoverRegion mRegion;
     private Calendar mLastBeaconDetectionTime;
-    private List<Beacon> mBeacons;
+    //private List<Beacon> mBeacons;
 
     //TODO: Get rid of these members
     public String customer_id;
@@ -70,8 +68,8 @@ public class RoverVisit extends RoverObject {
     public RoverOrganization getOrganization() { return mOrganization; }
     public List<RoverTouchPoint> getTouchPoints() { return mTouchPoints; }
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
-    public List<Beacon> getBeacons() { return mBeacons; }
-    public Region getRegion() { return mRegion; }
+    //public List<Beacon> getBeacons() { return mBeacons; }
+    public RoverRegion getRegion() { return mRegion; }
     
     //Setters
     public void setCustomer(RoverCustomer customer) { mCustomer = customer; }
@@ -82,8 +80,8 @@ public class RoverVisit extends RoverObject {
     public void setOrganization(RoverOrganization organization) { mOrganization = organization; }
     public void setTouchPoints(List<RoverTouchPoint> touchPoints) { mTouchPoints = touchPoints; }
     public void setLastBeaconDetection(Calendar time) { mLastBeaconDetectionTime = time; }
-    public void setBeacons(List<Beacon> beacons) { mBeacons = beacons; }
-    public void setRegion(Region region) { mRegion = region; }
+    //public void setBeacons(List<Beacon> beacons) { mBeacons = beacons; }
+    public void setRegion(RoverRegion region) { mRegion = region; }
     
     public void save() {
 
@@ -109,7 +107,7 @@ public class RoverVisit extends RoverObject {
         sendNotification();
     }
 
-    public boolean isInRegion(Region region) {
+    public boolean isInRegion(RoverRegion region) {
 
         return mRegion.equals(region);
     }

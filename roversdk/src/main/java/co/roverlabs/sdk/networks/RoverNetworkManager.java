@@ -1,12 +1,10 @@
 package co.roverlabs.sdk.networks;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import co.roverlabs.sdk.Rover;
 import co.roverlabs.sdk.models.RoverObject;
 import co.roverlabs.sdk.models.RoverObjectWrapper;
 import co.roverlabs.sdk.utilities.RoverConstants;
@@ -22,16 +20,24 @@ import retrofit.converter.GsonConverter;
 public class RoverNetworkManager {
     
     public static final String TAG = RoverNetworkManager.class.getName();
-    private Context mContext;
+    private static RoverNetworkManager sNetworkManagerInstance;
+    private String mAuthToken;
     private RoverNetworkListener.PostListener mPostListener;
     private RoverNetworkListener.PutListener mPutListener;
-    
-    
-    public RoverNetworkManager(Context con) {
-        
-        mContext = con;
-    }
 
+
+    private RoverNetworkManager() { }
+
+    public static RoverNetworkManager getInstance() {
+
+        if(sNetworkManagerInstance == null) {
+            sNetworkManagerInstance = new RoverNetworkManager();
+        }
+        return sNetworkManagerInstance;
+    }
+    
+    public void setAuthToken(String token) { mAuthToken = token; }
+    
     public void setPostListener(RoverNetworkListener.PostListener postListener) {
 
         mPostListener = postListener;
@@ -73,7 +79,7 @@ public class RoverNetworkManager {
         RoverObjectWrapper wrapper = new RoverObjectWrapper();
         wrapper.set(object);
         
-        makeCall().create(Rover.getInstance(mContext).getAuthToken(), object.getObjectName(), wrapper, new Callback<RoverObjectWrapper>() {
+        makeCall().create(mAuthToken, object.getObjectName(), wrapper, new Callback<RoverObjectWrapper>() {
 
                     @Override
                     public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
@@ -98,7 +104,7 @@ public class RoverNetworkManager {
         RoverObjectWrapper wrapper = new RoverObjectWrapper();
         wrapper.set(object);
         
-        makeCall().update(Rover.getInstance(mContext).getAuthToken(), object.getId(), object.getObjectName(), wrapper, new Callback() {
+        makeCall().update(mAuthToken, object.getId(), object.getObjectName(), wrapper, new Callback() {
 
             @Override
             public void success(Object o, Response response) {

@@ -6,24 +6,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
-import co.roverlabs.sdk.Rover;
-
 /**
  * Created by SherryYang on 2015-01-26.
  */
 public class RoverNotificationManager {
     
     private static final String TAG = RoverNotificationManager.class.getName();
+    private static RoverNotificationManager sNotificationManagerInstance;
     private Context mContext;
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
-
-    public RoverNotificationManager(Context con) {
+    private int mNotificationIconId;
+    
+    private RoverNotificationManager(Context con) {
 
         mContext = con;
         mNotificationManager = (NotificationManager)con.getSystemService(Context.NOTIFICATION_SERVICE);
-        // listen for RoverDidEnterTouchpoint -> sendNotification
     }
+
+    public static RoverNotificationManager getInstance(Context con) {
+
+        if(sNotificationManagerInstance == null) {
+            sNotificationManagerInstance = new RoverNotificationManager(con);
+        }
+        return sNotificationManagerInstance;
+    }
+    
+    public void setNotificationIconId(int id) { mNotificationIconId = id; }
 
     public void sendNotification(int id, String title, String message, Class intentClass) {
 
@@ -33,7 +42,7 @@ public class RoverNotificationManager {
         //intent.setAction(Intent.ACTION_MAIN);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mNotificationBuilder = new NotificationCompat.Builder(mContext)
-                .setSmallIcon(Rover.getInstance(mContext).getNotificationIconId())
+                .setSmallIcon(mNotificationIconId)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setContentIntent(pendingIntent)
