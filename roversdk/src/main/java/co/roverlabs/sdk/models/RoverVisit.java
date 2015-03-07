@@ -8,6 +8,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.ui.CardListActivity;
 
 /**
@@ -22,21 +24,21 @@ public class RoverVisit extends RoverObject {
     @SerializedName("keepAlive") private long mKeepAliveTime;
     @SerializedName("location") private RoverLocation mLocation;
     @SerializedName("organization") private RoverOrganization mOrganization;
-    @SerializedName("touchpoints") private List<RoverTouchPoint> mTouchPoints;
+    @SerializedName("touchpoints") private List<RoverTouchpoint> mTouchpoints;
 
     //New members
-    //variable - currentTouchPoint
-    //variable - Array<touchpoints> visitedTouchPoints
+    //variable - currentTouchpoint
+    //variable - Array<touchpoints> visitedTouchpoints
 
     /*
-    setCurrentTouchPoint(touchpoint) {
-        if(!this.visitedTouchPoint.contains(touchpoints) {
-            add to visitedTouchPoint
+    setCurrentTouchpoint(touchpoint) {
+        if(!this.visitedTouchpoint.contains(touchpoints) {
+            add to visitedTouchpoint
         }
-        this.currentTouchPoint = touchpoint;
+        this.currentTouchpoint = touchpoint;
     }
 
-    getTouchPoint(region) {
+    getTouchpoint(region) {
         returns the touchpoint associated with the region passed in
     }
      */
@@ -66,7 +68,7 @@ public class RoverVisit extends RoverObject {
     public long getKeepAliveTime() { return mKeepAliveTime; }
     public RoverLocation getLocation() { return mLocation; }
     public RoverOrganization getOrganization() { return mOrganization; }
-    public List<RoverTouchPoint> getTouchPoints() { return mTouchPoints; }
+    public List<RoverTouchpoint> getTouchpoints() { return mTouchpoints; }
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
     //public List<Beacon> getBeacons() { return mBeacons; }
     public RoverRegion getRegion() { return mRegion; }
@@ -78,7 +80,7 @@ public class RoverVisit extends RoverObject {
     public void setKeepAliveTime(long keepAliveTime) { mKeepAliveTime = keepAliveTime; }
     public void setLocation(RoverLocation location) { mLocation = location; }
     public void setOrganization(RoverOrganization organization) { mOrganization = organization; }
-    public void setTouchPoints(List<RoverTouchPoint> touchPoints) { mTouchPoints = touchPoints; }
+    public void setTouchpoints(List<RoverTouchpoint> touchpoints) { mTouchpoints = touchpoints; }
     public void setLastBeaconDetection(Calendar time) { mLastBeaconDetectionTime = time; }
     //public void setBeacons(List<Beacon> beacons) { mBeacons = beacons; }
     public void setRegion(RoverRegion region) { mRegion = region; }
@@ -102,7 +104,7 @@ public class RoverVisit extends RoverObject {
         mKeepAliveTime = visit.getKeepAliveTime();
         mLocation = visit.getLocation();
         mOrganization = visit.getOrganization();
-        mTouchPoints = visit.getTouchPoints();
+        mTouchpoints = visit.getTouchpoints();
         //TODO: Better place to put this call?
         sendNotification();
     }
@@ -124,10 +126,11 @@ public class RoverVisit extends RoverObject {
     public void sendNotification() {
 
         //TODO: Filter which touchpoint to use for notification based on server result
-        RoverTouchPoint touchPoint = mTouchPoints.get(0);
-        String title = touchPoint.getTitle();
-        String message = touchPoint.getNotification();
+        RoverTouchpoint touchpoint = mTouchpoints.get(0);
+        String title = touchpoint.getTitle();
+        String message = touchpoint.getNotification();
         //TODO: Better system for notification IDs
-        mNotificationManager.sendNotification(1, title, message, CardListActivity.class);
+        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(1, title, message, CardListActivity.class);
+        RoverEventBus.getInstance().post(notificationEvent);
     }
 }

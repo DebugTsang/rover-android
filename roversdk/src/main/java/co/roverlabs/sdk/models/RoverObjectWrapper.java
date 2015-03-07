@@ -11,29 +11,29 @@ public class RoverObjectWrapper {
 
     //JSON members
     @SerializedName("visit") private RoverVisit mVisit;
-    @SerializedName("touchpoint") private RoverTouchPoint mTouchPoint;
+    @SerializedName("touchpoint") private RoverTouchpoint mTouchpoint;
     
     //Local members
     public static final String TAG = RoverObjectWrapper.class.getName();
 
     //Getters
     public RoverVisit getVisit() { return mVisit; }
-    public RoverTouchPoint getTouchPoint() { return mTouchPoint; }
+    public RoverTouchpoint getTouchpoint() { return mTouchpoint; }
     
     public RoverObject get() {
 
         if(mVisit != null) {
             return mVisit;
         }
-        else if(mTouchPoint != null) {
-            return mTouchPoint;
+        else if(mTouchpoint != null) {
+            return mTouchpoint;
         }
         return null;
     }
 
     //Setters
     public void setVisit(RoverVisit visit) { mVisit = visit; }
-    public void setTouchPoint(RoverTouchPoint touchPoint) { mTouchPoint = touchPoint; }
+    public void setTouchpoint(RoverTouchpoint touchpoint) { mTouchpoint = touchpoint; }
     
     public void set(RoverObject object) {
 
@@ -46,7 +46,7 @@ public class RoverObjectWrapper {
                 break;
 
             case "touchpoint":
-                setTouchPoint((RoverTouchPoint)object);
+                setTouchpoint((RoverTouchpoint)object);
                 break;
 
             default:

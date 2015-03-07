@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by SherryYang on 2015-02-20.
  */
-public class RoverTouchPoint extends RoverObject {
+public class RoverTouchpoint extends RoverObject {
     
     //JSON members
     @SerializedName("title") private String mTitle;
@@ -18,7 +18,7 @@ public class RoverTouchPoint extends RoverObject {
     @SerializedName("cards") private List<RoverCard> mCards;
     
     //Constructor
-    public RoverTouchPoint(Context con) {
+    public RoverTouchpoint(Context con) {
         
         super(con);
         mObjectName = "touchpoint"; 

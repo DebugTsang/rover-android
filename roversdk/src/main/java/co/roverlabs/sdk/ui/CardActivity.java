@@ -35,8 +35,8 @@ public class CardActivity extends Activity {
         mButton = (Button)findViewById(R.id.cardButton);
         
         mLatestVisit = mVisitManager.getLatestVisit();
-        mTitleView.setText(mLatestVisit.getTouchPoints().get(0).getCards().get(0).getTitle());
-        mMessageView.setText("This is card ID " + mLatestVisit.getTouchPoints().get(0).getCards().get(0).getId());
+        mTitleView.setText(mLatestVisit.getTouchpoints().get(0).getCards().get(0).getTitle());
+        mMessageView.setText("This is card ID " + mLatestVisit.getTouchpoints().get(0).getCards().get(0).getId());
         mButton.setText("OK");
         
         mButton.setOnClickListener(new View.OnClickListener() {

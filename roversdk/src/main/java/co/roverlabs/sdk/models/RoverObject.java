@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
-import co.roverlabs.sdk.managers.RoverNotificationManager;
 import co.roverlabs.sdk.networks.RoverNetworkListener;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 
@@ -21,15 +20,12 @@ public abstract class RoverObject {
     private static final String TAG = RoverObject.class.getName();
     protected String mObjectName;
     protected transient RoverNetworkManager mNetworkManager;
-    //TODO: Best place to put the notification manager?
-    protected transient RoverNotificationManager mNotificationManager;
     
     //Should have instance of save successful/failed callback
     
     //Constructor
     public RoverObject(Context con) { 
         
-        mNotificationManager = RoverNotificationManager.getInstance(con);
         mNetworkManager = RoverNetworkManager.getInstance();
     }
     

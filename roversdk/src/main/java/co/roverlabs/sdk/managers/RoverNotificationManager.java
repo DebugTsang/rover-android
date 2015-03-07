@@ -6,6 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 
+import com.squareup.otto.Subscribe;
+
+import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverNotificationEvent;
+
 /**
  * Created by SherryYang on 2015-01-26.
  */
@@ -22,6 +27,7 @@ public class RoverNotificationManager {
 
         mContext = con;
         mNotificationManager = (NotificationManager)con.getSystemService(Context.NOTIFICATION_SERVICE);
+        RoverEventBus.getInstance().register(this);
     }
 
     public static RoverNotificationManager getInstance(Context con) {
@@ -34,20 +40,19 @@ public class RoverNotificationManager {
     
     public void setNotificationIconId(int id) { mNotificationIconId = id; }
 
-    public void sendNotification(int id, String title, String message, Class intentClass) {
+    @Subscribe
+    public void sendNotification(RoverNotificationEvent event) {
 
-        Intent intent = new Intent(mContext, intentClass);
+        Intent intent = new Intent(mContext, event.getIntentClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        //intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        //intent.setAction(Intent.ACTION_MAIN);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         mNotificationBuilder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(mNotificationIconId)
-                .setContentTitle(title)
-                .setContentText(message)
+                .setContentTitle(event.getTitle())
+                .setContentText(event.getMessage())
                 .setContentIntent(pendingIntent)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(event.getMessage()))
                 .setAutoCancel(true);
-        mNotificationManager.notify(id, mNotificationBuilder.build());
+        mNotificationManager.notify(event.getId(), mNotificationBuilder.build());
     }
 }

@@ -93,7 +93,7 @@ public class RoverVisitManager {
     
     /*
     void movedToSubRegion(region) {
-        touchpoint = latestVisit.getTouchPoint(region)
+        touchpoint = latestVisit.getTouchpoint(region)
         if(touchpoint is not null) {
           if (! latestvisit.visitedTouchpoints.contain(touchpoint)) {
             latestvisit.setcurrenttouchpoint(touchpoint)
