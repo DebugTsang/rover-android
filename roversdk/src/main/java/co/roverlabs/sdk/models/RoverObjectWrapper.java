@@ -14,7 +14,7 @@ public class RoverObjectWrapper {
     @SerializedName("touchpoint") private RoverTouchpoint mTouchpoint;
     
     //Local members
-    public static final String TAG = RoverObjectWrapper.class.getName();
+    public static final String TAG = RoverObjectWrapper.class.getSimpleName();
 
     //Getters
     public RoverVisit getVisit() { return mVisit; }

@@ -13,7 +13,7 @@ import co.roverlabs.sdk.utilities.RoverUtils;
  */
 public class Rover {
 
-    private static final String TAG = Rover.class.getName();
+    public static final String TAG = Rover.class.getSimpleName();
     private static Rover sRoverInstance;
     private Context mContext;
     private RoverRegionManager mRegionManager;

@@ -19,7 +19,7 @@ import co.roverlabs.sdk.utilities.RoverUtils;
  */
 public class RoverVisitManager {
     
-    private static final String TAG = RoverVisitManager.class.getName();
+    public static final String TAG = RoverVisitManager.class.getSimpleName();
     private static RoverVisitManager sVisitManagerInstance;
     private Context mContext;
     private RoverVisit mLatestVisit;

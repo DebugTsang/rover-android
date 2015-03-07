@@ -20,7 +20,7 @@ import co.roverlabs.sdk.models.RoverRegion;
  */
 public class RoverRegionManager {
     
-    private static final String TAG = RoverRegionManager.class.getName();
+    public static final String TAG = RoverRegionManager.class.getSimpleName();
     private static RoverRegionManager sRegionManagerInstance;
     private BeaconManager mBeaconManager;
     private RoverRegion mRegion;

@@ -16,7 +16,7 @@ import co.roverlabs.sdk.events.RoverNotificationEvent;
  */
 public class RoverNotificationManager {
     
-    private static final String TAG = RoverNotificationManager.class.getName();
+    public static final String TAG = RoverNotificationManager.class.getSimpleName();
     private static RoverNotificationManager sNotificationManagerInstance;
     private Context mContext;
     private NotificationCompat.Builder mNotificationBuilder;

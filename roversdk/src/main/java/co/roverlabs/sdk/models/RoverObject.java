@@ -17,7 +17,7 @@ public abstract class RoverObject {
     @SerializedName("id") protected String mId;
     
     //Local members
-    private static final String TAG = RoverObject.class.getName();
+    public static final String TAG = RoverObject.class.getSimpleName();
     protected String mObjectName;
     protected transient RoverNetworkManager mNetworkManager;
     

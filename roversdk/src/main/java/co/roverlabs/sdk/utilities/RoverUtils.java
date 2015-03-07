@@ -10,7 +10,7 @@ import com.google.gson.Gson;
  */
 public class RoverUtils {
     
-    private static final String TAG = RoverUtils.class.getName();
+    public static final String TAG = RoverUtils.class.getSimpleName();
     private static final String SHARED_PREFS_NAME = "RoverPrefs";
     
     public static String readStringFromSharedPreferences(Context con, String key, String defaultValue) {

@@ -44,7 +44,7 @@ public class RoverVisit extends RoverObject {
      */
 
     //Local members
-    private static final String TAG = RoverVisit.class.getName();
+    public static final String TAG = RoverVisit.class.getSimpleName();
     private RoverRegion mRegion;
     private Calendar mLastBeaconDetectionTime;
     //private List<Beacon> mBeacons;

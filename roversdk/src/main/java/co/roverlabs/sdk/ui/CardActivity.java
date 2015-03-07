@@ -15,7 +15,7 @@ import co.roverlabs.sdk.models.RoverVisit;
  */
 public class CardActivity extends Activity {
     
-    private static final String TAG = CardActivity.class.getName();
+    public static final String TAG = CardActivity.class.getSimpleName();
     private RoverVisitManager mVisitManager;
     private TextView mTitleView;
     private TextView mMessageView;

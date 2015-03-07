@@ -19,7 +19,7 @@ import retrofit.converter.GsonConverter;
  */
 public class RoverNetworkManager {
     
-    public static final String TAG = RoverNetworkManager.class.getName();
+    public static final String TAG = RoverNetworkManager.class.getSimpleName();
     private static RoverNetworkManager sNetworkManagerInstance;
     private String mAuthToken;
     private RoverNetworkListener.PostListener mPostListener;
