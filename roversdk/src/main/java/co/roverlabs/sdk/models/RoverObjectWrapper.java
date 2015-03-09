@@ -23,10 +23,10 @@ public class RoverObjectWrapper {
     public RoverObject get() {
 
         if(mVisit != null) {
-            return mVisit;
+            return getVisit();
         }
         else if(mTouchpoint != null) {
-            return mTouchpoint;
+            return getTouchpoint();
         }
         return null;
     }

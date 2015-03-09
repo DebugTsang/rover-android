@@ -22,9 +22,6 @@ public class RoverNetworkManager {
     public static final String TAG = RoverNetworkManager.class.getSimpleName();
     private static RoverNetworkManager sNetworkManagerInstance;
     private String mAuthToken;
-    private RoverNetworkListener.PostListener mPostListener;
-    private RoverNetworkListener.PutListener mPutListener;
-
 
     private RoverNetworkManager() { }
 
@@ -38,16 +35,6 @@ public class RoverNetworkManager {
     
     public void setAuthToken(String token) { mAuthToken = token; }
     
-    public void setPostListener(RoverNetworkListener.PostListener postListener) {
-
-        mPostListener = postListener;
-    }
-    
-    public void setPutListener(RoverNetworkListener.PutListener putListener) {
-        
-        mPutListener = putListener;
-    }
-    
     public RoverNetworkInterface makeCall() {
         
         Gson gson = new GsonBuilder()
@@ -60,65 +47,37 @@ public class RoverNetworkManager {
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build()
                 .create(RoverNetworkInterface.class);
-        
+
         return call;
     }
     
-    public void sendRequest(String method, RoverObject object) {
-        
-        if(method.equals("POST")) {
-            sendPostRequest(object);
-        }
-        else if(method.equals("PUT")) {
-            sendPutRequest(object);
-        }
-    }
-    
-    public void sendPostRequest(RoverObject object) {
-        
+    public void sendRequest(final String method, final RoverObject object, final RoverNetworkListener networkListener) {
+
         RoverObjectWrapper wrapper = new RoverObjectWrapper();
         wrapper.set(object);
         
-        makeCall().create(mAuthToken, object.getObjectName(), wrapper, new Callback<RoverObjectWrapper>() {
-
-                    @Override
-                    public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
-
-                        Log.d(TAG, "Retrofit POST call successful");
-                        mPostListener.onSuccess(roverObjectWrapper.get());
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        
-                        Log.d(TAG, "Retrofit encountered an error during POST - " + error);
-                        mPostListener.onFailure();
-                    }
-                }
-        );
-    }
-    
-    public void sendPutRequest(RoverObject object) {
-        
-        //TODO: Test PUT request
-        RoverObjectWrapper wrapper = new RoverObjectWrapper();
-        wrapper.set(object);
-        
-        makeCall().update(mAuthToken, object.getId(), object.getObjectName(), wrapper, new Callback() {
-
+        Callback<RoverObjectWrapper> networkCallback = new Callback<RoverObjectWrapper>() {
+            
             @Override
-            public void success(Object o, Response response) {
-
-                Log.d(TAG, "Retrofit PUT call successful");
-                mPutListener.onSuccess();
+            public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
+                
+                Log.d(TAG, "Retrofit " + method + " call successful");
+                networkListener.onNetworkCallSuccess(method, roverObjectWrapper.get());
             }
 
             @Override
             public void failure(RetrofitError error) {
 
-                Log.d(TAG, "Retrofit encountered an error during PUT - " + error);
-                mPutListener.onFailure();
+                Log.d(TAG, "Retrofit encountered an error during " + method + " call - " + error);
+                networkListener.onNetworkCallFailure(method);
             }
-        });
+        };
+        
+        if(method.equals("POST")) {
+            makeCall().create(mAuthToken, object.getObjectName(), wrapper, networkCallback);
+        }
+        else if(method.equals("PUT")) {
+            makeCall().update(mAuthToken, object.getId(), object.getObjectName(), wrapper, networkCallback);
+        }
     }
 }

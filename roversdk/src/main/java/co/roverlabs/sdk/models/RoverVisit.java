@@ -8,9 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import co.roverlabs.sdk.events.RoverEventBus;
-import co.roverlabs.sdk.events.RoverNotificationEvent;
-import co.roverlabs.sdk.ui.CardListActivity;
+import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 
 /**
  * Created by SherryYang on 2015-02-20.
@@ -85,13 +83,13 @@ public class RoverVisit extends RoverObject {
     //public void setBeacons(List<Beacon> beacons) { mBeacons = beacons; }
     public void setRegion(RoverRegion region) { mRegion = region; }
     
-    public void save() {
+    public void save(RoverObjectSaveListener saveListener) {
 
         //TODO: Change these hard coded values, should be grabbed from the list of beacons (mBeacons)
         this.customer_id ="1234";
         this.major = 52643;
         this.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
-        super.save();
+        super.save(saveListener);
     }
     
     public void update(RoverObject object) {
@@ -105,8 +103,6 @@ public class RoverVisit extends RoverObject {
         mLocation = visit.getLocation();
         mOrganization = visit.getOrganization();
         mTouchpoints = visit.getTouchpoints();
-        //TODO: Better place to put this call?
-        sendNotification();
     }
 
     public boolean isInRegion(RoverRegion region) {
@@ -121,16 +117,5 @@ public class RoverVisit extends RoverObject {
         Calendar now = Calendar.getInstance();
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
         return elapsedTime < mKeepAliveTime;
-    }
-    
-    public void sendNotification() {
-
-        //TODO: Filter which touchpoint to use for notification based on server result
-        RoverTouchpoint touchpoint = mTouchpoints.get(0);
-        String title = touchpoint.getTitle();
-        String message = touchpoint.getNotification();
-        //TODO: Better system for notification IDs
-        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(1, title, message, CardListActivity.class);
-        RoverEventBus.getInstance().post(notificationEvent);
     }
 }

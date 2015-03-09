@@ -7,9 +7,11 @@ import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
 
+import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
+import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.utilities.RoverUtils;
@@ -29,7 +31,6 @@ public class RoverVisitManager {
         
         mContext = con;
         RoverEventBus.getInstance().register(this);
-        // listen for RoverDidEnterRegion -> didEnterLocation
     }
 
     public static RoverVisitManager getInstance(Context con) {
@@ -47,7 +48,7 @@ public class RoverVisitManager {
 
         Log.d(TAG, "DID ENTER REGION BROUGHT BY OTTO " + region.toString());
 
-        if (getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
+        if(getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
 
             /*
             if(latestvisit.currenttouchoint is not null || !latestvisit.currenttouchpoint.isinregion(region)) {
@@ -57,12 +58,36 @@ public class RoverVisitManager {
 
             return;
         }
+        
         Calendar now = Calendar.getInstance();
         mLatestVisit = new RoverVisit(mContext);
         mLatestVisit.setRegion(region);
         mLatestVisit.setEnteredTime(now.getTime());
         mLatestVisit.setLastBeaconDetection(now);
-        mLatestVisit.save(); // success callback -> broadcast RoverDidEnterLocation (only after successful server call and mapping)
+        
+        mLatestVisit.save(new RoverObjectSaveListener() {
+            
+            @Override
+            public void onSaveSuccess() {
+                
+                RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
+                Log.d(TAG, "Save successful");
+            }
+
+            @Override
+            public void onSaveFailure() {
+
+                Log.d(TAG, "Save failed");
+            }
+        });
+                //new CustomMadeCallback {
+            //public void success () {
+                // piece of code
+                //Send event ( RoverDidEnterLocation )
+                //call movedToSubRegion(region)
+                
+            //}
+       // }); // success callback -> broadcast RoverDidEnterLocation (only after successful server call and mapping)
         /// after that -> movedToSubRegion(region)
     }
     
@@ -98,7 +123,7 @@ public class RoverVisitManager {
           if (! latestvisit.visitedTouchpoints.contain(touchpoint)) {
             latestvisit.setcurrenttouchpoint(touchpoint)
             broadcast 'RoverDidEnterTouchpoint' - have not seen the touchpoint before
-          
+          //RoverDidEnterTouchpoint event - ONly matters notification manager and developers
             return
           }
           

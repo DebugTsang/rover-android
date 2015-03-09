@@ -18,7 +18,7 @@ public interface RoverNetworkInterface {
                 @Path("id") String objectId,
                 @Path("object") String objectPath,
                 @Body RoverObjectWrapper object,
-                Callback callback);
+                Callback<RoverObjectWrapper> callback);
 
     @POST("/{object}s")
     void create(@Header("Authorization") String authToken,

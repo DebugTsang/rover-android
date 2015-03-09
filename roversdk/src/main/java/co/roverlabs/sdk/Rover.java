@@ -2,10 +2,18 @@ package co.roverlabs.sdk;
 
 import android.content.Context;
 
+import com.squareup.otto.Subscribe;
+
+import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
+import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.managers.RoverNotificationManager;
 import co.roverlabs.sdk.managers.RoverRegionManager;
 import co.roverlabs.sdk.managers.RoverVisitManager;
+import co.roverlabs.sdk.models.RoverTouchpoint;
+import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
+import co.roverlabs.sdk.ui.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
@@ -30,6 +38,7 @@ public class Rover {
     private Rover(Context con) { 
         
         mContext = con;
+        RoverEventBus.getInstance().register(this);
         setRegionManager();
         setVisitManager();
         setNetworkManager();
@@ -133,5 +142,18 @@ public class Rover {
     public void stopMonitoring() {
 
         mRegionManager.stopMonitoring();
+    }
+    
+    @Subscribe
+    public void onEnteredLocation(RoverEnteredLocationEvent event) {
+
+        //TODO: Filter which touchpoint to use for notification based on server result
+        RoverVisit visit = event.getVisit();
+        RoverTouchpoint touchpoint = visit.getTouchpoints().get(0);
+        String title = touchpoint.getTitle();
+        String message = touchpoint.getNotification();
+        //TODO: Better system for notification IDs
+        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(1, title, message, CardListActivity.class);
+        RoverEventBus.getInstance().post(notificationEvent);
     }
 }
