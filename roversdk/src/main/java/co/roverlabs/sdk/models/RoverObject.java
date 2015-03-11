@@ -22,8 +22,6 @@ public abstract class RoverObject {
     protected String mObjectName;
     protected transient RoverNetworkManager mNetworkManager;
     
-    //Should have instance of save successful/failed callback
-    
     //Constructor
     public RoverObject(Context con) { 
         

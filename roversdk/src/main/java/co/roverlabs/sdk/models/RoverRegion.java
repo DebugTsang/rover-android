@@ -8,25 +8,21 @@ import android.os.Parcelable;
  */
 public class RoverRegion implements Parcelable {
     
-    private String mId;
     private String mUuid;
     private Integer mMajor;
     private Integer mMinor;
     
-    public RoverRegion(String id, String uuid, Integer major, Integer minor) {
+    public RoverRegion(String uuid, Integer major, Integer minor) {
         
-        mId = id;
         mUuid = uuid;
         mMajor = major;
         mMinor = minor;
     }
     
-    public String getId() { return mId; }
     public String getUuid() { return mUuid; }
     public Integer getMajor() { return mMajor; }
     public Integer getMinor() { return mMinor; }
     
-    public void setId(String id) { mId = id; }
     public void setUuid(String uuid) { mUuid = uuid; }
     public void setMajor(Integer major) { mMajor = major; }
     public void setMinor(Integer minor) { mMinor = minor; }
@@ -68,7 +64,6 @@ public class RoverRegion implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
-        dest.writeString(mId);
         dest.writeString(mUuid);
         dest.writeInt(mMajor == null ? -1 : mMajor.intValue());
         dest.writeInt(mMinor == null ? -1 : mMinor.intValue());
@@ -78,7 +73,6 @@ public class RoverRegion implements Parcelable {
     public String toString() {
         
         return "{REGION:{" +
-                "ID:" + mId + "," +
                 "UUID:" + mUuid + "," +
                 "Major:" + mMajor + "," +
                 "Minor:" + mMinor + "}}";

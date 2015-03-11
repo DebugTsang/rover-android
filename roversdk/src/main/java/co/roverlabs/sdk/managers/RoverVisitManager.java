@@ -9,10 +9,12 @@ import java.util.Calendar;
 
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
+import co.roverlabs.sdk.events.RoverEnteredTouchpointEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.models.RoverRegion;
+import co.roverlabs.sdk.models.RoverTouchpoint;
 import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
@@ -44,18 +46,12 @@ public class RoverVisitManager {
     @Subscribe
     public void didEnterRegion(RoverEnteredRegionEvent event) {
         
-        RoverRegion region = event.getRegion();
-
-        Log.d(TAG, "DID ENTER REGION BROUGHT BY OTTO " + region.toString());
+        final RoverRegion region = event.getRegion();
 
         if(getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
-
-            /*
-            if(latestvisit.currenttouchoint is not null || !latestvisit.currenttouchpoint.isinregion(region)) {
-                movedToSubRegion(region)
+            if(mLatestVisit.getCurrentTouchpoint() != null || !mLatestVisit.getCurrentTouchpoint().isInSubRegion(region)) {
+                didEnterSubRegion(region);
             }
-             */
-
             return;
         }
         
@@ -69,91 +65,45 @@ public class RoverVisitManager {
             
             @Override
             public void onSaveSuccess() {
-                
+
+                Log.d(TAG, "Object save is successful");
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
-                Log.d(TAG, "Save successful");
+                didEnterSubRegion(region);
             }
 
             @Override
             public void onSaveFailure() {
 
-                Log.d(TAG, "Save failed");
+                Log.d(TAG, "Object save has failed");
             }
         });
-                //new CustomMadeCallback {
-            //public void success () {
-                // piece of code
-                //Send event ( RoverDidEnterLocation )
-                //call movedToSubRegion(region)
-                
-            //}
-       // }); // success callback -> broadcast RoverDidEnterLocation (only after successful server call and mapping)
-        /// after that -> movedToSubRegion(region)
     }
     
-//    //Rename to didEnterRegion
-//    //Delete list of beacons argument
-//    public void didEnterRegion(RoverRegion region) {
-//
-//        //Double check if region has all values passed in
-//
-//        if (getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
-//
-//            /*
-//            if(latestvisit.currenttouchoint is not null || !latestvisit.currenttouchpoint.isinregion(region)) {
-//                movedToSubRegion(region)
-//            }
-//             */
-//
-//            return;
-//        }
-//        Calendar now = Calendar.getInstance();
-//        mLatestVisit = new RoverVisit(mContext);
-//        mLatestVisit.setRegion(region);
-//        mLatestVisit.setEnteredTime(now.getTime());
-//        mLatestVisit.setLastBeaconDetection(now);
-//        mLatestVisit.save(); // success callback -> broadcast RoverDidEnterLocation (only after successful server call and mapping)
-//                                                /// after that -> movedToSubRegion(region)
-//    }
-    
-    /*
-    void movedToSubRegion(region) {
-        touchpoint = latestVisit.getTouchpoint(region)
-        if(touchpoint is not null) {
-          if (! latestvisit.visitedTouchpoints.contain(touchpoint)) {
-            latestvisit.setcurrenttouchpoint(touchpoint)
-            broadcast 'RoverDidEnterTouchpoint' - have not seen the touchpoint before
-          //RoverDidEnterTouchpoint event - ONly matters notification manager and developers
-            return
-          }
-          
-          latestvisit.setcurrenttouchpoint(touchpoint)
-        } else {
-            // log "invalid touchpoint"
-            Does not correspond to any set up touchpoint on the server
+    public void didEnterSubRegion(RoverRegion region) {
+
+        RoverTouchpoint touchpoint = mLatestVisit.getTouchpoint(region);
+        if(touchpoint != null) {
+            if(!mLatestVisit.getVisitedTouchpoints().contains(touchpoint)) {
+                mLatestVisit.setCurrentTouchpoint(touchpoint);
+                RoverEventBus.getInstance().post(new RoverEnteredTouchpointEvent(touchpoint));
+                return;
+            }
+            mLatestVisit.setCurrentTouchpoint(touchpoint);
         }
-        
-     */
+        else {
+            Log.d(TAG, "Invalid touchpoint - does not correspond to any set up touchpoints");
+        }
+    }
 
     @Subscribe
     public void didExitRegion(RoverExitedRegionEvent event) {
 
-        Log.d(TAG, "DID EXIT REGION BROUGHT BY OTTO");
         Calendar now = Calendar.getInstance();
         mLatestVisit.setLastBeaconDetection(now);
         mLatestVisit.setExitedTime(now.getTime());
         RoverUtils.writeObjectToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
         //TODO: mLatestVisit.save() to be tested
     }
-
-//    public void didExitRegion() {
-//
-//        Calendar now = Calendar.getInstance();
-//        mLatestVisit.setLastBeaconDetection(now);
-//        mLatestVisit.setExitedTime(now.getTime());
-//        RoverUtils.writeObjectToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
-//        //TODO: mLatestVisit.save() to be tested
-//    }
     
     public RoverVisit getLatestVisit() {
         

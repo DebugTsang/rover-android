@@ -5,6 +5,7 @@ import android.content.Context;
 import com.squareup.otto.Subscribe;
 
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
+import co.roverlabs.sdk.events.RoverEnteredTouchpointEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.managers.RoverNotificationManager;
@@ -154,6 +155,18 @@ public class Rover {
         String message = touchpoint.getNotification();
         //TODO: Better system for notification IDs
         RoverNotificationEvent notificationEvent = new RoverNotificationEvent(1, title, message, CardListActivity.class);
+        RoverEventBus.getInstance().post(notificationEvent);
+    }
+
+    @Subscribe
+    public void onEnteredTouchpoint(RoverEnteredTouchpointEvent event) {
+
+        //TODO: Filter which touchpoint to use for notification based on server result
+        RoverTouchpoint touchpoint = event.getTouchpoint();
+        String title = touchpoint.getTitle();
+        String message = touchpoint.getNotification();
+        //TODO: Better system for notification IDs
+        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(2, title, message, CardListActivity.class);
         RoverEventBus.getInstance().post(notificationEvent);
     }
 }

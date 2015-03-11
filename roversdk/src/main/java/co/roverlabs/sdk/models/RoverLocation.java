@@ -15,7 +15,7 @@ public class RoverLocation extends RoverObject {
     @SerializedName("city") private String mCity;
     @SerializedName("province") private String mProvince;
     @SerializedName("postalCode") private String mPostalCode;
-    @SerializedName("majorNumber") private int mMajorNumber;
+    @SerializedName("majorNumber") private Integer mMajor;
     @SerializedName("longitude") private float mLongitude;
     @SerializedName("latitude") private float mLatitude;
     @SerializedName("radius") private int mRadius;
@@ -33,7 +33,7 @@ public class RoverLocation extends RoverObject {
     public String getCity() { return mCity; }
     public String getProvince() { return mProvince; }
     public String getPostalCode() { return mPostalCode; }
-    public int getMajorNumber() { return mMajorNumber; }
+    public Integer getMajor() { return mMajor; }
     public float getLongitude() { return mLongitude; }
     public float getLatitude() { return mLatitude; }
     public int getRadius() { return mRadius; }
@@ -44,7 +44,7 @@ public class RoverLocation extends RoverObject {
     public void setCity(String city) { mCity = city; }
     public void setProvince(String province) { mProvince = province; }
     public void setPostalCode(String postalCode) { mPostalCode = postalCode; }
-    public void setMajorNumber(int majorNumber) { mMajorNumber = majorNumber; }
+    public void setMajor(Integer majorNumber) { mMajor = majorNumber; }
     public void setLongitude(float longitude) { mLongitude = longitude; }
     public void setLatitude(float latitude) { mLatitude = latitude; }
     public void setRadius(int radius) { mRadius = radius; }

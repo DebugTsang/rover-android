@@ -41,7 +41,7 @@ public class RoverRegionManager {
     
     public void setMonitorRegion(String uuid) {
         
-        mRegion = new RoverRegion("Current Region", uuid, null, null);
+        mRegion = new RoverRegion(uuid, null, null);
         mEstimoteRegion = new Region("Monitor Region", uuid, null, null);
     }
     

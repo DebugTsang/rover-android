@@ -11,7 +11,7 @@ public class RoverEnteredRegionEvent {
     
     public RoverEnteredRegionEvent(RoverRegion region) {
         
-        mRegion = new RoverRegion(region.getId(), region.getUuid(), region.getMajor(), region.getMinor());
+        mRegion = new RoverRegion(region.getUuid(), region.getMajor(), region.getMinor());
     }
     
     public RoverRegion getRegion() { return mRegion; }

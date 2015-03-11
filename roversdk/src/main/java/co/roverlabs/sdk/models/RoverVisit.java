@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,29 +25,12 @@ public class RoverVisit extends RoverObject {
     @SerializedName("organization") private RoverOrganization mOrganization;
     @SerializedName("touchpoints") private List<RoverTouchpoint> mTouchpoints;
 
-    //New members
-    //variable - currentTouchpoint
-    //variable - Array<touchpoints> visitedTouchpoints
-
-    /*
-    setCurrentTouchpoint(touchpoint) {
-        if(!this.visitedTouchpoint.contains(touchpoints) {
-            add to visitedTouchpoint
-        }
-        this.currentTouchpoint = touchpoint;
-    }
-
-    getTouchpoint(region) {
-        returns the touchpoint associated with the region passed in
-    }
-     */
-
     //Local members
     public static final String TAG = RoverVisit.class.getSimpleName();
     private RoverRegion mRegion;
     private Calendar mLastBeaconDetectionTime;
-    //private List<Beacon> mBeacons;
-
+    private RoverTouchpoint mCurrentTouchpoint;
+    private List<RoverTouchpoint> mVisitedTouchpoints;
     //TODO: Get rid of these members
     public String customer_id;
     public String uuid;
@@ -57,6 +41,7 @@ public class RoverVisit extends RoverObject {
         
         super(con);
         mObjectName = "visit"; 
+        mVisitedTouchpoints = new ArrayList<>();
     }
     
     //Getters
@@ -68,8 +53,19 @@ public class RoverVisit extends RoverObject {
     public RoverOrganization getOrganization() { return mOrganization; }
     public List<RoverTouchpoint> getTouchpoints() { return mTouchpoints; }
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
-    //public List<Beacon> getBeacons() { return mBeacons; }
     public RoverRegion getRegion() { return mRegion; }
+    public RoverTouchpoint getCurrentTouchpoint() { return mCurrentTouchpoint; }
+    public List<RoverTouchpoint> getVisitedTouchpoints() { return mVisitedTouchpoints; }
+    
+    public RoverTouchpoint getTouchpoint(RoverRegion region) {
+        
+        for(RoverTouchpoint touchpoint : mTouchpoints) {
+            if((touchpoint.getMinor()).equals(region.getMinor())) {
+                return touchpoint;
+            }
+        }
+        return null;
+    }
     
     //Setters
     public void setCustomer(RoverCustomer customer) { mCustomer = customer; }
@@ -80,8 +76,15 @@ public class RoverVisit extends RoverObject {
     public void setOrganization(RoverOrganization organization) { mOrganization = organization; }
     public void setTouchpoints(List<RoverTouchpoint> touchpoints) { mTouchpoints = touchpoints; }
     public void setLastBeaconDetection(Calendar time) { mLastBeaconDetectionTime = time; }
-    //public void setBeacons(List<Beacon> beacons) { mBeacons = beacons; }
     public void setRegion(RoverRegion region) { mRegion = region; }
+    
+    public void setCurrentTouchpoint(RoverTouchpoint touchpoint) {
+        
+        if(!mVisitedTouchpoints.contains(touchpoint)) {
+            mVisitedTouchpoints.add(touchpoint);
+        }
+        mCurrentTouchpoint = touchpoint;
+    }
     
     public void save(RoverObjectSaveListener saveListener) {
 
