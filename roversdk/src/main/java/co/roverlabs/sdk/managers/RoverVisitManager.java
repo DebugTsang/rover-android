@@ -49,14 +49,14 @@ public class RoverVisitManager {
         final RoverRegion region = event.getRegion();
 
         if(getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
-            if(mLatestVisit.getCurrentTouchpoint() != null || !mLatestVisit.getCurrentTouchpoint().isInSubRegion(region)) {
+            if(mLatestVisit.getCurrentTouchpoint() == null || !mLatestVisit.getCurrentTouchpoint().isInSubRegion(region)) {
                 didEnterSubRegion(region);
             }
             return;
         }
         
         Calendar now = Calendar.getInstance();
-        mLatestVisit = new RoverVisit(mContext);
+        mLatestVisit = new RoverVisit();
         mLatestVisit.setRegion(region);
         mLatestVisit.setEnteredTime(now.getTime());
         mLatestVisit.setLastBeaconDetection(now);
@@ -68,6 +68,9 @@ public class RoverVisitManager {
 
                 Log.d(TAG, "Object save is successful");
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
+                
+                // tell the regionmanager, start monitoring for these uuid, major, and minor
+                
                 didEnterSubRegion(region);
             }
 

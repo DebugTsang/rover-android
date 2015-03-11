@@ -23,7 +23,6 @@ public class RoverRegionManager {
     public static final String TAG = RoverRegionManager.class.getSimpleName();
     private static RoverRegionManager sRegionManagerInstance;
     private BeaconManager mBeaconManager;
-    private RoverRegion mRegion;
     private Region mEstimoteRegion;
     
     private RoverRegionManager(Context con) {
@@ -41,7 +40,6 @@ public class RoverRegionManager {
     
     public void setMonitorRegion(String uuid) {
         
-        mRegion = new RoverRegion(uuid, null, null);
         mEstimoteRegion = new Region("Monitor Region", uuid, null, null);
     }
     
@@ -52,11 +50,10 @@ public class RoverRegionManager {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
-                mRegion.setUuid(region.getProximityUUID());
                 //TODO: Grab the actual nearest beacon instead of just the first in the list of beacons
-                mRegion.setMajor(beacons.get(0).getMajor());
-                mRegion.setMinor(beacons.get(0).getMinor());
-                RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(mRegion));
+                Beacon beacon = beacons.get(0);
+                RoverRegion roverRegion = new RoverRegion(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
+                RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(roverRegion));
             }
 
             @Override

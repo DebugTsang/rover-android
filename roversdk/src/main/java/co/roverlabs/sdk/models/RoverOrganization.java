@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -11,14 +9,10 @@ public class RoverOrganization extends RoverObject {
     
     //JSON members
     @SerializedName("meta") private Object mMetaData;
-    @SerializedName("titla") private String mTitle;
+    @SerializedName("title") private String mTitle;
     
     //Constructor
-    public RoverOrganization(Context con) {
-        
-        super(con);
-        mObjectName = "organization"; 
-    }
+    public RoverOrganization() { mObjectName = "organization"; }
     
     //Getters
     public Object getMetaData() { return mMetaData; }

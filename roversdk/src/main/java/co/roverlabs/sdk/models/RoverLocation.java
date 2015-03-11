@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -21,11 +19,7 @@ public class RoverLocation extends RoverObject {
     @SerializedName("radius") private int mRadius;
     
     //Constructor
-    public RoverLocation(Context con) {
-        
-        super(con);
-        mObjectName = "location"; 
-    }
+    public RoverLocation() { mObjectName = "location"; }
 
     //Getters
     public String getTitle() { return mTitle; }

@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -13,11 +11,7 @@ public class RoverCustomer extends RoverObject {
     @SerializedName("customerId") private String mId;
     
     //Constructor
-    public RoverCustomer(Context con) { 
-        
-        super(con);
-        mObjectName = "customer"; 
-    }
+    public RoverCustomer() { mObjectName = "customer"; }
     
     //Getters
     public String getId() { return mId; }

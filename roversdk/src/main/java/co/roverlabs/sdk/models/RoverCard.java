@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -17,11 +15,7 @@ public class RoverCard extends RoverObject {
     private int mImageResourceId;
     
     //Constructor
-    public RoverCard(Context con) { 
-        
-        super(con);
-        mObjectName = "card"; 
-    }
+    public RoverCard() { mObjectName = "card"; }
 
     //Getters
     public String getTitle() { return mTitle; }

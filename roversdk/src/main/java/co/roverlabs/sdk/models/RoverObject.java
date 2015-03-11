@@ -1,6 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
@@ -23,10 +22,7 @@ public abstract class RoverObject {
     protected transient RoverNetworkManager mNetworkManager;
     
     //Constructor
-    public RoverObject(Context con) { 
-        
-        mNetworkManager = RoverNetworkManager.getInstance();
-    }
+    public RoverObject() { mNetworkManager = RoverNetworkManager.getInstance(); }
     
     //Getters
     public String getId() { return mId; }

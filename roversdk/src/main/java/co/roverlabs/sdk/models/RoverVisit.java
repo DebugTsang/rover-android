@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -24,6 +22,9 @@ public class RoverVisit extends RoverObject {
     @SerializedName("location") private RoverLocation mLocation;
     @SerializedName("organization") private RoverOrganization mOrganization;
     @SerializedName("touchpoints") private List<RoverTouchpoint> mTouchpoints;
+    @SerializedName("customer_id") private String mCustomerId;
+    @SerializedName("uuid") private String mUuid;
+    @SerializedName("major") private Integer mMajor;
 
     //Local members
     public static final String TAG = RoverVisit.class.getSimpleName();
@@ -31,16 +32,11 @@ public class RoverVisit extends RoverObject {
     private Calendar mLastBeaconDetectionTime;
     private RoverTouchpoint mCurrentTouchpoint;
     private List<RoverTouchpoint> mVisitedTouchpoints;
-    //TODO: Get rid of these members
-    public String customer_id;
-    public String uuid;
-    public int major;
     
     //Constructor
-    public RoverVisit(Context con) { 
+    public RoverVisit() {
         
-        super(con);
-        mObjectName = "visit"; 
+        mObjectName = "visit";
         mVisitedTouchpoints = new ArrayList<>();
     }
     
@@ -56,6 +52,9 @@ public class RoverVisit extends RoverObject {
     public RoverRegion getRegion() { return mRegion; }
     public RoverTouchpoint getCurrentTouchpoint() { return mCurrentTouchpoint; }
     public List<RoverTouchpoint> getVisitedTouchpoints() { return mVisitedTouchpoints; }
+    public String getCustomerId() { return mCustomerId; }
+    public String getUuid() { return mUuid; }
+    public Integer getMajor() { return mMajor; }
     
     public RoverTouchpoint getTouchpoint(RoverRegion region) {
         
@@ -77,6 +76,9 @@ public class RoverVisit extends RoverObject {
     public void setTouchpoints(List<RoverTouchpoint> touchpoints) { mTouchpoints = touchpoints; }
     public void setLastBeaconDetection(Calendar time) { mLastBeaconDetectionTime = time; }
     public void setRegion(RoverRegion region) { mRegion = region; }
+    public void setCustomerId(String customerId) { mCustomerId = customerId; }
+    public void setUuid(String uuid) { mUuid = uuid; }
+    public void setMajor(Integer major) { mMajor = major; }
     
     public void setCurrentTouchpoint(RoverTouchpoint touchpoint) {
         
@@ -88,10 +90,10 @@ public class RoverVisit extends RoverObject {
     
     public void save(RoverObjectSaveListener saveListener) {
 
-        //TODO: Change these hard coded values, should be grabbed from the list of beacons (mBeacons)
-        this.customer_id ="1234";
-        this.major = 52643;
-        this.uuid = "F352DB29-6A05-4EA2-A356-9BFAC2BB3316";
+        //TODO: Remove hard coded customer ID
+        mCustomerId ="1234";
+        mUuid = mRegion.getUuid();
+        mMajor = mRegion.getMajor();
         super.save(saveListener);
     }
     
@@ -115,8 +117,7 @@ public class RoverVisit extends RoverObject {
 
     public boolean isAlive() {
 
-        //TODO: Get rid of temporary keep alive time of 5 minutes
-        mKeepAliveTime = 300000;
+        mKeepAliveTime = mKeepAliveTime * 60000;
         Calendar now = Calendar.getInstance();
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
         return elapsedTime < mKeepAliveTime;

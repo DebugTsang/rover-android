@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.content.Context;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -18,11 +16,7 @@ public class RoverTouchpoint extends RoverObject {
     @SerializedName("cards") private List<RoverCard> mCards;
     
     //Constructor
-    public RoverTouchpoint(Context con) {
-        
-        super(con);
-        mObjectName = "touchpoint"; 
-    }
+    public RoverTouchpoint() { mObjectName = "touchpoint"; }
     
     //Getters
     public String getTitle() { return mTitle; }
