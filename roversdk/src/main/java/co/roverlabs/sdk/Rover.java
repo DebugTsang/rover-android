@@ -159,6 +159,7 @@ public class Rover {
     public void onEnteredLocation(RoverEnteredLocationEvent event) {
 
         //TODO: Update open time
+        mNotificationManager.clearNotificationEvents();
         mRegionManager.startRanging();
     }
 
@@ -166,12 +167,14 @@ public class Rover {
     public void onEnteredTouchpoint(RoverEnteredTouchpointEvent event) {
 
         Log.d(TAG, "sending notification");
-        //TODO: Filter which touchpoint to use for notification based on server result
         RoverTouchpoint touchpoint = event.getTouchpoint();
+        String id = touchpoint.getId();
         String title = touchpoint.getTitle();
         String message = touchpoint.getNotification();
-        //TODO: Better system for notification IDs
-        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(1, title, message, CardListActivity.class);
+        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, CardListActivity.class);
+        if(!mNotificationManager.getNotificationEvents().contains(notificationEvent)) {
+            mNotificationManager.addNotificationEvent(notificationEvent);
+        }
         RoverEventBus.getInstance().post(notificationEvent);
     }
 }

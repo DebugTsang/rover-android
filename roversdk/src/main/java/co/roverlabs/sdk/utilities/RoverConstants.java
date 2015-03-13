@@ -11,4 +11,5 @@ public class RoverConstants {
     public static final int TEST_MINOR_ESTIMOTE = 58856;
 
     public final static String GROUP_KEY_TOUCHPOINTS = "group_key_touchpoints";
+    public final static int TOUCHPOINT_NOTIFICATION_ID = 1;
 }

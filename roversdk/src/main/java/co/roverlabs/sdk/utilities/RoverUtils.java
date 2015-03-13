@@ -49,13 +49,13 @@ public class RoverUtils {
         return gson.fromJson(json, customObjectClass);
     }
     
-    public static void writeObjectToSharedPreferences(Context con, String key, Object customObject) {
+    public static void writeObjectToSharedPreferences(Context con, Object customObject) {
 
         SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(customObject);
-        editor.putString(key, json);
+        editor.putString(customObject.getClass().getSimpleName(), json);
         editor.apply();
     }
 }

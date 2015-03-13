@@ -122,9 +122,9 @@ public class RoverVisit extends RoverObject {
 
     public boolean isAlive() {
 
-        long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(mKeepAliveTime);
+        //long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(mKeepAliveTime);
         //TODO: Remove for testing
-        //long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(2);
+        long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(2);
         Log.d(TAG, "keep alive time is " + String.valueOf(keepAliveTimeInMillis));
         Calendar now = Calendar.getInstance();
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();

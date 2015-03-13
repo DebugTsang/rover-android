@@ -86,7 +86,7 @@ public class RoverVisitManager {
                 Log.d(TAG, "Object save is successful");
                 didEnterSubRegion(subRegion);
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
-                RoverUtils.writeObjectToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
+                RoverUtils.writeObjectToSharedPreferences(mContext, mLatestVisit);
             }
 
             @Override
@@ -123,7 +123,7 @@ public class RoverVisitManager {
         Calendar now = Calendar.getInstance();
         mLatestVisit.setLastBeaconDetection(now);
         mLatestVisit.setExitedTime(now.getTime());
-        RoverUtils.writeObjectToSharedPreferences(mContext, mLatestVisit.getObjectName(), mLatestVisit);
+        RoverUtils.writeObjectToSharedPreferences(mContext, mLatestVisit);
         Log.d(TAG, "The saved region is " + mLatestVisit.getRegion().toString());
         //TODO: mLatestVisit.save() to be tested
     }

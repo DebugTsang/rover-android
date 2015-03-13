@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import java.util.List;
 
 import co.roverlabs.sdk.R;
+import co.roverlabs.sdk.managers.RoverNotificationManager;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.models.RoverVisit;
@@ -18,6 +19,7 @@ import co.roverlabs.sdk.models.RoverVisit;
 public class CardListActivity extends Activity {
 
     private RoverVisitManager mVisitManager;
+    private RoverNotificationManager mNotificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,7 @@ public class CardListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_list);
         mVisitManager = RoverVisitManager.getInstance(this.getApplicationContext());
+        mNotificationManager = RoverNotificationManager.getInstance(this.getApplicationContext());
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.cardList);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -48,5 +51,12 @@ public class CardListActivity extends Activity {
             }
         }
         return cards;
+    }
+
+    @Override
+    protected void onResume() {
+
+        mNotificationManager.clearNotificationEvents();
+        super.onResume();
     }
 }
