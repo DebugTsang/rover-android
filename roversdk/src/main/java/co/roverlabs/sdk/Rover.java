@@ -1,6 +1,7 @@
 package co.roverlabs.sdk;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.squareup.otto.Subscribe;
 
@@ -32,19 +33,11 @@ public class Rover {
     private String mAppId;
     private int mNotificationIconId;
     //TODO: Get rid of temp fix
-    private static boolean sSetUp = false;
+    private boolean mSetUp = false;
+    private boolean mMonitoringStarted = false;
 
     //Constructor
-    private Rover(Context con) { 
-        
-        mContext = con;
-        RoverEventBus.getInstance().register(this);
-        setRegionManager();
-        setVisitManager();
-        setNetworkManager();
-        setNotificationManager();
-        sSetUp = true;
-    }
+    private Rover(Context con) { mContext = con; }
 
     public static Rover getInstance(Context con) {
 
@@ -52,6 +45,22 @@ public class Rover {
             sRoverInstance = new Rover(con);
         }
         return sRoverInstance;
+    }
+    
+    public void completeSetUp() {
+        
+        if(!mSetUp) {
+            Log.d(TAG, "Setting Rover up for the first time");
+            RoverEventBus.getInstance().register(this);
+            setRegionManager();
+            setVisitManager();
+            setNetworkManager();
+            setNotificationManager();
+            mSetUp = true;
+        }
+        else {
+            Log.d(TAG, "Rover has already been set up");
+        }
     }
     
     private void setRegionManager() {
@@ -75,11 +84,6 @@ public class Rover {
         
         mNotificationManager = RoverNotificationManager.getInstance(mContext);
         mNotificationManager.setNotificationIconId(getNotificationIconId());
-    }
-    
-    public static boolean isSetUp() {
-        
-        return sSetUp;
     }
 
     //Getters
@@ -136,7 +140,14 @@ public class Rover {
 
     public void startMonitoring() {
 
-        mRegionManager.startMonitoring();
+        if(!mMonitoringStarted) {
+            Log.d(TAG, "Rover is causing monitoring to start");
+            mRegionManager.startMonitoring();
+            mMonitoringStarted = true;
+        }
+        else {
+            Log.d(TAG, "Monitoring has already started - do nothing");
+        }
     }
 
     public void stopMonitoring() {
@@ -148,11 +159,13 @@ public class Rover {
     public void onEnteredLocation(RoverEnteredLocationEvent event) {
 
         //TODO: Update open time
+        mRegionManager.startRanging();
     }
 
     @Subscribe
     public void onEnteredTouchpoint(RoverEnteredTouchpointEvent event) {
 
+        Log.d(TAG, "sending notification");
         //TODO: Filter which touchpoint to use for notification based on server result
         RoverTouchpoint touchpoint = event.getTouchpoint();
         String title = touchpoint.getTitle();

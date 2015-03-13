@@ -14,8 +14,13 @@ public class RoverNotificationEvent {
         
         mId = id;
         mTitle = title;
-        mMessage = message;
         mIntentClass = intentClass;
+        if(message == null) {
+            mMessage = "";
+        }
+        else {
+            mMessage = message;
+        }
     }
     
     public int getId() { return mId; }

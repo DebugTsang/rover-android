@@ -46,18 +46,35 @@ public class RoverVisitManager {
     @Subscribe
     public void didEnterRegion(RoverEnteredRegionEvent event) {
         
-        final RoverRegion region = event.getRegion();
+        final RoverRegion subRegion = event.getRegion();
+        final RoverRegion mainRegion = new RoverRegion(subRegion.getUuid(), subRegion.getMajor(), null);
+        
+        Log.d(TAG, "subRegion is " + subRegion.toString());
+        Log.d(TAG, "mainRegion is " + mainRegion.toString());
 
-        if(getLatestVisit() != null && mLatestVisit.isInRegion(region) && mLatestVisit.isAlive()) {
-            if(mLatestVisit.getCurrentTouchpoint() == null || !mLatestVisit.getCurrentTouchpoint().isInSubRegion(region)) {
-                didEnterSubRegion(region);
+        Log.d(TAG, "the region grabbed from RoverEnteredRegionEvent is " + event.getRegion().toString());
+        if(getLatestVisit() != null) {
+            Log.d(TAG, "the latest visit region is " + getLatestVisit().getRegion().toString());
+            Log.d(TAG, "getLatestVisit() != null is " + String.valueOf(getLatestVisit() != null));
+            Log.d(TAG, "mLatestVisit.isInRegion(mainRegion) is " + String.valueOf(mLatestVisit.isInRegion(mainRegion)));
+            Log.d(TAG, "mLatestVisit.isAlive() is " + String.valueOf(mLatestVisit.isAlive()));
+        }
+        
+        if(getLatestVisit() != null && mLatestVisit.isInRegion(mainRegion) && mLatestVisit.isAlive()) {
+            Log.d(TAG, "in the same mainRegion");
+            if(mLatestVisit.getCurrentTouchpoint() == null || !mLatestVisit.getCurrentTouchpoint().isInSubRegion(subRegion)) {
+                Log.d(TAG, "not in the same subRegion");
+                didEnterSubRegion(subRegion);
+            }
+            else {
+                Log.d(TAG, "in the same subRegion");
             }
             return;
         }
         
         Calendar now = Calendar.getInstance();
         mLatestVisit = new RoverVisit();
-        mLatestVisit.setRegion(region);
+        mLatestVisit.setRegion(mainRegion);
         mLatestVisit.setEnteredTime(now.getTime());
         mLatestVisit.setLastBeaconDetection(now);
         
@@ -67,11 +84,9 @@ public class RoverVisitManager {
             public void onSaveSuccess() {
 
                 Log.d(TAG, "Object save is successful");
+                didEnterSubRegion(subRegion);
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
-                
-                // tell the regionmanager, start monitoring for these uuid, major, and minor
-                
-                didEnterSubRegion(region);
+                RoverUtils.writeObjectToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
             }
 
             @Override
@@ -82,14 +97,18 @@ public class RoverVisitManager {
         });
     }
     
-    public void didEnterSubRegion(RoverRegion region) {
+    public void didEnterSubRegion(RoverRegion subRegion) {
 
-        RoverTouchpoint touchpoint = mLatestVisit.getTouchpoint(region);
+        RoverTouchpoint touchpoint = mLatestVisit.getTouchpoint(subRegion);
         if(touchpoint != null) {
             if(!mLatestVisit.getVisitedTouchpoints().contains(touchpoint)) {
+                Log.d(TAG, "has not seen this touchpoint yet");
                 mLatestVisit.setCurrentTouchpoint(touchpoint);
                 RoverEventBus.getInstance().post(new RoverEnteredTouchpointEvent(touchpoint));
                 return;
+            }
+            else {
+                Log.d(TAG, "seen this touchpoint already");
             }
             mLatestVisit.setCurrentTouchpoint(touchpoint);
         }
@@ -104,7 +123,8 @@ public class RoverVisitManager {
         Calendar now = Calendar.getInstance();
         mLatestVisit.setLastBeaconDetection(now);
         mLatestVisit.setExitedTime(now.getTime());
-        RoverUtils.writeObjectToSharedPreferences(mContext, "RoverVisit", mLatestVisit);
+        RoverUtils.writeObjectToSharedPreferences(mContext, mLatestVisit.getObjectName(), mLatestVisit);
+        Log.d(TAG, "The saved region is " + mLatestVisit.getRegion().toString());
         //TODO: mLatestVisit.save() to be tested
     }
     
