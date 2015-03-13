@@ -4,19 +4,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v4.app.NotificationCompat;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverNotificationEvent;
-import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
  * Created by SherryYang on 2015-01-26.
@@ -29,13 +22,12 @@ public class RoverNotificationManager {
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
     private int mNotificationIconId;
-    private List<RoverNotificationEvent> mNotificationEvents;
+    private int mNotificationId;
     
     private RoverNotificationManager(Context con) {
 
         mContext = con;
         mNotificationManager = (NotificationManager)con.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationEvents = new ArrayList<>();
         RoverEventBus.getInstance().register(this);
     }
 
@@ -46,11 +38,12 @@ public class RoverNotificationManager {
         }
         return sNotificationManagerInstance;
     }
+    
+    public void setNotificationIconId(int id) { mNotificationIconId = id; }
 
     @Subscribe
     public void sendNotification(RoverNotificationEvent event) {
 
-        mNotificationEvents.add(event);
         Intent intent = new Intent(mContext, event.getIntentClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -61,24 +54,8 @@ public class RoverNotificationManager {
                 .setContentText(event.getMessage())
                 .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(event.getMessage()))
-                .setGroup(RoverConstants.GROUP_KEY_TOUCHPOINTS)
                 .setAutoCancel(true);
         
-        if(mNotificationEvents.size() > 1) {
-            String summaryText = String.valueOf(mNotificationEvents.size()) + " new messages";
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle()
-                    .setBigContentTitle("Rover Demo")
-                    .setSummaryText(summaryText);
-            for(RoverNotificationEvent notificationEvent : mNotificationEvents) {
-                String title = notificationEvent.getTitle();
-                String message = notificationEvent.getMessage();
-                SpannableString notificationSpannable = new SpannableString(title + " " + message);
-                notificationSpannable.setSpan(new StyleSpan(Typeface.BOLD), 0, title.length(), 0);
-                inboxStyle.addLine(notificationSpannable);
-            }
-            mNotificationBuilder.setStyle(inboxStyle);
-        }
-        
-        mNotificationManager.notify(event.getId(), mNotificationBuilder.build());
+        mNotificationManager.notify(mNotificationId++, mNotificationBuilder.build());
     }
 }

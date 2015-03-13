@@ -171,7 +171,7 @@ public class Rover {
         String title = touchpoint.getTitle();
         String message = touchpoint.getNotification();
         //TODO: Better system for notification IDs
-        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(1, title, message, CardListActivity.class);
+        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(title, message, CardListActivity.class);
         RoverEventBus.getInstance().post(notificationEvent);
     }
 }
