@@ -115,6 +115,9 @@ public class Rover {
         
         if(mNotificationIconId == 0) {
             mNotificationIconId = RoverUtils.readIntFromSharedPreferences(mContext, "NotificationIconId", 0);
+            if(mNotificationIconId == 0) {
+                mNotificationIconId = R.drawable.rover_icon;
+            }
         }
         return mNotificationIconId;
     }
