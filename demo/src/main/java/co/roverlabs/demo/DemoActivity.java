@@ -11,17 +11,24 @@ import co.roverlabs.sdk.Rover;
 public class DemoActivity extends ActionBarActivity {
     
     public static final String TAG = DemoActivity.class.getName();
+    private Rover mRover;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-        if(!Rover.isSetUp() /* TODO: Change temp fix */) {
-            Rover.getInstance(this.getApplicationContext()).setUuid("647086E7-89A6-439C-9E3B-4A2268F13FC6");
-            Rover.getInstance(this.getApplicationContext()).setAppId("d1309e050df0a1fa2abc0eb3023f69ad7543fb8dce64d16d6f6f45719da7c923");
-            Rover.getInstance(this.getApplicationContext()).setNotificationIconId(R.drawable.icon);
-            Rover.getInstance(this.getApplicationContext()).startMonitoring();
-        }
+        
+        mRover = Rover.getInstance(this.getApplicationContext());
+
+        //Testing
+        //mRover.setUuid("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
+        //In office
+        mRover.setUuid("647086E7-89A6-439C-9E3B-4A2268F13FC6");
+        mRover.setAppId("d1309e050df0a1fa2abc0eb3023f69ad7543fb8dce64d16d6f6f45719da7c923");
+        mRover.setNotificationIconId(R.drawable.icon);
+        mRover.completeSetUp();
+        mRover.startMonitoring();
     }
     
     @Override

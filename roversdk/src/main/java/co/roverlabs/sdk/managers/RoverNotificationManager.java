@@ -22,6 +22,7 @@ public class RoverNotificationManager {
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
     private int mNotificationIconId;
+    private int mNotificationId;
     
     private RoverNotificationManager(Context con) {
 
@@ -46,6 +47,7 @@ public class RoverNotificationManager {
         Intent intent = new Intent(mContext, event.getIntentClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        
         mNotificationBuilder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(mNotificationIconId)
                 .setContentTitle(event.getTitle())
@@ -53,6 +55,7 @@ public class RoverNotificationManager {
                 .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(event.getMessage()))
                 .setAutoCancel(true);
-        mNotificationManager.notify(event.getId(), mNotificationBuilder.build());
+        
+        mNotificationManager.notify(mNotificationId++, mNotificationBuilder.build());
     }
 }

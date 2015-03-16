@@ -1,11 +1,14 @@
 package co.roverlabs.sdk.models;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 
@@ -58,9 +61,11 @@ public class RoverVisit extends RoverObject {
     
     public RoverTouchpoint getTouchpoint(RoverRegion region) {
         
-        for(RoverTouchpoint touchpoint : mTouchpoints) {
-            if((touchpoint.getMinor()).equals(region.getMinor())) {
-                return touchpoint;
+        if(mTouchpoints != null) {
+            for (RoverTouchpoint touchpoint : mTouchpoints) {
+                if ((touchpoint.getMinor()).equals(region.getMinor())) {
+                    return touchpoint;
+                }
             }
         }
         return null;
@@ -117,9 +122,13 @@ public class RoverVisit extends RoverObject {
 
     public boolean isAlive() {
 
-        mKeepAliveTime = mKeepAliveTime * 60000;
+        long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(mKeepAliveTime);
+        //TODO: Remove for testing
+        //long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(2);
+        Log.d(TAG, "keep alive time is " + String.valueOf(keepAliveTimeInMillis));
         Calendar now = Calendar.getInstance();
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
-        return elapsedTime < mKeepAliveTime;
+        Log.d(TAG, "elapsed time is " + String.valueOf(TimeUnit.MILLISECONDS.toMinutes(elapsedTime)));
+        return elapsedTime < keepAliveTimeInMillis;
     }
 }
