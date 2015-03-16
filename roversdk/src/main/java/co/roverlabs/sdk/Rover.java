@@ -168,10 +168,11 @@ public class Rover {
         Log.d(TAG, "sending notification");
         //TODO: Filter which touchpoint to use for notification based on server result
         RoverTouchpoint touchpoint = event.getTouchpoint();
+        int id = touchpoint.getMinor();
         String title = touchpoint.getTitle();
         String message = touchpoint.getNotification();
         //TODO: Better system for notification IDs
-        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(title, message, CardListActivity.class);
+        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, CardListActivity.class);
         RoverEventBus.getInstance().post(notificationEvent);
     }
 }

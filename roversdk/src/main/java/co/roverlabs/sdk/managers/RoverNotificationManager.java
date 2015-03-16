@@ -22,7 +22,6 @@ public class RoverNotificationManager {
     private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
     private int mNotificationIconId;
-    private int mNotificationId;
     
     private RoverNotificationManager(Context con) {
 
@@ -56,6 +55,6 @@ public class RoverNotificationManager {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(event.getMessage()))
                 .setAutoCancel(true);
         
-        mNotificationManager.notify(mNotificationId++, mNotificationBuilder.build());
+        mNotificationManager.notify(event.getId(), mNotificationBuilder.build());
     }
 }
