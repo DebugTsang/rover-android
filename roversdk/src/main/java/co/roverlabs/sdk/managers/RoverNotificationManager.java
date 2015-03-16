@@ -44,7 +44,8 @@ public class RoverNotificationManager {
     public void sendNotification(RoverNotificationEvent event) {
 
         Intent intent = new Intent(mContext, event.getIntentClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         
         mNotificationBuilder = new NotificationCompat.Builder(mContext)

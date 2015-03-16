@@ -14,7 +14,6 @@ import co.roverlabs.sdk.managers.RoverRegionManager;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverTouchpoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
-import co.roverlabs.sdk.ui.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
@@ -24,7 +23,8 @@ public class Rover {
 
     public static final String TAG = Rover.class.getSimpleName();
     private static Rover sRoverInstance;
-    private Context mContext;
+    private Context mApplicationContext;
+    private Context mActivityContext;
     private RoverRegionManager mRegionManager;
     private RoverVisitManager mVisitManager;
     private RoverNetworkManager mNetworkManager;
@@ -37,7 +37,11 @@ public class Rover {
     private boolean mMonitoringStarted = false;
 
     //Constructor
-    private Rover(Context con) { mContext = con; }
+    private Rover(Context con) { 
+        
+        mActivityContext = con;
+        mApplicationContext = con.getApplicationContext();
+    }
 
     public static Rover getInstance(Context con) {
 
@@ -65,13 +69,13 @@ public class Rover {
     
     private void setRegionManager() {
         
-        mRegionManager = RoverRegionManager.getInstance(mContext);
+        mRegionManager = RoverRegionManager.getInstance(mApplicationContext);
         mRegionManager.setMonitorRegion(getUuid());
     }
     
     private void setVisitManager() {
         
-        mVisitManager = RoverVisitManager.getInstance(mContext);
+        mVisitManager = RoverVisitManager.getInstance(mApplicationContext);
     }
     
     private void setNetworkManager() {
@@ -82,7 +86,7 @@ public class Rover {
     
     private void setNotificationManager() {
         
-        mNotificationManager = RoverNotificationManager.getInstance(mContext);
+        mNotificationManager = RoverNotificationManager.getInstance(mApplicationContext);
         mNotificationManager.setNotificationIconId(getNotificationIconId());
     }
 
@@ -90,7 +94,7 @@ public class Rover {
     public String getAppId() { 
         
         if(mAppId == null) {
-            mAppId = RoverUtils.readStringFromSharedPreferences(mContext, "AppId", null);
+            mAppId = RoverUtils.readStringFromSharedPreferences(mApplicationContext, "AppId", null);
         }
         return mAppId; 
     }
@@ -98,7 +102,7 @@ public class Rover {
     public String getAuthToken() {
 
         if(mAppId == null) {
-            mAppId = RoverUtils.readStringFromSharedPreferences(mContext, "AppId", null);
+            mAppId = RoverUtils.readStringFromSharedPreferences(mApplicationContext, "AppId", null);
         }
         return "Bearer " + mAppId; 
     }
@@ -106,7 +110,7 @@ public class Rover {
     public String getUuid() {
 
         if(mUuid == null) {
-            mUuid = RoverUtils.readStringFromSharedPreferences(mContext, "UUID", null);
+            mUuid = RoverUtils.readStringFromSharedPreferences(mApplicationContext, "UUID", null);
         }
         return mUuid;
     }
@@ -114,7 +118,10 @@ public class Rover {
     public int getNotificationIconId() { 
         
         if(mNotificationIconId == 0) {
-            mNotificationIconId = RoverUtils.readIntFromSharedPreferences(mContext, "NotificationIconId", 0);
+            mNotificationIconId = RoverUtils.readIntFromSharedPreferences(mApplicationContext, "NotificationIconId", 0);
+            if(mNotificationIconId == 0) {
+                mNotificationIconId = R.drawable.rover_icon;
+            }
         }
         return mNotificationIconId;
     }
@@ -123,19 +130,19 @@ public class Rover {
     public void setAppId(String appId) { 
         
         mAppId = appId;
-        RoverUtils.writeStringToSharedPreferences(mContext, "AppId", appId);
+        RoverUtils.writeStringToSharedPreferences(mApplicationContext, "AppId", appId);
     }
     
     public void setUuid(String uuid) { 
         
         mUuid = uuid;
-        RoverUtils.writeStringToSharedPreferences(mContext, "UUID", uuid);
+        RoverUtils.writeStringToSharedPreferences(mApplicationContext, "UUID", uuid);
     }
     
     public void setNotificationIconId(int resourceId) { 
         
         mNotificationIconId = resourceId;
-        RoverUtils.writeIntToSharedPreferences(mContext, "NotificationIconId", resourceId);
+        RoverUtils.writeIntToSharedPreferences(mApplicationContext, "NotificationIconId", resourceId);
     }
 
     public void startMonitoring() {
@@ -172,7 +179,7 @@ public class Rover {
         String title = touchpoint.getTitle();
         String message = touchpoint.getNotification();
         //TODO: Better system for notification IDs
-        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, CardListActivity.class);
+        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, mActivityContext.getClass());
         RoverEventBus.getInstance().post(notificationEvent);
     }
 }
