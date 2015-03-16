@@ -15,7 +15,6 @@ import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverTouchpoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 import co.roverlabs.sdk.ui.CardListActivity;
-import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
@@ -168,9 +167,10 @@ public class Rover {
 
         Log.d(TAG, "sending notification");
         RoverTouchpoint touchpoint = event.getTouchpoint();
+        Integer id = touchpoint.getMinor();
         String title = touchpoint.getTitle();
         String message = touchpoint.getNotification();
-        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(RoverConstants.TOUCHPOINT_NOTIFICATION_ID, title, message, CardListActivity.class);
+        RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, CardListActivity.class);
         RoverEventBus.getInstance().post(notificationEvent);
     }
 }

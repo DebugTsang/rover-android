@@ -54,7 +54,9 @@ public class RoverNotificationManager {
     @Subscribe
     public void sendNotification(RoverNotificationEvent event) {
 
-        mNotificationEvents.add(event);
+        if(!mNotificationEvents.contains(event)) {
+            mNotificationEvents.add(event);
+        }
         Intent intent = new Intent(mContext, event.getIntentClass());
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -83,6 +85,6 @@ public class RoverNotificationManager {
             mNotificationBuilder.setStyle(inboxStyle);
         }
         
-        mNotificationManager.notify(event.getId(), mNotificationBuilder.build());
+        mNotificationManager.notify(RoverConstants.TOUCHPOINT_NOTIFICATION_ID, mNotificationBuilder.build());
     }
 }
