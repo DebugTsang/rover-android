@@ -7,11 +7,22 @@
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
 
+    <!-- Needed permission to receive the Boot Complete system event -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <!-- Declaration that this app is usable on phones with Bluetooth Low Energy -->
     <!-- Requirement set to true, will not work on phones without Bluetooth Low Energy -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
     
     <application>
+
+        <receiver android:name=".RoverReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".ui.CardActivity"
