@@ -20,6 +20,7 @@ public class RoverVisit extends RoverObject {
     //JSON members
     @SerializedName("customer") private RoverCustomer mCustomer;
     @SerializedName("enteredAt") private Date mEnteredTime;
+    @SerializedName("entered_at") private Date mEnteredAt; //TODO: Remove - used for testing
     @SerializedName("exitedAt") private Date mExitedTime;
     @SerializedName("keepAlive") private long mKeepAliveTime;
     @SerializedName("location") private RoverLocation mLocation;
@@ -73,7 +74,7 @@ public class RoverVisit extends RoverObject {
     
     //Setters
     public void setCustomer(RoverCustomer customer) { mCustomer = customer; }
-    public void setEnteredTime(Date enteredTime) { mEnteredTime = enteredTime; }
+    public void setEnteredTime(Date enteredTime) { mEnteredTime = mEnteredAt = enteredTime; }
     public void setExitedTime(Date exitedTime) { mExitedTime = exitedTime; }
     public void setKeepAliveTime(long keepAliveTime) { mKeepAliveTime = keepAliveTime; }
     public void setLocation(RoverLocation location) { mLocation = location; }
@@ -107,7 +108,7 @@ public class RoverVisit extends RoverObject {
         RoverVisit visit = (RoverVisit)object;
         super.update(visit);
         mCustomer = visit.getCustomer();
-        mEnteredTime = visit.getEnteredTime();
+        mEnteredTime = mEnteredAt = visit.getEnteredTime();
         mExitedTime = visit.getExitedTime();
         mKeepAliveTime = visit.getKeepAliveTime();
         mLocation = visit.getLocation();

@@ -30,6 +30,8 @@
             android:name="com.estimote.sdk.service.BeaconService"
             android:exported="false"/>
 
+        <service android:name=".RoverMonitorService" />
+
     </application>
 
 </manifest>

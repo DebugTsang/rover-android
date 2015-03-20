@@ -6,14 +6,14 @@ import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverVisit;
 
 /**
- * Created by SherryYang on 2015-03-09.
+ * Created by SherryYang on 2015-03-20.
  */
-public class RoverEnteredLocationEvent {
-    
+public class RoverExitedLocationEvent {
+
     private RoverVisit mVisit;
 
-    public RoverEnteredLocationEvent(RoverVisit visit) { mVisit = visit; }
-    
+    public RoverExitedLocationEvent(RoverVisit visit) { mVisit = visit; }
+
     public RoverVisit getVisit() { return mVisit; }
 
     public Region getRangeRegion() {

@@ -11,6 +11,7 @@ import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
 import co.roverlabs.sdk.events.RoverEnteredTouchpointEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverExitedLocationEvent;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.models.RoverRegion;
@@ -102,13 +103,13 @@ public class RoverVisitManager {
         RoverTouchpoint touchpoint = mLatestVisit.getTouchpoint(subRegion);
         if(touchpoint != null) {
             if(!mLatestVisit.getVisitedTouchpoints().contains(touchpoint)) {
-                Log.d(TAG, "has not seen this touchpoint yet");
+                Log.d(TAG, "Has not seen this touchpoint yet");
                 mLatestVisit.setCurrentTouchpoint(touchpoint);
                 RoverEventBus.getInstance().post(new RoverEnteredTouchpointEvent(touchpoint));
                 return;
             }
             else {
-                Log.d(TAG, "seen this touchpoint already");
+                Log.d(TAG, "Seen this touchpoint already");
             }
             mLatestVisit.setCurrentTouchpoint(touchpoint);
         }
@@ -125,6 +126,7 @@ public class RoverVisitManager {
         mLatestVisit.setExitedTime(now.getTime());
         RoverUtils.writeObjectToSharedPreferences(mContext, mLatestVisit);
         Log.d(TAG, "The saved region is " + mLatestVisit.getRegion().toString());
+        RoverEventBus.getInstance().post(new RoverExitedLocationEvent(mLatestVisit));
         //TODO: mLatestVisit.save() to be tested
     }
     
