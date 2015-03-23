@@ -6,9 +6,11 @@ package co.roverlabs.sdk.utilities;
 public class RoverConstants {
 
     public static final String ROVER_URL = "https://rover-node.herokuapp.com/mobile/v2";
-    public static final String ESTIMOTE_DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
-    public static final int TEST_MAJOR_ESTIMOTE = 65535;
-    public static final int TEST_MINOR_ESTIMOTE = 58856;
+    public static final String SHARED_PREFS_NAME = "RoverPrefs";
+    public static final String SHARED_PREFS_NAME_CUSTOMER_ID = "CustomerId";
+    public static final String SHARED_PREFS_NAME_APP_ID = "AppId";
+    public static final String SHARED_PREFS_NAME_UUID = "UUID";
+    public static final String SHARED_PREFS_NAME_NOTIFICATION_ICON = "NotificationIconId";
+    public static final String SHARED_PREFS_NAME_LAUNCH_ACTIVITY = "LaunchActivityName";
 
-    public final static String GROUP_KEY_TOUCHPOINTS = "group_key_touchpoints";
 }

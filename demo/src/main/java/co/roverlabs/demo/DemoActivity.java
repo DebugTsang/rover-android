@@ -26,8 +26,9 @@ public class DemoActivity extends ActionBarActivity {
         //In office
         mRover.setUuid("647086E7-89A6-439C-9E3B-4A2268F13FC6");
         mRover.setAppId("d1309e050df0a1fa2abc0eb3023f69ad7543fb8dce64d16d6f6f45719da7c923");
+        mRover.setCustomerId("1234567890");
         mRover.setLaunchActivityName(this.getClass().getName());
-        //mRover.setNotificationIconId(R.drawable.icon);
+        mRover.setNotificationIconId(R.drawable.icon);
         mRover.completeSetUp();
         mRover.startMonitoring();
     }

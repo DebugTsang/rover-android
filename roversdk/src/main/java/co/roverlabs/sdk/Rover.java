@@ -14,6 +14,7 @@ import co.roverlabs.sdk.managers.RoverRegionManager;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverTouchpoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
+import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
@@ -24,14 +25,15 @@ public class Rover {
     public static final String TAG = Rover.class.getSimpleName();
     private static Rover sRoverInstance;
     private Context mContext;
-    private String mLaunchActivityName;
     private RoverRegionManager mRegionManager;
     private RoverVisitManager mVisitManager;
     private RoverNetworkManager mNetworkManager;
     private RoverNotificationManager mNotificationManager;
+    private String mCustomerId;
     private String mUuid;
     private String mAppId;
     private int mNotificationIconId;
+    private String mLaunchActivityName;
     //TODO: Get rid of temp fix
     private boolean mSetUp = false;
     private boolean mMonitoringStarted = false;
@@ -94,7 +96,7 @@ public class Rover {
     public String getAppId() { 
         
         if(mAppId == null) {
-            mAppId = RoverUtils.readStringFromSharedPreferences(mContext, "AppId", null);
+            mAppId = RoverUtils.readStringFromSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_APP_ID, null);
         }
         return mAppId; 
     }
@@ -102,15 +104,23 @@ public class Rover {
     public String getAuthToken() {
 
         if(mAppId == null) {
-            mAppId = RoverUtils.readStringFromSharedPreferences(mContext, "AppId", null);
+            mAppId = RoverUtils.readStringFromSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_APP_ID, null);
         }
         return "Bearer " + mAppId; 
+    }
+
+    public String getCustomerId() {
+
+        if(mCustomerId == null) {
+            mCustomerId = RoverUtils.readStringFromSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, null);
+        }
+        return mCustomerId;
     }
     
     public String getUuid() {
 
         if(mUuid == null) {
-            mUuid = RoverUtils.readStringFromSharedPreferences(mContext, "UUID", null);
+            mUuid = RoverUtils.readStringFromSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_UUID, null);
         }
         return mUuid;
     }
@@ -118,7 +128,7 @@ public class Rover {
     public int getNotificationIconId() { 
         
         if(mNotificationIconId == 0) {
-            mNotificationIconId = RoverUtils.readIntFromSharedPreferences(mContext, "NotificationIconId", 0);
+            mNotificationIconId = RoverUtils.readIntFromSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_NOTIFICATION_ICON, 0);
             if(mNotificationIconId == 0) {
                 mNotificationIconId = R.drawable.rover_icon;
             }
@@ -129,7 +139,7 @@ public class Rover {
     public String getLaunchActivityName() {
 
         if (mLaunchActivityName == null) {
-            mLaunchActivityName = RoverUtils.readStringFromSharedPreferences(mContext, "LaunchActivityName", null);
+            mLaunchActivityName = RoverUtils.readStringFromSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_LAUNCH_ACTIVITY, null);
         }
         return mLaunchActivityName;
     }
@@ -138,31 +148,37 @@ public class Rover {
     public void setAppId(String appId) { 
         
         mAppId = appId;
-        RoverUtils.writeStringToSharedPreferences(mContext, "AppId", appId);
+        RoverUtils.writeStringToSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_APP_ID, appId);
+    }
+
+    public void setCustomerId(String customerId) {
+
+        mCustomerId = customerId;
+        RoverUtils.writeStringToSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, customerId);
     }
     
     public void setUuid(String uuid) { 
         
         mUuid = uuid;
-        RoverUtils.writeStringToSharedPreferences(mContext, "UUID", uuid);
+        RoverUtils.writeStringToSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_UUID, uuid);
     }
     
     public void setNotificationIconId(int resourceId) { 
         
         mNotificationIconId = resourceId;
-        RoverUtils.writeIntToSharedPreferences(mContext, "NotificationIconId", resourceId);
+        RoverUtils.writeIntToSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_NOTIFICATION_ICON, resourceId);
     }
 
     public void setLaunchActivityName(String launchActivityName) {
 
         mLaunchActivityName = launchActivityName;
-        RoverUtils.writeStringToSharedPreferences(mContext, "LaunchActivityName", launchActivityName);
+        RoverUtils.writeStringToSharedPreferences(mContext, RoverConstants.SHARED_PREFS_NAME_LAUNCH_ACTIVITY, launchActivityName);
     }
 
     public void startMonitoring() {
 
         if(!mMonitoringStarted) {
-            Log.d(TAG, "Rover is causing monitoring to start");
+            Log.d(TAG, "Monitoring is starting");
             mRegionManager.startMonitoring();
             mMonitoringStarted = true;
         }
