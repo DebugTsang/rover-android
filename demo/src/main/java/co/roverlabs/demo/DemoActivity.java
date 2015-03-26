@@ -5,6 +5,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import co.roverlabs.sdk.Rover;
 
 
@@ -24,9 +27,15 @@ public class DemoActivity extends ActionBarActivity {
         //Testing
         //mRover.setUuid("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
         //In office
-        mRover.setUuid("647086E7-89A6-439C-9E3B-4A2268F13FC6");
-        mRover.setAppId("d1309e050df0a1fa2abc0eb3023f69ad7543fb8dce64d16d6f6f45719da7c923");
-        mRover.setCustomerId("1234567890");
+        mRover.setUuid("B39C291F-A2F9-426B-BCF7-5A64D304E215");
+        mRover.setAppId("62f95a37f64278710aba567d4cd5ffd1");
+        mRover.setCustomerId("1234");
+        mRover.setCustomerName("Sean");
+        mRover.setCustomerEmail("srucker@gmail.com");
+        Map<String, Object> customerTraits = new HashMap<>();
+        customerTraits.put("gender", "male");
+        customerTraits.put("age", 23);
+        mRover.setCustomerTraits(customerTraits);
         mRover.setLaunchActivityName(this.getClass().getName());
         mRover.setNotificationIconId(R.drawable.icon);
         mRover.completeSetUp();

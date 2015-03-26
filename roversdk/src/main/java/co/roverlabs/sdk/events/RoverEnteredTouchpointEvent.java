@@ -8,8 +8,15 @@ import co.roverlabs.sdk.models.RoverTouchpoint;
 public class RoverEnteredTouchpointEvent {
     
     private RoverTouchpoint mTouchpoint;
+    private boolean mVisited;
     
-    public RoverEnteredTouchpointEvent(RoverTouchpoint touchpoint) { mTouchpoint = touchpoint; }
+    public RoverEnteredTouchpointEvent(RoverTouchpoint touchpoint) {
+
+        mTouchpoint = touchpoint;
+    }
     
     public RoverTouchpoint getTouchpoint() { return mTouchpoint; }
+    public boolean hasBeenVisited() { return mVisited; }
+
+    public void setBeenVisited(boolean visited) { mVisited = visited; }
 }

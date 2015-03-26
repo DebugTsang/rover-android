@@ -7,6 +7,6 @@ import co.roverlabs.sdk.models.RoverObject;
  */
 public interface RoverNetworkListener {
     
-    public void onNetworkCallSuccess(String method, RoverObject object);
-    public void onNetworkCallFailure(String method);
+    public void onNetworkCallSuccess(RoverObject object);
+    public void onNetworkCallFailure();
 }

@@ -51,33 +51,25 @@ public class RoverNetworkManager {
         return call;
     }
     
-    public void sendRequest(final String method, final RoverObject object, final RoverNetworkListener networkListener) {
+    public void sendRequest(final RoverObject object, final RoverNetworkListener networkListener) {
 
-        RoverObjectWrapper wrapper = new RoverObjectWrapper();
-        wrapper.set(object);
-        
         Callback<RoverObjectWrapper> networkCallback = new Callback<RoverObjectWrapper>() {
             
             @Override
             public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
                 
-                Log.d(TAG, "Retrofit " + method + " call successful");
-                networkListener.onNetworkCallSuccess(method, roverObjectWrapper.get());
+                Log.d(TAG, "Retrofit call successful");
+                networkListener.onNetworkCallSuccess(roverObjectWrapper.get());
             }
 
             @Override
             public void failure(RetrofitError error) {
 
-                Log.d(TAG, "Retrofit encountered an error during " + method + " call - " + error);
-                networkListener.onNetworkCallFailure(method);
+                Log.d(TAG, "Retrofit encountered an error - " + error);
+                networkListener.onNetworkCallFailure();
             }
         };
         
-        if(method.equals("POST")) {
-            makeCall().create(mAuthToken, object.getObjectName(), wrapper, networkCallback);
-        }
-        else if(method.equals("PUT")) {
-            makeCall().update(mAuthToken, object.getId(), object.getObjectName(), wrapper, networkCallback);
-        }
+        makeCall().createVisit(mAuthToken, object, networkCallback);
     }
 }
