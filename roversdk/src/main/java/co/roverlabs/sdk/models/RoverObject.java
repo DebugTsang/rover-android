@@ -72,4 +72,26 @@ public abstract class RoverObject {
         mId = object.getId();
         mMeta = object.getMeta();
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if(this == o) {
+            return true;
+        }
+        if(o == null) {
+            return false;
+        }
+        if(getClass() != o.getClass()) {
+            return false;
+        }
+
+        RoverObject roverObject = (RoverObject)o;
+
+        if(mId != null ? !mId.equals(roverObject.getId()) : roverObject.getId() != null) {
+            return false;
+        }
+
+        return true;
+    }
 }

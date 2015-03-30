@@ -33,25 +33,25 @@ public class RoverTouchpoint extends RoverObject {
     public void setMinor(Integer minorNumber) { mMinor = minorNumber; }
     public void setCards(List<RoverCard> cards) { mCards = cards; }
 
-    @Override
-    public boolean equals(Object o) {
-
-        if(this == o) {
-            return true;
-        }
-        if(o == null) {
-            return false;
-        }
-        if(getClass() != o.getClass()) {
-            return false;
-        }
-
-        RoverTouchpoint touchpoint = (RoverTouchpoint)o;
-
-        if(mMinor != null ? !mMinor.equals(touchpoint.getMinor()) : touchpoint.getMinor() != null) {
-            return false;
-        }
-
-        return true;
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//
+//        if(this == o) {
+//            return true;
+//        }
+//        if(o == null) {
+//            return false;
+//        }
+//        if(getClass() != o.getClass()) {
+//            return false;
+//        }
+//
+//        RoverTouchpoint touchpoint = (RoverTouchpoint)o;
+//
+//        if(mMinor != null ? !mMinor.equals(touchpoint.getMinor()) : touchpoint.getMinor() != null) {
+//            return false;
+//        }
+//
+//        return true;
+//    }
 }

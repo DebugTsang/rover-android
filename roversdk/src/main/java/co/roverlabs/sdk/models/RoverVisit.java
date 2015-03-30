@@ -69,19 +69,33 @@ public class RoverVisit extends RoverObject {
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
     public List<RoverTouchpoint> getCurrentTouchpoints() { return mCurrentTouchpoints; }
     public List<RoverTouchpoint> getVisitedTouchpoints() { return mVisitedTouchpoints; }
+
+    public List<RoverTouchpoint> getWildCardTouchpoints() {
+
+        List<RoverTouchpoint> wildCardTouchpoints = new ArrayList<>();
+        if(mTouchpoints != null) {
+            for(RoverTouchpoint touchpoint : mTouchpoints) {
+                if(touchpoint.getTrigger().equals(RoverConstants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
+                    wildCardTouchpoints.add(touchpoint);
+                }
+            }
+        }
+        return wildCardTouchpoints;
+    }
     
     public RoverTouchpoint getTouchpoint(RoverRegion region) {
 
         if(mTouchpoints != null) {
             for(RoverTouchpoint touchpoint : mTouchpoints) {
-                //TODO: Add logic to handle wild cards
                 if(touchpoint.getMinor() != null) {
                     if ((touchpoint.getMinor()).equals(region.getMinor())) {
+                        Log.d(TAG, "Region " + region.getMinor() + " corresponds to a valid touchpoint");
                         return touchpoint;
                     }
                 }
             }
         }
+        Log.d(TAG, "Region " + region.getMinor() + " does not correspond to a valid touchpoint");
         return null;
     }
 
@@ -119,28 +133,29 @@ public class RoverVisit extends RoverObject {
         return mRegion.equals(region);
     }
 
-    public boolean isValidTouchpoint(RoverRegion region) {
+//    public boolean isValidTouchpoint(RoverRegion region) {
+//
+//        if(mTouchpoints != null) {
+//            for(RoverTouchpoint touchpoint : mTouchpoints) {
+//                if(touchpoint.getMinor() != null) {
+//                    if (region.getMinor().equals(touchpoint.getMinor())) {
+//                        Log.d(TAG, "Beacon minor " + region.getMinor() + " is a valid touchpoint");
+//                        return true;
+//                    }
+//                }
+//            }
+//        }
+//        Log.d(TAG, "Invalid touchpoint - does not correspond to any set up touchpoints");
+//        return false;
+//    }
 
-        if(mTouchpoints != null) {
-            for(RoverTouchpoint touchpoint : mTouchpoints) {
-                //TODO: Add wildcard support
-                if(touchpoint.getMinor() != null) {
-                    if (region.getMinor().equals(touchpoint.getMinor())) {
-                        Log.d(TAG, "Beacon minor " + region.getMinor() + " is a valid touchpoint");
-                        return true;
-                    }
-                }
-            }
-        }
-        Log.d(TAG, "Invalid touchpoint - does not correspond to any set up touchpoints");
-        return false;
-    }
-
-    public boolean isInTouchpoint(RoverRegion region) {
+    public boolean isInSubRegion(RoverRegion region) {
 
         for(RoverTouchpoint touchpoint : mCurrentTouchpoints) {
-            if(touchpoint.getMinor().equals(region.getMinor())) {
-                return true;
+            if(touchpoint.getMinor() != null) {
+                if (touchpoint.getMinor().equals(region.getMinor())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -154,6 +169,21 @@ public class RoverVisit extends RoverObject {
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
         //Log.d(TAG, "Elapsed time is " + String.valueOf(TimeUnit.MILLISECONDS.toMinutes(elapsedTime)));
         return elapsedTime < keepAliveTimeInMillis;
+    }
+
+    public boolean currentlyContainsWildCardTouchpoints() {
+
+        for(RoverTouchpoint touchpoint : mCurrentTouchpoints) {
+            if(touchpoint.getTrigger().equals(RoverConstants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean currentlyContainsTouchpoints() {
+
+        return mCurrentTouchpoints.isEmpty();
     }
 
     public void save(RoverObjectSaveListener saveListener) {

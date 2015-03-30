@@ -21,5 +21,6 @@ public class RoverConstants {
     public static final String REGION_TYPE_SUB = "RegionTypeSub";
     public static final String RANGE_ACTION_START = "RangeStart";
     public static final String RANGE_ACTION_STOP = "RangeStop";
+    public static final String WILD_CARD_TOUCHPOINT_TRIGGER = "visit";
 
 }
