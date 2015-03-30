@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
-import co.roverlabs.sdk.networks.RoverNetworkListener;
+import co.roverlabs.sdk.networks.RoverNetworkObjectSaveListener;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 
 /**
@@ -46,12 +46,12 @@ public abstract class RoverObject {
         
         final RoverObject self = this;
         
-        mNetworkManager.sendRequest(this, new RoverNetworkListener() {
-            
+        mNetworkManager.sendObjectSaveRequest(this, new RoverNetworkObjectSaveListener() {
+
             @Override
             public void onNetworkCallSuccess(RoverObject object) {
 
-                if(object != null) {
+                if (object != null) {
                     self.update(object);
                 }
                 Log.d(TAG, "Network call from " + self.getObjectName() + " ID " + self.getId() + " has succeeded");
@@ -60,7 +60,7 @@ public abstract class RoverObject {
 
             @Override
             public void onNetworkCallFailure() {
-                
+
                 Log.d(TAG, "Network call from " + self.getObjectName() + " ID " + self.getId() + " has failed");
                 objectSaveListener.onSaveFailure();
             }

@@ -5,7 +5,7 @@ package co.roverlabs.sdk.utilities;
  */
 public class RoverConstants {
 
-    public static final String ROVER_URL = "http://api.staging.roverlabs.co/mobile/v2";
+    public static final String ROVER_URL = "http://api.demo.roverlabs.co/mobile/v2";
     public static final String OPERATING_SYSTEM = "Android";
     public static final String SDK_VERSION = "1.0";
     public static final String SHARED_PREFS_NAME = "RoverPrefs";

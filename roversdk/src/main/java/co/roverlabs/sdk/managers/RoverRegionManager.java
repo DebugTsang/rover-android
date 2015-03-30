@@ -62,7 +62,7 @@ public class RoverRegionManager {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
-                Log.d(TAG, "Main region has been entered for major " + region.getMajor());
+                Log.d(TAG, "Main region has been entered for major");
                 Beacon beacon = beacons.get(0);
                 mCurrentBeacons.add(beacon);
                 mRangeRegion = new Region("Range Region", beacon.getProximityUUID(), beacon.getMajor(), null);
@@ -73,8 +73,8 @@ public class RoverRegionManager {
             @Override
             public void onExitedRegion(Region region) {
                 
-                Log.d(TAG, "Main region has been exited for major " + region.getMajor());
-                RoverRegion exitedMainRegion = new RoverRegion(region.getProximityUUID(), region.getMajor(), region.getMinor());
+                Log.d(TAG, "Main region has been exited");
+                RoverRegion exitedMainRegion = new RoverRegion(region.getProximityUUID(), null, null);
                 RoverEventBus.getInstance().post(new RoverExitedRegionEvent(exitedMainRegion, RoverConstants.REGION_TYPE_MAIN));
             }
         }));

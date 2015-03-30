@@ -1,5 +1,6 @@
 package co.roverlabs.sdk.networks;
 
+import co.roverlabs.sdk.events.RoverEvent;
 import co.roverlabs.sdk.models.RoverObject;
 import co.roverlabs.sdk.models.RoverObjectWrapper;
 import retrofit.Callback;
@@ -21,7 +22,7 @@ public interface RoverNetworkInterface {
     @POST("/visits/{id}/events")
     void sendEvent(@Header("Authorization") String authToken,
                    @Path("id") String objectId,
-                   @Body RoverObjectWrapper object,
-                   Callback<RoverObjectWrapper> callback);
+                   @Body RoverEvent event,
+                   Callback<Object> callback);
 }
 

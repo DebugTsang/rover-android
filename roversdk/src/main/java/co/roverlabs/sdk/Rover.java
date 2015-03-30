@@ -15,6 +15,7 @@ import co.roverlabs.sdk.events.RoverExitedLocationEvent;
 import co.roverlabs.sdk.events.RoverExitedTouchpointEvent;
 import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.events.RoverRangeEvent;
+import co.roverlabs.sdk.listeners.RoverEventSaveListener;
 import co.roverlabs.sdk.managers.RoverNotificationManager;
 import co.roverlabs.sdk.managers.RoverRegionManager;
 import co.roverlabs.sdk.managers.RoverVisitManager;
@@ -240,15 +241,41 @@ public class Rover {
     }
     
     @Subscribe
-    public void onEnteredLocation(RoverEnteredLocationEvent event) {
+    public void onEnteredLocation(final RoverEnteredLocationEvent event) {
 
-        //TODO: Send event to server
+        event.send(new RoverEventSaveListener() {
+
+            @Override
+            public void onSaveSuccess() {
+
+                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has successfully been sent");
+            }
+
+            @Override
+            public void onSaveFailure() {
+
+                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has failed sending");
+            }
+        });
     }
 
     @Subscribe
-    public void onExitedLocation(RoverExitedLocationEvent event) {
+    public void onExitedLocation(final RoverExitedLocationEvent event) {
 
-        //TODO: Send event to server
+        event.send(new RoverEventSaveListener() {
+
+            @Override
+            public void onSaveSuccess() {
+
+                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has successfully been sent");
+            }
+
+            @Override
+            public void onSaveFailure() {
+
+                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has failed sending");
+            }
+        });
     }
 
     @Subscribe
@@ -263,29 +290,60 @@ public class Rover {
     }
 
     @Subscribe
-    public void onEnteredTouchpoint(RoverEnteredTouchpointEvent event) {
+    public void onEnteredTouchpoint(final RoverEnteredTouchpointEvent event) {
 
-        //TODO: Send event to server
         if(!event.hasBeenVisited()) {
             RoverTouchpoint touchpoint = event.getTouchpoint();
-            int id = touchpoint.getMinor();
+            String touchpointId = touchpoint.getId();
+            String numberOnlyId = touchpointId.replaceAll("[^0-9]", "");
+            numberOnlyId = numberOnlyId.substring(Math.max(0, numberOnlyId.length() - 7));
+            int id = Integer.valueOf(numberOnlyId);
             String title = touchpoint.getTitle();
             String message = touchpoint.getNotification();
             RoverNotificationEvent notificationEvent = null;
             try {
                 notificationEvent = new RoverNotificationEvent(id, title, message, Class.forName(getLaunchActivityName()));
                 Log.d(TAG, "Sending notification for touchpoint " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ")");
+                RoverEventBus.getInstance().post(notificationEvent);
             }
             catch (ClassNotFoundException e) {
                 Log.e(TAG, "Cannot send notification - cannot find launch activity name", e);
             }
-            RoverEventBus.getInstance().post(notificationEvent);
         }
+
+        event.send(new RoverEventSaveListener() {
+
+            @Override
+            public void onSaveSuccess() {
+
+                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has successfully been sent");
+            }
+
+            @Override
+            public void onSaveFailure() {
+
+                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has failed sending");
+            }
+        });
+
     }
 
     @Subscribe
-    public void onExitedTouchpoint(RoverExitedTouchpointEvent event) {
+    public void onExitedTouchpoint(final RoverExitedTouchpointEvent event) {
 
-        //TODO: Send event to server
+        event.send(new RoverEventSaveListener() {
+
+            @Override
+            public void onSaveSuccess() {
+
+                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has successfully been sent");
+            }
+
+            @Override
+            public void onSaveFailure() {
+
+                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has failed sending");
+            }
+        });
     }
 }

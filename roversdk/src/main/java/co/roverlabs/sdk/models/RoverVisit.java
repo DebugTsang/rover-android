@@ -133,22 +133,6 @@ public class RoverVisit extends RoverObject {
         return mRegion.equals(region);
     }
 
-//    public boolean isValidTouchpoint(RoverRegion region) {
-//
-//        if(mTouchpoints != null) {
-//            for(RoverTouchpoint touchpoint : mTouchpoints) {
-//                if(touchpoint.getMinor() != null) {
-//                    if (region.getMinor().equals(touchpoint.getMinor())) {
-//                        Log.d(TAG, "Beacon minor " + region.getMinor() + " is a valid touchpoint");
-//                        return true;
-//                    }
-//                }
-//            }
-//        }
-//        Log.d(TAG, "Invalid touchpoint - does not correspond to any set up touchpoints");
-//        return false;
-//    }
-
     public boolean isInSubRegion(RoverRegion region) {
 
         for(RoverTouchpoint touchpoint : mCurrentTouchpoints) {

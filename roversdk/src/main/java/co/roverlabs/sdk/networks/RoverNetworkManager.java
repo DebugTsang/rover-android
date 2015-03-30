@@ -5,6 +5,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import co.roverlabs.sdk.events.RoverEvent;
 import co.roverlabs.sdk.models.RoverObject;
 import co.roverlabs.sdk.models.RoverObjectWrapper;
 import co.roverlabs.sdk.utilities.RoverConstants;
@@ -51,25 +52,47 @@ public class RoverNetworkManager {
         return call;
     }
     
-    public void sendRequest(final RoverObject object, final RoverNetworkListener networkListener) {
+    public void sendObjectSaveRequest(final RoverObject object, final RoverNetworkObjectSaveListener networkListener) {
 
         Callback<RoverObjectWrapper> networkCallback = new Callback<RoverObjectWrapper>() {
             
             @Override
             public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
                 
-                Log.d(TAG, "Retrofit call successful");
+                Log.d(TAG, "Retrofit call successful for object save");
                 networkListener.onNetworkCallSuccess(roverObjectWrapper.get());
             }
 
             @Override
             public void failure(RetrofitError error) {
 
-                Log.d(TAG, "Retrofit encountered an error - " + error);
+                Log.d(TAG, "Retrofit encountered an error during object save - " + error);
                 networkListener.onNetworkCallFailure();
             }
         };
         
         makeCall().createVisit(mAuthToken, object, networkCallback);
+    }
+
+    public void sendEventSaveRequest(final RoverEvent event, final RoverNetworkEventSaveListener networkListener) {
+
+        Callback<Object> networkCallback = new Callback<Object>() {
+
+            @Override
+            public void success(Object o, Response response) {
+
+                Log.d(TAG, "Retrofit call Successful for event save");
+                networkListener.onNetworkCallSuccess(response);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+                Log.d(TAG, "Retrofit encountered an error during event save - " + error);
+                networkListener.onNetworkCallFailure();
+            }
+        };
+
+        makeCall().sendEvent(mAuthToken, event.getId(), event, networkCallback);
     }
 }
