@@ -7,7 +7,7 @@ public class RoverConstants {
 
     public static final String ROVER_URL = "http://api.demo.roverlabs.co/mobile/v2";
     public static final String OPERATING_SYSTEM = "Android";
-    public static final String SDK_VERSION = "1.0";
+    public static final String SDK_VERSION = "0.1.0";
     public static final String SHARED_PREFS_NAME = "RoverPrefs";
     public static final String SHARED_PREFS_NAME_APP_ID = "AppId";
     public static final String SHARED_PREFS_NAME_UUID = "UUID";
