@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.events;
 
-import android.util.Log;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -43,21 +41,17 @@ public class RoverEvent {
 
     public void send(final RoverEventSaveListener eventSaveListener) {
 
-        final RoverEvent self = this;
-
         mNetworkManager.sendEventSaveRequest(this, new RoverNetworkEventSaveListener() {
 
             @Override
             public void onNetworkCallSuccess(Response response) {
 
-                Log.d(TAG, "Network call for " + self.getAction() + " " + self.getObjectName() + " event has succeeded");
                 eventSaveListener.onSaveSuccess();
             }
 
             @Override
             public void onNetworkCallFailure() {
 
-                Log.d(TAG, "Network call for " + self.getAction() + " " + self.getObjectName() + " event has failed");
                 eventSaveListener.onSaveFailure();
             }
         });

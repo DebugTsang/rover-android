@@ -86,9 +86,9 @@ public class RoverVisitManager {
             @Override
             public void onSaveSuccess() {
 
-                Log.d(TAG, "Visit object save is successful");
-                didEnterSubRegion(subRegion);
+                Log.d(TAG, "Visit object save successful");
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
+                didEnterSubRegion(subRegion);
                 RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_START));
                 RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             }
@@ -96,7 +96,7 @@ public class RoverVisitManager {
             @Override
             public void onSaveFailure() {
 
-                Log.d(TAG, "Visit object save has failed");
+                Log.d(TAG, "Visit object save failed");
             }
         });
     }
@@ -121,10 +121,6 @@ public class RoverVisitManager {
             RoverRegion subRegion = event.getRegion();
             didExitSubRegion(subRegion);
         }
-
-        // if total number of beacons seen at this event == 0 {
-        // exit all wildcard touchpoints
-        //
     }
 
     public void exitedAllWildCardTouchpoints() {
@@ -150,32 +146,37 @@ public class RoverVisitManager {
 
     public void didEnterSubRegion(RoverRegion subRegion) {
 
-        // Enter all wild cards
-        // if not latestVisit.currentTouchpoints.contains(latestVisit.getWildcardTouhpoints().anyofthem)
-        // add all of them to current touchpoints and fire events and shit
-        // }
-
         if(!mLatestVisit.currentlyContainsWildCardTouchpoints()) {
             for(RoverTouchpoint wildCardTouchpoint : mLatestVisit.getWildCardTouchpoints()) {
-                Log.d(TAG, "Adding wild card touchpoint " + wildCardTouchpoint.getMinor() + " (" + wildCardTouchpoint.getTitle() + ")");
-                mLatestVisit.addToCurrentTouchpoints(wildCardTouchpoint);
                 RoverEnteredTouchpointEvent enteredTouchpointEvent = new RoverEnteredTouchpointEvent(mLatestVisit.getId(), wildCardTouchpoint);
-                enteredTouchpointEvent.setBeenVisited(false);
+                if(!mLatestVisit.getVisitedTouchpoints().contains(wildCardTouchpoint)) {
+                    Log.d(TAG, "Touchpoint wild card (" + wildCardTouchpoint.getTitle() + ") - not seen before");
+                    //mLatestVisit.addToCurrentTouchpoints(wildCardTouchpoint);
+                    enteredTouchpointEvent.setBeenVisited(false);
+                }
+                else {
+                    Log.d(TAG, "Touchpoint wild card (" + wildCardTouchpoint.getTitle() + ") - seen before");
+                    enteredTouchpointEvent.setBeenVisited(true);
+                }
+                mLatestVisit.addToCurrentTouchpoints(wildCardTouchpoint);
                 RoverEventBus.getInstance().post(enteredTouchpointEvent);
             }
         }
+
         RoverTouchpoint touchpoint = mLatestVisit.getTouchpoint(subRegion);
+
         if(touchpoint != null) {
             RoverEnteredTouchpointEvent enteredTouchpointEvent = new RoverEnteredTouchpointEvent(mLatestVisit.getId(), touchpoint);
             if(!mLatestVisit.getVisitedTouchpoints().contains(touchpoint)) {
-                Log.d(TAG, "Has not seen touchpoint " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ") yet");
-                mLatestVisit.addToCurrentTouchpoints(touchpoint);
+                Log.d(TAG, "Touchpoint minor " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ") - not seen before");
+                //mLatestVisit.addToCurrentTouchpoints(touchpoint);
                 enteredTouchpointEvent.setBeenVisited(false);
             }
             else {
-                Log.d(TAG, "Has seen touchpoint " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ")");
+                Log.d(TAG, "Touchpoint minor " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ") - seen before");
                 enteredTouchpointEvent.setBeenVisited(true);
             }
+            mLatestVisit.addToCurrentTouchpoints(touchpoint);
             RoverEventBus.getInstance().post(enteredTouchpointEvent);
         }
     }

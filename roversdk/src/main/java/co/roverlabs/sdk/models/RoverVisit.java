@@ -89,13 +89,13 @@ public class RoverVisit extends RoverObject {
             for(RoverTouchpoint touchpoint : mTouchpoints) {
                 if(touchpoint.getMinor() != null) {
                     if ((touchpoint.getMinor()).equals(region.getMinor())) {
-                        Log.d(TAG, "Region " + region.getMinor() + " corresponds to a valid touchpoint");
+                        Log.d(TAG, "Minor " + region.getMinor() + " corresponds to a valid touchpoint");
                         return touchpoint;
                     }
                 }
             }
         }
-        Log.d(TAG, "Region " + region.getMinor() + " does not correspond to a valid touchpoint");
+        Log.d(TAG, "Minor " + region.getMinor() + " does not correspond to a valid touchpoint");
         return null;
     }
 
@@ -137,7 +137,7 @@ public class RoverVisit extends RoverObject {
 
         for(RoverTouchpoint touchpoint : mCurrentTouchpoints) {
             if(touchpoint.getMinor() != null) {
-                if (touchpoint.getMinor().equals(region.getMinor())) {
+                if(touchpoint.getMinor().equals(region.getMinor())) {
                     return true;
                 }
             }
@@ -148,10 +148,8 @@ public class RoverVisit extends RoverObject {
     public boolean isAlive() {
 
         long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(mKeepAliveTime);
-        //Log.d(TAG, "Keep alive time is " + String.valueOf(mKeepAliveTime));
         Calendar now = Calendar.getInstance();
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
-        //Log.d(TAG, "Elapsed time is " + String.valueOf(TimeUnit.MILLISECONDS.toMinutes(elapsedTime)));
         return elapsedTime < keepAliveTimeInMillis;
     }
 

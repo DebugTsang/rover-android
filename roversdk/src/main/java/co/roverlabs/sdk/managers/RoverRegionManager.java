@@ -36,7 +36,7 @@ public class RoverRegionManager {
     private RoverRegionManager(Context con) {
 
         mBeaconManager = new BeaconManager(con);
-        mCurrentBeacons = new ArrayList<>();
+        //mCurrentBeacons = new ArrayList<>();
         mIsBeaconServiceReady = false;
         mMonitorStarted = false;
         mRangeStarted = false;
@@ -57,15 +57,17 @@ public class RoverRegionManager {
     
     public void startMonitoring() {
 
-        mBeaconManager.setMonitoringListener((new BeaconManager.MonitoringListener() {
+        mBeaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
-                Log.d(TAG, "Main region has been entered for major");
+                Log.d(TAG, "Region entered - main");
                 Beacon beacon = beacons.get(0);
+                mCurrentBeacons = new ArrayList<>();
                 mCurrentBeacons.add(beacon);
                 mRangeRegion = new Region("Range Region", beacon.getProximityUUID(), beacon.getMajor(), null);
+                Log.d(TAG, "Region entered - minor " + beacon.getMinor());
                 RoverRegion enteredRegion = new RoverRegion(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
                 RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
             }
@@ -73,11 +75,11 @@ public class RoverRegionManager {
             @Override
             public void onExitedRegion(Region region) {
                 
-                Log.d(TAG, "Main region has been exited");
+                Log.d(TAG, "Region exited - main");
                 RoverRegion exitedMainRegion = new RoverRegion(region.getProximityUUID(), null, null);
                 RoverEventBus.getInstance().post(new RoverExitedRegionEvent(exitedMainRegion, RoverConstants.REGION_TYPE_MAIN));
             }
-        }));
+        });
 
         mBeaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             
@@ -89,7 +91,11 @@ public class RoverRegionManager {
                 try {
                     if(!mMonitorStarted) {
                         mBeaconManager.startMonitoring(mMonitorRegion);
+                        Log.d(TAG, "Monitoring now");
                         mMonitorStarted = true;
+                    }
+                    else {
+                        Log.d(TAG, "Monitoring has already started - do nothing");
                     }
                 } 
                 catch(RemoteException e) {
@@ -104,6 +110,7 @@ public class RoverRegionManager {
         try {
             if(mMonitorStarted) {
                 mBeaconManager.stopMonitoring(mMonitorRegion);
+                Log.d(TAG, "Not monitoring anymore");
                 mMonitorStarted = false;
             }
         } 
@@ -128,12 +135,12 @@ public class RoverRegionManager {
                 subtractedBeacons = RoverUtils.subtractList(beacons, mCurrentBeacons);
                 mCurrentBeacons = beacons;
                 for(Beacon beacon : addedBeacons) {
-                    Log.d(TAG, "Region has been entered for minor " + beacon.getMinor());
+                    Log.d(TAG, "Region entered - minor " + beacon.getMinor());
                     RoverRegion enteredSubRegion = new RoverRegion(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
                     RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredSubRegion));
                 }
                 for(Beacon beacon : subtractedBeacons) {
-                    Log.d(TAG, "Region has been exited for minor " + beacon.getMinor());
+                    Log.d(TAG, "Region exited - minor " + beacon.getMinor());
                     RoverRegion exitedSubRegion = new RoverRegion(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
                     RoverEventBus.getInstance().post(new RoverExitedRegionEvent(exitedSubRegion, RoverConstants.REGION_TYPE_SUB));
                 }
@@ -144,8 +151,11 @@ public class RoverRegionManager {
             try {
                 if(!mRangeStarted) {
                     mBeaconManager.startRanging(mRangeRegion);
-                    Log.d(TAG, "It's ranging now");
+                    Log.d(TAG, "Ranging now");
                     mRangeStarted = true;
+                }
+                else {
+                    Log.d(TAG, "Ranging has already started - do nothing");
                 }
             }
             catch(RemoteException e) {
@@ -163,7 +173,7 @@ public class RoverRegionManager {
                     try {
                         if(!mRangeStarted) {
                             mBeaconManager.startRanging(mRangeRegion);
-                            Log.d(TAG, "It's ranging now");
+                            Log.d(TAG, "Ranging now");
                             mRangeStarted = true;
                         }
                     }
@@ -180,7 +190,7 @@ public class RoverRegionManager {
         try {
             if(mRangeStarted) {
                 mBeaconManager.stopRanging(mRangeRegion);
-                Log.d(TAG, "It's not ranging anymore");
+                Log.d(TAG, "Not ranging anymore");
                 mRangeStarted = false;
                 mRangeRegion = null;
             }

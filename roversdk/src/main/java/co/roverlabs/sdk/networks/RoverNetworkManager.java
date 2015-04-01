@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.networks;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -45,7 +43,7 @@ public class RoverNetworkManager {
         RoverNetworkInterface call = new RestAdapter.Builder()
                 .setEndpoint(RoverConstants.ROVER_URL)
                 .setConverter(new GsonConverter(gson))
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                //.setLogLevel(RestAdapter.LogLevel.FULL)
                 .build()
                 .create(RoverNetworkInterface.class);
 
@@ -59,14 +57,12 @@ public class RoverNetworkManager {
             @Override
             public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
                 
-                Log.d(TAG, "Retrofit call successful for object save");
                 networkListener.onNetworkCallSuccess(roverObjectWrapper.get());
             }
 
             @Override
             public void failure(RetrofitError error) {
 
-                Log.d(TAG, "Retrofit encountered an error during object save - " + error);
                 networkListener.onNetworkCallFailure();
             }
         };
@@ -81,14 +77,12 @@ public class RoverNetworkManager {
             @Override
             public void success(Object o, Response response) {
 
-                Log.d(TAG, "Retrofit call Successful for event save");
                 networkListener.onNetworkCallSuccess(response);
             }
 
             @Override
             public void failure(RetrofitError error) {
 
-                Log.d(TAG, "Retrofit encountered an error during event save - " + error);
                 networkListener.onNetworkCallFailure();
             }
         };

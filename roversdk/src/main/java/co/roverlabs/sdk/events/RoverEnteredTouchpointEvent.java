@@ -15,6 +15,7 @@ public class RoverEnteredTouchpointEvent extends RoverEvent {
     @SerializedName("touchpoint") private String mTouchpointId;
 
     //Local members
+    public static final String TAG = RoverEnteredTouchpointEvent.class.getSimpleName();
     transient private RoverTouchpoint mTouchpoint;
     transient private boolean mVisited;
     

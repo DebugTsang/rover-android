@@ -1,15 +1,13 @@
 package co.roverlabs.sdk.models;
 
-import android.util.Log;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
-import co.roverlabs.sdk.networks.RoverNetworkObjectSaveListener;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
+import co.roverlabs.sdk.networks.RoverNetworkObjectSaveListener;
 
 /**
  * Created by SherryYang on 2015-02-20.
@@ -54,14 +52,12 @@ public abstract class RoverObject {
                 if (object != null) {
                     self.update(object);
                 }
-                Log.d(TAG, "Network call from " + self.getObjectName() + " ID " + self.getId() + " has succeeded");
                 objectSaveListener.onSaveSuccess();
             }
 
             @Override
             public void onNetworkCallFailure() {
 
-                Log.d(TAG, "Network call from " + self.getObjectName() + " ID " + self.getId() + " has failed");
                 objectSaveListener.onSaveFailure();
             }
         });

@@ -9,6 +9,7 @@ import co.roverlabs.sdk.models.RoverVisit;
  */
 public class RoverExitedLocationEvent extends RoverEvent {
 
+    public static final String TAG = RoverExitedLocationEvent.class.getSimpleName();
     transient private RoverVisit mVisit;
 
     public RoverExitedLocationEvent(RoverVisit visit) {

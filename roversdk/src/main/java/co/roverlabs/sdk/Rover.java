@@ -46,6 +46,7 @@ public class Rover {
     private Map<String, Object> mCustomerTraits;
     //TODO: Get rid of temp fix
     private boolean mSetUp = false;
+    private boolean mMonitorStarted = false;
 
     //Constructor
     private Rover(Context con) { mContext = con; }
@@ -231,13 +232,26 @@ public class Rover {
 
     public void startMonitoring() {
 
-        mRegionManager.startMonitoring();
+        if(!mMonitorStarted) {
+            Log.d(TAG, "Monitoring is being started by Rover");
+            mRegionManager.startMonitoring();
+            mMonitorStarted = true;
+        }
+        else {
+            Log.d(TAG, "Monitoring was already started by Rover - do nothing");
+        }
     }
 
     public void stopMonitoring() {
 
-        mRegionManager.stopMonitoring();
-
+        if(mMonitorStarted) {
+            Log.d(TAG, "Monitoring is being stopped by Rover");
+            mRegionManager.stopMonitoring();
+            mMonitorStarted = false;
+        }
+        else {
+            Log.d(TAG, "Monitoring was already stopped by Rover - do nothing");
+        }
     }
     
     @Subscribe
@@ -248,13 +262,13 @@ public class Rover {
             @Override
             public void onSaveSuccess() {
 
-                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has successfully been sent");
+                Log.d(TAG, "Event sent successfully - enter location");
             }
 
             @Override
             public void onSaveFailure() {
 
-                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has failed sending");
+                Log.d(TAG, "Event sent unsuccessfully - enter location");
             }
         });
     }
@@ -267,13 +281,13 @@ public class Rover {
             @Override
             public void onSaveSuccess() {
 
-                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has successfully been sent");
+                Log.d(TAG, "Event sent successfully - exit location");
             }
 
             @Override
             public void onSaveFailure() {
 
-                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has failed sending");
+                Log.d(TAG, "Event sent unsuccessfully - exit location");
             }
         });
     }
@@ -303,7 +317,12 @@ public class Rover {
             RoverNotificationEvent notificationEvent = null;
             try {
                 notificationEvent = new RoverNotificationEvent(id, title, message, Class.forName(getLaunchActivityName()));
-                Log.d(TAG, "Sending notification for touchpoint " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ")");
+                if(touchpoint.getMinor() != null) {
+                    Log.d(TAG, "Sending notification - touchpoint minor " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ")");
+                }
+                else {
+                    Log.d(TAG, "Sending notification - touchpoint wild card (" + touchpoint.getTitle() + ")");
+                }
                 RoverEventBus.getInstance().post(notificationEvent);
             }
             catch (ClassNotFoundException e) {
@@ -316,13 +335,23 @@ public class Rover {
             @Override
             public void onSaveSuccess() {
 
-                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has successfully been sent");
+                if(event.getTouchpoint().getMinor() != null) {
+                    Log.d(TAG, "Event sent successfully - enter touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                }
+                else {
+                    Log.d(TAG, "Event sent successfully - enter touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
+                }
             }
 
             @Override
             public void onSaveFailure() {
 
-                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has failed sending");
+                if(event.getTouchpoint().getMinor() != null) {
+                    Log.d(TAG, "Event sent unsuccessfully - enter touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                }
+                else {
+                    Log.d(TAG, "Event sent unsuccessfully - enter touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
+                }
             }
         });
 
@@ -336,13 +365,23 @@ public class Rover {
             @Override
             public void onSaveSuccess() {
 
-                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has successfully been sent");
+                if(event.getTouchpoint().getMinor() != null) {
+                    Log.d(TAG, "Event sent successfully - exit touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                }
+                else {
+                    Log.d(TAG, "Event sent successfully - exit touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
+                }
             }
 
             @Override
             public void onSaveFailure() {
 
-                Log.d(TAG, "Event " + event.getAction() + " " + event.getObjectName() + " has failed sending");
+                if(event.getTouchpoint().getMinor() != null) {
+                    Log.d(TAG, "Event sent unsuccessfully - exit touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                }
+                else {
+                    Log.d(TAG, "Event sent unsuccessfully - exit touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
+                }
             }
         });
     }
