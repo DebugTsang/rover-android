@@ -24,11 +24,10 @@ public class DemoActivity extends ActionBarActivity {
         
         mRover = Rover.getInstance(this.getApplicationContext());
 
-        //Testing
         //mRover.setUuid("B9407F30-F5F8-466E-AFF9-25556B57FE6D");
-        //In office
-        mRover.setUuid("B39C291F-A2F9-426B-BCF7-5A64D304E215");
-        mRover.setAppId("62f95a37f64278710aba567d4cd5ffd1");
+        mRover.setSimulation(true);
+        mRover.setUuid("7931D3AA-299B-4A12-9FCC-D66F2C5D2462");
+        mRover.setAppId("eae9edb6352b8fec6618d3d9cb96f2e795e1c2df1ad5388af807b05d8dfcd7d6");
         mRover.setCustomerId("1234");
         mRover.setCustomerName("Sean");
         mRover.setCustomerEmail("srucker@gmail.com");

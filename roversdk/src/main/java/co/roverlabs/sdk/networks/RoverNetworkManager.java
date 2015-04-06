@@ -43,7 +43,7 @@ public class RoverNetworkManager {
         RoverNetworkInterface call = new RestAdapter.Builder()
                 .setEndpoint(RoverConstants.ROVER_URL)
                 .setConverter(new GsonConverter(gson))
-                //.setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build()
                 .create(RoverNetworkInterface.class);
 

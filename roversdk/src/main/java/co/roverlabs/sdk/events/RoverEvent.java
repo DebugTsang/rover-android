@@ -21,7 +21,7 @@ public class RoverEvent {
 
     //Local members
     public static final String TAG = RoverEvent.class.getSimpleName();
-    protected String mId;
+    protected transient String mId;
     protected transient RoverNetworkManager mNetworkManager;
 
     //Constructor

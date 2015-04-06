@@ -44,12 +44,14 @@ public class Rover {
     private String mCustomerName;
     private String mCustomerEmail;
     private Map<String, Object> mCustomerTraits;
+    private boolean mIsSimulation;
     //TODO: Get rid of temp fix
     private boolean mSetUp = false;
     private boolean mMonitorStarted = false;
 
-    //Constructor
     private Rover(Context con) { mContext = con; }
+
+    public void setSimulation(boolean isSimulation) { mIsSimulation = isSimulation; }
 
     public static Rover getInstance(Context con) {
 
@@ -89,6 +91,7 @@ public class Rover {
         
         mVisitManager = RoverVisitManager.getInstance(mContext);
         mVisitManager.setCustomer(getCustomerId(), getCustomerName(), getCustomerEmail(), getCustomerTraits());
+        mVisitManager.setSimulation(mIsSimulation);
     }
     
     private void setNetworkManager() {

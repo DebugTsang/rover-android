@@ -32,6 +32,7 @@ public class RoverVisit extends RoverObject {
     @SerializedName("osVersion") private String mOsVersion;
     @SerializedName("sdkVersion") private String mSdkVersion;
     @SerializedName("timestamp") private Date mTimeStamp;
+    @SerializedName("simulate") private boolean mIsSimulation;
 
     //Local members
     public static final String TAG = RoverVisit.class.getSimpleName();
@@ -69,6 +70,7 @@ public class RoverVisit extends RoverObject {
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
     public List<RoverTouchpoint> getCurrentTouchpoints() { return mCurrentTouchpoints; }
     public List<RoverTouchpoint> getVisitedTouchpoints() { return mVisitedTouchpoints; }
+    public boolean getIsSimulation() { return mIsSimulation; }
 
     public List<RoverTouchpoint> getWildCardTouchpoints() {
 
@@ -114,6 +116,7 @@ public class RoverVisit extends RoverObject {
     public void setTimeStamp(Date timeStamp) { mTimeStamp = timeStamp; }
     public void setRegion(RoverRegion region) { mRegion = region; }
     public void setLastBeaconDetectionTime(Calendar lastBeaconDetectionTime) { mLastBeaconDetectionTime = lastBeaconDetectionTime; }
+    public void setSimulation(boolean isSimulation) { mIsSimulation = isSimulation; }
     
     public void addToCurrentTouchpoints(RoverTouchpoint touchpoint) {
 
