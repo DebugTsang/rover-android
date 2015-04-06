@@ -1,6 +1,7 @@
 package co.roverlabs.sdk.managers;
 
 import android.content.Context;
+import android.os.CountDownTimer;
 import android.util.Log;
 
 import com.squareup.otto.Subscribe;
@@ -8,6 +9,7 @@ import com.squareup.otto.Subscribe;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
@@ -31,10 +33,12 @@ import co.roverlabs.sdk.utilities.RoverUtils;
 public class RoverVisitManager {
     
     public static final String TAG = RoverVisitManager.class.getSimpleName();
+    private final long COUNT_DOWN_INTERVAL = 60000;
     private static RoverVisitManager sVisitManagerInstance;
     private Context mContext;
     private RoverVisit mLatestVisit;
     private RoverCustomer mCustomer;
+    private RoverTimer mRangeTimer;
     
     //Constructor
     private RoverVisitManager(Context con) { 
@@ -63,6 +67,11 @@ public class RoverVisitManager {
     @Subscribe
     public void didEnterRegion(RoverEnteredRegionEvent event) {
 
+        if(mRangeTimer != null && mRangeTimer.hasCountDownStarted()) {
+            mRangeTimer.cancel();
+            mRangeTimer.setCountDownStarted(false);
+        }
+
         final RoverRegion subRegion = event.getRegion();
         final RoverRegion mainRegion = new RoverRegion(subRegion.getUuid(), subRegion.getMajor(), null);
 
@@ -70,7 +79,6 @@ public class RoverVisitManager {
             if(!mLatestVisit.isInSubRegion(subRegion)) {
                 didEnterSubRegion(subRegion);
             }
-            RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_START));
             return;
         }
 
@@ -90,6 +98,7 @@ public class RoverVisitManager {
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
                 didEnterSubRegion(subRegion);
                 RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_START));
+                mRangeTimer = new RoverTimer(mLatestVisit.getKeepAliveTime(), COUNT_DOWN_INTERVAL);
                 RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             }
 
@@ -108,14 +117,15 @@ public class RoverVisitManager {
             Calendar now = Calendar.getInstance();
             mLatestVisit.setLastBeaconDetectionTime(now);
             if(mLatestVisit.currentlyContainsWildCardTouchpoints()) {
-                exitedAllWildCardTouchpoints();
+                exitAllWildCardTouchpoints();
             }
             if(mLatestVisit.currentlyContainsTouchpoints()) {
-                exitedAllTouchpoints();
+                exitAllTouchpoints();
             }
             RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             RoverEventBus.getInstance().post(new RoverExitedLocationEvent(mLatestVisit));
-            RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_STOP));
+            mRangeTimer.start();
+            mRangeTimer.setCountDownStarted(true);
         }
         else if(event.getRegionType().equals(RoverConstants.REGION_TYPE_SUB)) {
             RoverRegion subRegion = event.getRegion();
@@ -123,7 +133,7 @@ public class RoverVisitManager {
         }
     }
 
-    public void exitedAllWildCardTouchpoints() {
+    public void exitAllWildCardTouchpoints() {
 
         Iterator<RoverTouchpoint> iterator = mLatestVisit.getCurrentTouchpoints().iterator();
         while(iterator.hasNext()) {
@@ -135,7 +145,7 @@ public class RoverVisitManager {
         }
     }
 
-    public void exitedAllTouchpoints() {
+    public void exitAllTouchpoints() {
 
         Iterator<RoverTouchpoint> iterator = mLatestVisit.getCurrentTouchpoints().iterator();
         while(iterator.hasNext()) {
@@ -151,7 +161,6 @@ public class RoverVisitManager {
                 RoverEnteredTouchpointEvent enteredTouchpointEvent = new RoverEnteredTouchpointEvent(mLatestVisit.getId(), wildCardTouchpoint);
                 if(!mLatestVisit.getVisitedTouchpoints().contains(wildCardTouchpoint)) {
                     Log.d(TAG, "Touchpoint wild card (" + wildCardTouchpoint.getTitle() + ") - not seen before");
-                    //mLatestVisit.addToCurrentTouchpoints(wildCardTouchpoint);
                     enteredTouchpointEvent.setBeenVisited(false);
                 }
                 else {
@@ -169,7 +178,6 @@ public class RoverVisitManager {
             RoverEnteredTouchpointEvent enteredTouchpointEvent = new RoverEnteredTouchpointEvent(mLatestVisit.getId(), touchpoint);
             if(!mLatestVisit.getVisitedTouchpoints().contains(touchpoint)) {
                 Log.d(TAG, "Touchpoint minor " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ") - not seen before");
-                //mLatestVisit.addToCurrentTouchpoints(touchpoint);
                 enteredTouchpointEvent.setBeenVisited(false);
             }
             else {
@@ -196,5 +204,30 @@ public class RoverVisitManager {
             mLatestVisit = (RoverVisit)RoverUtils.readObjectFromSharedPrefs(mContext, RoverVisit.class, null);
         }
         return mLatestVisit;
+    }
+
+    private class RoverTimer extends CountDownTimer {
+
+        public final String TAG = RoverTimer.class.getSimpleName();
+        private boolean mCountDownStarted = false;
+
+        public RoverTimer(long rangeTime, long countDownInterval) { super(rangeTime, countDownInterval); }
+
+        public void setCountDownStarted(boolean started) { mCountDownStarted = started; }
+
+        public boolean hasCountDownStarted() { return mCountDownStarted; }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+            Log.d(TAG, "Time left for ranging - " + TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished) + " minute(s)");
+        }
+
+        @Override
+        public void onFinish() {
+
+            Log.d(TAG, "RoverRangeTimer has expired - ranging will now be stopped");
+            RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_STOP));
+        }
     }
 }
