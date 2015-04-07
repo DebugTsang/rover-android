@@ -7,6 +7,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
 import co.roverlabs.sdk.events.RoverEnteredTouchpointEvent;
@@ -25,7 +26,7 @@ import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
- * Created by SherryYang on 2015-01-21.
+ *
  */
 public class Rover {
 
@@ -55,7 +56,7 @@ public class Rover {
 
     public static Rover getInstance(Context con) {
 
-        if (sRoverInstance == null) {
+        if(sRoverInstance == null) {
             Log.d(TAG, "Rover is null");
             sRoverInstance = new Rover(con);
         }
@@ -106,6 +107,18 @@ public class Rover {
         mNotificationManager.setNotificationIconId(getNotificationIconId());
     }
 
+    private String getCustomerId() {
+
+        if(mCustomerId == null) {
+            mCustomerId = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, null);
+            if(mCustomerId == null) {
+                mCustomerId = UUID.randomUUID().toString();
+                RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, mCustomerId);
+            }
+        }
+        return mCustomerId;
+    }
+
     //Getters
     public String getAppId() { 
         
@@ -117,10 +130,7 @@ public class Rover {
     
     public String getAuthToken() {
 
-        if(mAppId == null) {
-            mAppId = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_APP_ID, null);
-        }
-        return "Bearer " + mAppId; 
+        return "Bearer " + getAppId();
     }
     
     public String getUuid() {
@@ -148,14 +158,6 @@ public class Rover {
             mLaunchActivityName = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_LAUNCH_ACTIVITY_NAME, null);
         }
         return mLaunchActivityName;
-    }
-
-    public String getCustomerId() {
-
-        if(mCustomerId == null) {
-            mCustomerId = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, null);
-        }
-        return mCustomerId;
     }
 
     public String getCustomerName() {
@@ -206,12 +208,6 @@ public class Rover {
 
         mLaunchActivityName = launchActivityName;
         RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_LAUNCH_ACTIVITY_NAME, launchActivityName);
-    }
-
-    public void setCustomerId(String customerId) {
-
-        mCustomerId = customerId;
-        RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, customerId);
     }
 
     public void setCustomerName(String customerName) {

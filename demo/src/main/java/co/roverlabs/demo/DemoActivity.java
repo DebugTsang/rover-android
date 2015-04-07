@@ -21,6 +21,7 @@ public class DemoActivity extends ActionBarActivity {
         
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+
         
         mRover = Rover.getInstance(this.getApplicationContext());
 
@@ -28,7 +29,6 @@ public class DemoActivity extends ActionBarActivity {
         mRover.setSimulation(true);
         mRover.setUuid("7931D3AA-299B-4A12-9FCC-D66F2C5D2462");
         mRover.setAppId("eae9edb6352b8fec6618d3d9cb96f2e795e1c2df1ad5388af807b05d8dfcd7d6");
-        mRover.setCustomerId("1234");
         mRover.setCustomerName("Sean");
         mRover.setCustomerEmail("srucker@gmail.com");
         Map<String, Object> customerTraits = new HashMap<>();
