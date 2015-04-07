@@ -17,7 +17,21 @@ import java.util.Map;
 public class RoverUtils {
     
     public static final String TAG = RoverUtils.class.getSimpleName();
-    
+
+    public static boolean readBoolFromSharedPrefs(Context con, String key, boolean defaultValue) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPrefs.getBoolean(key, defaultValue);
+    }
+
+    public static void writeBoolToSharedPrefs(Context con, String key, boolean value) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
     public static String readStringFromSharedPrefs(Context con, String key, String defaultValue) {
 
         SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);

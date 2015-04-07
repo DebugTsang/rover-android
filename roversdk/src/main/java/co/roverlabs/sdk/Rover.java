@@ -45,14 +45,11 @@ public class Rover {
     private String mCustomerName;
     private String mCustomerEmail;
     private Map<String, Object> mCustomerTraits;
-    private boolean mIsSimulation;
     //TODO: Get rid of temp fix
     private boolean mSetUp = false;
     private boolean mMonitorStarted = false;
 
     private Rover(Context con) { mContext = con; }
-
-    public void setSimulation(boolean isSimulation) { mIsSimulation = isSimulation; }
 
     public static Rover getInstance(Context con) {
 
@@ -92,7 +89,7 @@ public class Rover {
         
         mVisitManager = RoverVisitManager.getInstance(mContext);
         mVisitManager.setCustomer(getCustomerId(), getCustomerName(), getCustomerEmail(), getCustomerTraits());
-        mVisitManager.setSimulation(mIsSimulation);
+        mVisitManager.setSimulation(getSimulation());
     }
     
     private void setNetworkManager() {
@@ -185,6 +182,11 @@ public class Rover {
         return mCustomerTraits;
     }
 
+    public boolean getSimulation() {
+
+        return RoverUtils.readBoolFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_SIMULATION, false);
+    }
+
     //Setters
     public void setAppId(String appId) { 
         
@@ -227,6 +229,11 @@ public class Rover {
         mCustomerTraits = new HashMap<String, Object>();
         mCustomerTraits = customerTraits;
         RoverUtils.writeMapToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_TRAITS, customerTraits);
+    }
+
+    public void setSimulation(boolean isSimulation) {
+
+        RoverUtils.writeBoolToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_SIMULATION, isSimulation);
     }
 
     public void startMonitoring() {
