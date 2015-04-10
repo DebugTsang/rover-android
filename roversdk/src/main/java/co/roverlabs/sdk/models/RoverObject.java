@@ -41,7 +41,7 @@ public abstract class RoverObject {
 
     
     public void save(final RoverObjectSaveListener objectSaveListener) {
-        
+        // instead of this, broadcast event: RoverVisitNeedsValidation -> THIS ()RoverVisit)
         final RoverObject self = this;
         
         mNetworkManager.sendObjectSaveRequest(this, new RoverNetworkObjectSaveListener() {

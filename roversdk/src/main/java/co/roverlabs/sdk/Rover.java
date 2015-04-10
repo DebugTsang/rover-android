@@ -25,9 +25,6 @@ import co.roverlabs.sdk.networks.RoverNetworkManager;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
-/**
- *
- */
 public class Rover {
 
     public static final String TAG = Rover.class.getSimpleName();
@@ -37,10 +34,7 @@ public class Rover {
     private RoverVisitManager mVisitManager;
     private RoverNetworkManager mNetworkManager;
     private RoverNotificationManager mNotificationManager;
-    private String mUuid;
-    private String mAppId;
-    private int mNotificationIconId;
-    private String mLaunchActivityName;
+    private RoverConfigs mConfigs;
     private String mCustomerId;
     private String mCustomerName;
     private String mCustomerEmail;
@@ -62,47 +56,63 @@ public class Rover {
         }
         return sRoverInstance;
     }
-    
-    public void completeSetUp() {
-        
-        if(!mSetUp) {
-            Log.d(TAG, "Setting Rover up for the first time");
-            RoverEventBus.getInstance().register(this);
-            setRegionManager();
-            setVisitManager();
-            setNetworkManager();
-            setNotificationManager();
-            mSetUp = true;
+
+    public void setConfigurations(RoverConfigs configs) {
+
+        if(!configs.isComplete()) {
+            Log.d(TAG, "Rover cannot be set up - configurations incomplete");
+            return;
         }
-        else {
-            Log.d(TAG, "Rover has already been set up");
-        }
+        mConfigs = configs;
+        RoverUtils.writeObjectToSharedPrefs(mContext, configs);
+        completeSetUp();
     }
     
-    private void setRegionManager() {
+    private void completeSetUp() {
+
+        Log.d(TAG, "Setting up Rover");
+        getConfigurations();
+        RoverEventBus.getInstance().register(this);
+        setRegionManager(mConfigs.getUuid());
+        setVisitManager(mConfigs.getSandBoxMode());
+        setNetworkManager(mConfigs.getAuthToken());
+        setNotificationManager(mConfigs.getNotificationIconId());
+        mSetUp = true;
+    }
+
+    public void getConfigurations() {
+
+        if(mConfigs == null) {
+            mConfigs = (RoverConfigs)RoverUtils.readObjectFromSharedPrefs(mContext, RoverConfigs.class, null);
+        }
+    }
+
+    private void setRegionManager(String uuid) {
         
         mRegionManager = RoverRegionManager.getInstance(mContext);
-        mRegionManager.setMonitorRegion(getUuid());
+        mRegionManager.setMonitorRegion(uuid);
     }
     
-    private void setVisitManager() {
+    private void setVisitManager(boolean sandBoxMode) {
         
         mVisitManager = RoverVisitManager.getInstance(mContext);
+        //Customer object
         mVisitManager.setCustomer(getCustomerId(), getCustomerName(), getCustomerEmail(), getCustomerTraits());
-        mVisitManager.setSimulation(getSimulation());
+        mVisitManager.setSandBoxMode(sandBoxMode);
     }
     
-    private void setNetworkManager() {
+    private void setNetworkManager(String authToken) {
         
         mNetworkManager = RoverNetworkManager.getInstance();
-        mNetworkManager.setAuthToken(getAuthToken());
+        mNetworkManager.setAuthToken(authToken);
     }
     
-    private void setNotificationManager() {
+    private void setNotificationManager(int notificationIconId) {
         
         mNotificationManager = RoverNotificationManager.getInstance(mContext);
-        mNotificationManager.setNotificationIconId(getNotificationIconId());
+        mNotificationManager.setNotificationIconId(notificationIconId);
     }
+
 
     private String getCustomerId() {
 
@@ -114,47 +124,6 @@ public class Rover {
             }
         }
         return mCustomerId;
-    }
-
-    //Getters
-    public String getAppId() { 
-        
-        if(mAppId == null) {
-            mAppId = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_APP_ID, null);
-        }
-        return mAppId; 
-    }
-    
-    public String getAuthToken() {
-
-        return "Bearer " + getAppId();
-    }
-    
-    public String getUuid() {
-
-        if(mUuid == null) {
-            mUuid = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_UUID, null);
-        }
-        return mUuid;
-    }
-    
-    public int getNotificationIconId() { 
-        
-        if(mNotificationIconId == 0) {
-            mNotificationIconId = RoverUtils.readIntFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_NOTIFICATION_ICON_ID, 0);
-            if(mNotificationIconId == 0) {
-                mNotificationIconId = R.drawable.rover_icon;
-            }
-        }
-        return mNotificationIconId;
-    }
-
-    public String getLaunchActivityName() {
-
-        if (mLaunchActivityName == null) {
-            mLaunchActivityName = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_LAUNCH_ACTIVITY_NAME, null);
-        }
-        return mLaunchActivityName;
     }
 
     public String getCustomerName() {
@@ -182,36 +151,6 @@ public class Rover {
         return mCustomerTraits;
     }
 
-    public boolean getSimulation() {
-
-        return RoverUtils.readBoolFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_SIMULATION, false);
-    }
-
-    //Setters
-    public void setAppId(String appId) { 
-        
-        mAppId = appId;
-        RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_APP_ID, appId);
-    }
-    
-    public void setUuid(String uuid) { 
-        
-        mUuid = uuid;
-        RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_UUID, uuid);
-    }
-    
-    public void setNotificationIconId(int resourceId) { 
-        
-        mNotificationIconId = resourceId;
-        RoverUtils.writeIntToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_NOTIFICATION_ICON_ID, resourceId);
-    }
-
-    public void setLaunchActivityName(String launchActivityName) {
-
-        mLaunchActivityName = launchActivityName;
-        RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_LAUNCH_ACTIVITY_NAME, launchActivityName);
-    }
-
     public void setCustomerName(String customerName) {
 
         mCustomerName = customerName;
@@ -231,13 +170,12 @@ public class Rover {
         RoverUtils.writeMapToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_TRAITS, customerTraits);
     }
 
-    public void setSimulation(boolean isSimulation) {
-
-        RoverUtils.writeBoolToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_SIMULATION, isSimulation);
-    }
-
     public void startMonitoring() {
 
+        if(!mSetUp) {
+            Log.d(TAG, "Setting up Rover before monitoring can start");
+            completeSetUp();
+        }
         if(!mMonitorStarted) {
             Log.d(TAG, "Monitoring is being started by Rover");
             mRegionManager.startMonitoring();
@@ -250,13 +188,17 @@ public class Rover {
 
     public void stopMonitoring() {
 
-        if(mMonitorStarted) {
-            Log.d(TAG, "Monitoring is being stopped by Rover");
-            mRegionManager.stopMonitoring();
-            mMonitorStarted = false;
+        if(mSetUp) {
+            if(mMonitorStarted) {
+                mRegionManager.stopMonitoring();
+                mMonitorStarted = false;
+            }
+            else {
+                Log.d(TAG, "Monitoring was already stopped by Rover - do nothing");
+            }
         }
         else {
-            Log.d(TAG, "Monitoring was already stopped by Rover - do nothing");
+            Log.d(TAG, "Rover has not been set up yet - do nothing");
         }
     }
     
@@ -322,7 +264,7 @@ public class Rover {
             String message = touchpoint.getNotification();
             RoverNotificationEvent notificationEvent = null;
             try {
-                notificationEvent = new RoverNotificationEvent(id, title, message, Class.forName(getLaunchActivityName()));
+                notificationEvent = new RoverNotificationEvent(id, title, message, Class.forName(mConfigs.getLaunchActivityName()));
                 if(touchpoint.getMinor() != null) {
                     Log.d(TAG, "Sending notification - touchpoint minor " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ")");
                 }

@@ -17,7 +17,7 @@ public class RoverConstants {
     public static final String SHARED_PREFS_NAME_CUSTOMER_NAME = "CustomerName";
     public static final String SHARED_PREFS_NAME_CUSTOMER_EMAIL = "CustomerEmail";
     public static final String SHARED_PREFS_NAME_CUSTOMER_TRAITS = "CustomerTraits";
-    public static final String SHARED_PREFS_NAME_SIMULATION = "IsSimulation";
+    public static final String SHARED_PREFS_NAME_SAND_BOX_MODE = "SandBoxMode";
     public static final String REGION_TYPE_MAIN = "RegionTypeMain";
     public static final String REGION_TYPE_SUB = "RegionTypeSub";
     public static final String RANGE_ACTION_START = "RangeStart";

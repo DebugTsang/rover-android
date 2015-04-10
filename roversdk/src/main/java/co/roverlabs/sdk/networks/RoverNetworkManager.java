@@ -37,7 +37,7 @@ public class RoverNetworkManager {
     public RoverNetworkInterface makeCall() {
         
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'")
+                .setDateFormat("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSSZZZZZ")
                 .create();
         
         RoverNetworkInterface call = new RestAdapter.Builder()

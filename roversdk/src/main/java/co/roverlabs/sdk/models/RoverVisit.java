@@ -20,7 +20,7 @@ import co.roverlabs.sdk.utilities.RoverConstants;
 public class RoverVisit extends RoverObject {
 
     //JSON members
-    @SerializedName("keepAlive") private long mKeepAliveTime;
+    @SerializedName("keepAlive") private long mKeepAliveTimeInMinutes;
     @SerializedName("organization") private RoverOrganization mOrganization;
     @SerializedName("location") private RoverLocation mLocation;
     @SerializedName("customer") private RoverCustomer mCustomer;
@@ -54,7 +54,7 @@ public class RoverVisit extends RoverObject {
     }
     
     //Getters
-    public long getKeepAliveTime() { return mKeepAliveTime; }
+    public long getKeepAliveTime() { return mKeepAliveTimeInMinutes; }
     public RoverOrganization getOrganization() { return mOrganization; }
     public RoverLocation getLocation() { return mLocation; }
     public RoverCustomer getCustomer() { return mCustomer; }
@@ -102,7 +102,7 @@ public class RoverVisit extends RoverObject {
     }
 
     //Setter
-    public void setKeepAliveTime(long keepAliveTime) { mKeepAliveTime = keepAliveTime; }
+    public void setKeepAliveTime(long keepAliveTime) { mKeepAliveTimeInMinutes = keepAliveTime; }
     public void setOrganization(RoverOrganization organization) { mOrganization = organization; }
     public void setLocation(RoverLocation location) { mLocation = location; }
     public void setCustomer(RoverCustomer customer) { mCustomer = customer; }
@@ -150,7 +150,7 @@ public class RoverVisit extends RoverObject {
 
     public boolean isAlive() {
 
-        long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(mKeepAliveTime);
+        long keepAliveTimeInMillis = TimeUnit.MINUTES.toMillis(mKeepAliveTimeInMinutes);
         Calendar now = Calendar.getInstance();
         long elapsedTime = now.getTimeInMillis() - mLastBeaconDetectionTime.getTimeInMillis();
         return elapsedTime < keepAliveTimeInMillis;
@@ -182,7 +182,7 @@ public class RoverVisit extends RoverObject {
 
         RoverVisit visit = (RoverVisit)object;
         super.update(visit);
-        mKeepAliveTime = visit.getKeepAliveTime();
+        mKeepAliveTimeInMinutes = visit.getKeepAliveTime();
         mOrganization = visit.getOrganization();
         mLocation = visit.getLocation();
         mCustomer = visit.getCustomer();

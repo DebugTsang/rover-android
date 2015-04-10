@@ -39,7 +39,7 @@ public class RoverVisitManager {
     private RoverVisit mLatestVisit;
     private RoverCustomer mCustomer;
     private RoverTimer mRangeTimer;
-    private boolean mIsSimulation;
+    private boolean mSandBoxMode;
     
     //Constructor
     private RoverVisitManager(Context con) { 
@@ -56,7 +56,7 @@ public class RoverVisitManager {
         return sVisitManagerInstance;
     }
 
-    public void setSimulation(boolean isSimulation) { mIsSimulation = isSimulation; }
+    public void setSandBoxMode(boolean sandBoxMode) { mSandBoxMode = sandBoxMode; }
 
     public void setCustomer(String id, String name, String email, Map<String, Object> traits) {
 
@@ -87,7 +87,7 @@ public class RoverVisitManager {
 
         Calendar now = Calendar.getInstance();
         mLatestVisit = new RoverVisit();
-        mLatestVisit.setSimulation(mIsSimulation);
+        mLatestVisit.setSimulation(mSandBoxMode);
         mLatestVisit.setCustomer(mCustomer);
         mLatestVisit.setRegion(mainRegion);
         mLatestVisit.setTimeStamp(now.getTime());
@@ -100,7 +100,9 @@ public class RoverVisitManager {
 
                 Log.d(TAG, "Visit object save successful");
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
-                didEnterSubRegion(subRegion);
+                if(!mLatestVisit.isInSubRegion(subRegion)) {
+                    didEnterSubRegion(subRegion);
+                }
                 RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_START));
                 mRangeTimer = new RoverTimer(mLatestVisit.getKeepAliveTime(), COUNT_DOWN_INTERVAL);
                 RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
@@ -215,11 +217,20 @@ public class RoverVisitManager {
         public final String TAG = RoverTimer.class.getSimpleName();
         private boolean mCountDownStarted = false;
 
-        public RoverTimer(long rangeTime, long countDownInterval) { super(rangeTime, countDownInterval); }
+        public RoverTimer(long keepAliveTimeInMinutes, long countDownInterval) {
 
-        public void setCountDownStarted(boolean started) { mCountDownStarted = started; }
+            super(TimeUnit.MINUTES.toMillis(keepAliveTimeInMinutes), countDownInterval);
+        }
 
-        public boolean hasCountDownStarted() { return mCountDownStarted; }
+        public void setCountDownStarted(boolean started) {
+
+            mCountDownStarted = started;
+        }
+
+        public boolean hasCountDownStarted() {
+
+            return mCountDownStarted;
+        }
 
         @Override
         public void onTick(long millisUntilFinished) {

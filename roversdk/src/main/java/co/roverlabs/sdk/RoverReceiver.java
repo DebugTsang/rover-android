@@ -18,7 +18,6 @@ public class RoverReceiver extends BroadcastReceiver {
 
         Log.d(TAG, "The action received is " + intent.getAction());
         mRover = Rover.getInstance(context.getApplicationContext());
-        mRover.completeSetUp();
         mRover.startMonitoring();
     }
 }
