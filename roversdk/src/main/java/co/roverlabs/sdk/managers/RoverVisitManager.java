@@ -8,7 +8,6 @@ import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
@@ -56,15 +55,14 @@ public class RoverVisitManager {
         return sVisitManagerInstance;
     }
 
-    public void setSandBoxMode(boolean sandBoxMode) { mSandBoxMode = sandBoxMode; }
+    public void setSandBoxMode(boolean sandBoxMode) {
 
-    public void setCustomer(String id, String name, String email, Map<String, Object> traits) {
+        mSandBoxMode = sandBoxMode;
+    }
 
-        mCustomer = new RoverCustomer();
-        mCustomer.setId(id);
-        mCustomer.setName(name);
-        mCustomer.setEmail(email);
-        mCustomer.setTraits(traits);
+    public void setCustomer(RoverCustomer customer) {
+
+        mCustomer = customer;
     }
 
     @Subscribe

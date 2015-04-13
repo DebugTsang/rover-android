@@ -1,5 +1,7 @@
 package co.roverlabs.sdk.models;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
@@ -15,7 +17,7 @@ public class RoverCustomer extends RoverObject {
     @SerializedName("name") private String mName;
     @SerializedName("email") private String mEmail;
     @SerializedName("traits") private Map<String, Object> mTraits;
-    
+
     //Constructor
     public RoverCustomer() {
 
@@ -34,4 +36,32 @@ public class RoverCustomer extends RoverObject {
     public void setName(String name) { mName = name; }
     public void setEmail(String email) { mEmail = email; }
     public void setTraits(Map<String, Object> traits) { mTraits = traits; }
+
+    public void addTraits(String key, Object value) {
+
+        if(mTraits == null) {
+            mTraits = new HashMap<>();
+        }
+        mTraits.put(key, value);
+    }
+
+    public boolean isComplete() {
+
+        String missing = "Missing property: ";
+
+        if(mName == null) {
+            missing += "Name";
+        }
+        if(mEmail == null) {
+            missing += ", Email";
+        }
+
+        if(mName != null && mEmail != null) {
+            return true;
+        }
+        else {
+            Log.d(TAG, missing);
+            return false;
+        }
+    }
 }
