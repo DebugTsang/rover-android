@@ -4,6 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by SherryYang on 2015-01-27.
@@ -11,51 +17,90 @@ import com.google.gson.Gson;
 public class RoverUtils {
     
     public static final String TAG = RoverUtils.class.getSimpleName();
-    private static final String SHARED_PREFS_NAME = "RoverPrefs";
-    
-    public static String readStringFromSharedPreferences(Context con, String key, String defaultValue) {
 
-        SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
-        return sharedPreferences.getString(key, defaultValue);
+    public static boolean readBoolFromSharedPrefs(Context con, String key, boolean defaultValue) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPrefs.getBoolean(key, defaultValue);
+    }
+
+    public static void writeBoolToSharedPrefs(Context con, String key, boolean value) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public static String readStringFromSharedPrefs(Context con, String key, String defaultValue) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPrefs.getString(key, defaultValue);
     }
     
-    public static void writeStringToSharedPreferences(Context con, String key, String value) {
+    public static void writeStringToSharedPrefs(Context con, String key, String value) {
         
-        SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(key, value);
         editor.apply();
     }
     
-    public static int readIntFromSharedPreferences(Context con, String key, int defaultValue) {
+    public static int readIntFromSharedPrefs(Context con, String key, int defaultValue) {
 
-        SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
-        return sharedPreferences.getInt(key, defaultValue);
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        return sharedPrefs.getInt(key, defaultValue);
     }
 
-    public static void writeIntToSharedPreferences(Context con, String key, int value) {
+    public static void writeIntToSharedPrefs(Context con, String key, int value) {
 
-        SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putInt(key, value);
         editor.apply();
     }
-    
-    public static Object readObjectFromSharedPreferences(Context con, Class customObjectClass, String defaultValue) {
-        
-        SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
+
+    public static Map<String, Object> readMapFromSharedPrefs(Context con, String key) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = sharedPreferences.getString(customObjectClass.getSimpleName(), defaultValue);
+        String json = sharedPrefs.getString(key, null);
+        Type type = new TypeToken<Map<String, Object>>(){}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    public static void writeMapToSharedPrefs(Context con, String key, Map<String, Object> value) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(value);
+        editor.putString(key, json);
+        editor.apply();
+    }
+    
+    public static Object readObjectFromSharedPrefs(Context con, Class customObjectClass, String defaultValue) {
+        
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, 0);
+        Gson gson = new Gson();
+        String json = sharedPrefs.getString(customObjectClass.getSimpleName(), defaultValue);
         return gson.fromJson(json, customObjectClass);
     }
     
-    public static void writeObjectToSharedPreferences(Context con, Object customObject) {
+    public static void writeObjectToSharedPrefs(Context con, Object customObject) {
 
-        SharedPreferences sharedPreferences = con.getSharedPreferences(SHARED_PREFS_NAME, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, 0);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(customObject);
         editor.putString(customObject.getClass().getSimpleName(), json);
         editor.apply();
+    }
+
+    public static List subtractList(List list1, List list2) {
+
+        List result = new ArrayList(list2);
+        result.removeAll(list1);
+        return result;
     }
 }

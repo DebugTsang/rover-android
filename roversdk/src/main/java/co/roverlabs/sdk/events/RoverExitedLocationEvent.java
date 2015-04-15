@@ -5,21 +5,21 @@ import java.util.Calendar;
 import co.roverlabs.sdk.models.RoverVisit;
 
 /**
- * Created by SherryYang on 2015-03-09.
+ * Created by SherryYang on 2015-03-25.
  */
-public class RoverEnteredLocationEvent extends RoverEvent {
+public class RoverExitedLocationEvent extends RoverEvent {
 
-    public static final String TAG = RoverEnteredLocationEvent.class.getSimpleName();
+    public static final String TAG = RoverExitedLocationEvent.class.getSimpleName();
     transient private RoverVisit mVisit;
-    
-    public RoverEnteredLocationEvent(RoverVisit visit) {
+
+    public RoverExitedLocationEvent(RoverVisit visit) {
 
         mObjectName = "location";
-        mAction = "enter";
+        mAction = "exit";
         mTimeStamp = Calendar.getInstance().getTime();
         mVisit = visit;
         mId = visit.getId();
     }
-    
+
     public RoverVisit getVisit() { return mVisit; }
 }

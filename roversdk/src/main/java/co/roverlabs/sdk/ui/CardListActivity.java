@@ -32,7 +32,7 @@ public class CardListActivity extends Activity {
         recyclerView.setLayoutManager(linearLayoutManager);
         //TODO: Shallow copy of the RoverVisit object, need to implement deep copy
         RoverVisit latestVisit = mVisitManager.getLatestVisit();
-        List<RoverCard> latestCards = latestVisit.getCurrentTouchpoint().getCards();
+        List<RoverCard> latestCards = latestVisit.getCurrentTouchpoints().get(0).getCards();
         CardListAdapter cardListAdapter = new CardListAdapter(createImageInCardList(latestCards), this);
         recyclerView.setAdapter(cardListAdapter);
     }

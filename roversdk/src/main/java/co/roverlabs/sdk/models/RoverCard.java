@@ -9,6 +9,7 @@ public class RoverCard extends RoverObject {
 
     //JSON members
     @SerializedName("title") private String mTitle;
+    //TODO: View object needs to be added
     
     //TODO: Remove these (used for testing)
     private String mMessage;
@@ -29,8 +30,3 @@ public class RoverCard extends RoverObject {
     public void setMessage(String message) { mMessage = message; }
     public void setImageResourceId(int imageResourceId) { mImageResourceId = imageResourceId; }
 }
-/*            "detailView":{  },
-            "id":"54dc0ab206489ada572dc472",
-            "listView":{  },
-            "meta":{  },
-            "title":"Back to School"*/

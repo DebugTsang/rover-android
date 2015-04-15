@@ -5,10 +5,14 @@ package co.roverlabs.sdk.utilities;
  */
 public class RoverConstants {
 
-    public static final String ROVER_URL = "https://rover-node.herokuapp.com/mobile/v2";
-    public static final String ESTIMOTE_DEFAULT_UUID = "B9407F30-F5F8-466E-AFF9-25556B57FE6D";
-    public static final int TEST_MAJOR_ESTIMOTE = 65535;
-    public static final int TEST_MINOR_ESTIMOTE = 58856;
-
-    public final static String GROUP_KEY_TOUCHPOINTS = "group_key_touchpoints";
+    public static final String ROVER_URL = "http://api.roverlabs.co/mobile/v2";
+    public static final String OPERATING_SYSTEM = "Android";
+    public static final String SDK_VERSION = "0.1.0";
+    public static final String SHARED_PREFS_NAME = "RoverPrefs";
+    public static final String SHARED_PREFS_NAME_CUSTOMER_ID = "CustomerId";
+    public static final String REGION_TYPE_MAIN = "RegionTypeMain";
+    public static final String REGION_TYPE_SUB = "RegionTypeSub";
+    public static final String RANGE_ACTION_START = "RangeStart";
+    public static final String RANGE_ACTION_STOP = "RangeStop";
+    public static final String WILD_CARD_TOUCHPOINT_TRIGGER = "visit";
 }
