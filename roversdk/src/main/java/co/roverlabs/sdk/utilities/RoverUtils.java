@@ -81,7 +81,7 @@ public class RoverUtils {
     
     public static Object readObjectFromSharedPrefs(Context con, Class customObjectClass, String defaultValue) {
         
-        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, 0);
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPrefs.getString(customObjectClass.getSimpleName(), defaultValue);
         return gson.fromJson(json, customObjectClass);
@@ -89,11 +89,27 @@ public class RoverUtils {
     
     public static void writeObjectToSharedPrefs(Context con, Object customObject) {
 
-        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, 0);
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(customObject);
         editor.putString(customObject.getClass().getSimpleName(), json);
+        editor.apply();
+    }
+
+    public static void removeObjectFromSharedPrefs(Context con, Class customObjectClass) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.remove(customObjectClass.getSimpleName());
+        editor.apply();
+    }
+
+    public static void clearSharedPrefs(Context con) {
+
+        SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPrefs.edit();
+        editor.clear();
         editor.apply();
     }
 

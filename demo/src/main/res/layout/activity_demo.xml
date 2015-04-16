@@ -1,13 +1,165 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".DemoActivity">
+    tools:context=".DemoActivity">
 
-    <TextView android:text="@string/welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView" />
+    <ScrollView android:id="@+id/customer_info_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <LinearLayout android:id="@+id/customer_info_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/welcome_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:gravity="center"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/welcome"
+                android:layout_margin="20dp" />
+
+            <TextView
+                android:id="@+id/customer_id_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:visibility="gone"
+                android:textIsSelectable="true"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/hi_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_gravity="center_horizontal"
+                android:padding="20dp"
+                android:visibility="gone"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/monitoring_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_gravity="center_horizontal"
+                android:padding="20dp"
+                android:visibility="gone"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/reset_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_gravity="center_horizontal"
+                android:padding="20dp"
+                android:text="@string/reset_message"
+                android:visibility="gone"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/ready_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_gravity="center_horizontal"
+                android:padding="20dp"
+                android:text="@string/ready_message"
+                android:visibility="gone"
+                android:gravity="center" />
+
+            <EditText android:id="@+id/customer_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_name"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText android:id="@+id/customer_email_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/customer_phone_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/prompt_phone"
+                android:inputType="phone"
+                android:ems="10"
+                android:layout_gravity="center_horizontal" />
+
+            <Button
+                style="?android:textAppearanceSmall"
+                android:id="@+id/monitor_start_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_monitor_start"
+                android:visibility="gone"
+                android:textStyle="bold" />
+
+            <Button
+                style="?android:textAppearanceSmall"
+                android:id="@+id/monitor_stop_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_monitor_stop"
+                android:visibility="gone"
+                android:textStyle="bold" />
+
+            <Button
+                style="?android:textAppearanceSmall"
+                android:id="@+id/reset_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_reset"
+                android:visibility="gone"
+                android:textStyle="bold" />
+
+            <Button
+                style="?android:textAppearanceSmall"
+                android:id="@+id/save_customer_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_customer_save"
+                android:textStyle="bold" />
+
+            <Button
+                style="?android:textAppearanceSmall"
+                android:id="@+id/new_customer_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_customer_new"
+                android:visibility="gone"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

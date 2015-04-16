@@ -3,6 +3,19 @@
 
     <string name="app_name">Rover Demo</string>
     <string name="welcome">Welcome to the Rover demo!</string>
-    <string name="action_settings">Settings</string>
+
+    <string name="prompt_name">Name</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_phone">Phone Number (Optional)</string>
+    <string name="monitoring_started_message">Rover is now monitoring for beacons!</string>
+    <string name="monitoring_stopped_message">Rover is not monitoring for beacons!</string>
+    <string name="ready_message">Rover is now ready for beacon monitoring</string>
+    <string name="reset_message">Rover has been reset</string>
+    <string name="action_monitor_start">Start Monitoring</string>
+    <string name="action_monitor_stop">Stop Monitoring</string>
+    <string name="action_customer_save">Save</string>
+    <string name="action_customer_new">Create New Customer</string>
+    <string name="action_reset">Reset</string>
+    <string name="error_field_required">This field is required</string>
 
 </resources>

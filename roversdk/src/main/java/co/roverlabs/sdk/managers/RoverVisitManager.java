@@ -36,7 +36,7 @@ public class RoverVisitManager {
     private static RoverVisitManager sVisitManagerInstance;
     private Context mContext;
     private RoverVisit mLatestVisit;
-    private RoverCustomer mCustomer;
+    //private RoverCustomer mCustomer;
     private RoverTimer mRangeTimer;
     private boolean mSandBoxMode;
     
@@ -60,10 +60,16 @@ public class RoverVisitManager {
         mSandBoxMode = sandBoxMode;
     }
 
-    public void setCustomer(RoverCustomer customer) {
+    public void resetVisit() {
 
-        mCustomer = customer;
+        mLatestVisit = null;
+        RoverUtils.removeObjectFromSharedPrefs(mContext, RoverVisit.class);
     }
+
+//    public void setCustomer(RoverCustomer customer) {
+//
+//        mCustomer = customer;
+//    }
 
     @Subscribe
     public void didEnterRegion(RoverEnteredRegionEvent event) {
@@ -86,7 +92,7 @@ public class RoverVisitManager {
         Calendar now = Calendar.getInstance();
         mLatestVisit = new RoverVisit();
         mLatestVisit.setSimulation(mSandBoxMode);
-        mLatestVisit.setCustomer(mCustomer);
+        mLatestVisit.setCustomer((RoverCustomer)RoverUtils.readObjectFromSharedPrefs(mContext, RoverCustomer.class, null));
         mLatestVisit.setRegion(mainRegion);
         mLatestVisit.setTimeStamp(now.getTime());
         mLatestVisit.setLastBeaconDetectionTime(now);
@@ -128,8 +134,10 @@ public class RoverVisitManager {
             }
             RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             RoverEventBus.getInstance().post(new RoverExitedLocationEvent(mLatestVisit));
-            mRangeTimer.start();
-            mRangeTimer.setCountDownStarted(true);
+            if(mRangeTimer != null) {
+                mRangeTimer.start();
+                mRangeTimer.setCountDownStarted(true);
+            }
         }
         else if(event.getRegionType().equals(RoverConstants.REGION_TYPE_SUB)) {
             RoverRegion subRegion = event.getRegion();

@@ -53,6 +53,24 @@ public class Rover {
         return sRoverInstance;
     }
 
+    public void reset() {
+
+        mConfigs = null;
+        mCustomer = null;
+        RoverUtils.removeObjectFromSharedPrefs(mContext, RoverConfigs.class);
+        RoverUtils.removeObjectFromSharedPrefs(mContext, RoverCustomer.class);
+        if(mVisitManager != null) {
+            mVisitManager.resetVisit();
+        }
+    }
+
+    public void resetVisit() {
+
+        if(mVisitManager != null) {
+            mVisitManager.resetVisit();
+        }
+    }
+
     public void setCustomer(RoverCustomer customer) {
 
         if(mCustomer != null) {
@@ -118,7 +136,7 @@ public class Rover {
     private void setVisitManager(RoverCustomer customer, boolean sandBoxMode) {
         
         mVisitManager = RoverVisitManager.getInstance(mContext);
-        mVisitManager.setCustomer(customer);
+        //mVisitManager.setCustomer(customer);
         mVisitManager.setSandBoxMode(sandBoxMode);
     }
     
@@ -134,14 +152,25 @@ public class Rover {
         mNotificationManager.setNotificationIconId(notificationIconId);
     }
 
-    private String getCustomerId() {
+    public String getCustomerId() {
 
         String customerId = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, null);
         if(customerId == null) {
-            customerId = UUID.randomUUID().toString();
-            RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, customerId);
+            customerId = createCustomerId();
         }
         return customerId;
+    }
+
+    public String createCustomerId() {
+
+        String customerId = UUID.randomUUID().toString();
+        RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, customerId);
+        return customerId;
+    }
+
+    public boolean isMonitoring() {
+
+        return mMonitorStarted;
     }
 
     public void startMonitoring() {
@@ -165,6 +194,7 @@ public class Rover {
         if(mSetUp) {
             if(mMonitorStarted) {
                 mRegionManager.stopMonitoring();
+                mRegionManager.stopRanging();
                 mMonitorStarted = false;
             }
             else {

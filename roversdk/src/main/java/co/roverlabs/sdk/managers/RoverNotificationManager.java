@@ -1,5 +1,6 @@
 package co.roverlabs.sdk.managers;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -54,6 +55,7 @@ public class RoverNotificationManager {
                 .setContentText(event.getMessage())
                 .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(event.getMessage()))
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true);
         
         mNotificationManager.notify(event.getId(), mNotificationBuilder.build());
