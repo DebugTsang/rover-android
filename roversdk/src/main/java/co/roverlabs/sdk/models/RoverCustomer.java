@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.models;
 
-import android.util.Log;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
@@ -43,25 +41,5 @@ public class RoverCustomer extends RoverObject {
             mTraits = new HashMap<>();
         }
         mTraits.put(key, value);
-    }
-
-    public boolean isComplete() {
-
-        String missing = "Missing property: ";
-
-        if(mName == null) {
-            missing += "Name";
-        }
-        if(mEmail == null) {
-            missing += ", Email";
-        }
-
-        if(mName != null && mEmail != null) {
-            return true;
-        }
-        else {
-            Log.d(TAG, missing);
-            return false;
-        }
     }
 }

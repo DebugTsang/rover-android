@@ -1,10 +1,12 @@
 package co.roverlabs.sdk;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.Map;
 import java.util.UUID;
 
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
@@ -53,15 +55,15 @@ public class Rover {
         return sRoverInstance;
     }
 
-    public void reset() {
+    public RoverCustomer resetCustomer() {
 
-        mConfigs = null;
-        mCustomer = null;
-        RoverUtils.removeObjectFromSharedPrefs(mContext, RoverConfigs.class);
-        RoverUtils.removeObjectFromSharedPrefs(mContext, RoverCustomer.class);
+        mCustomer = new RoverCustomer();
+        mCustomer.setId(createCustomerId());
+        RoverUtils.writeObjectToSharedPrefs(mContext, mCustomer);
         if(mVisitManager != null) {
             mVisitManager.resetVisit();
         }
+        return mCustomer;
     }
 
     public void resetVisit() {
@@ -73,25 +75,29 @@ public class Rover {
 
     public void setCustomer(RoverCustomer customer) {
 
-        if(mCustomer != null) {
-            Log.d(TAG, "Customer has already been set up - do nothing");
-            return;
+        String name = customer.getName();
+        String email = customer.getEmail();
+        Map<String, Object> traits = customer.getTraits();
+
+        getCustomer();
+
+        Log.d(TAG, "In setCustomer, customer ID is " + mCustomer.getId());
+
+        if(name != null && !TextUtils.isEmpty(name)) {
+            mCustomer.setName(name);
         }
-        if(!customer.isComplete()) {
-            Log.d(TAG, "Rover cannot be set up - customer property missing");
-            return;
+        if(email != null && !TextUtils.isEmpty(email)) {
+            mCustomer.setEmail(email);
         }
-        mCustomer = customer;
-        mCustomer.setId(getCustomerId());
-        RoverUtils.writeObjectToSharedPrefs(mContext, customer);
+        if(traits != null && !traits.isEmpty()) {
+            mCustomer.setTraits(traits);
+        }
+
+        RoverUtils.writeObjectToSharedPrefs(mContext, mCustomer);
     }
 
     public void setConfigurations(RoverConfigs configs) {
 
-        if(mConfigs != null) {
-            Log.d(TAG, "Rover has already been configured - do nothing");
-            return;
-        }
         if(!configs.isComplete()) {
             Log.d(TAG, "Rover cannot be set up - configurations incomplete");
             return;
@@ -104,68 +110,65 @@ public class Rover {
 
         Log.d(TAG, "Setting up Rover");
         if(mCustomer == null) {
-            mCustomer = getCustomer();
+            getCustomer();
         }
         if(mConfigs == null) {
-            mConfigs = getConfigurations();
+            getConfigurations();
         }
         RoverEventBus.getInstance().register(this);
         setRegionManager(mConfigs.getUuid());
-        setVisitManager(mCustomer, mConfigs.getSandBoxMode());
+        setVisitManager(mConfigs.getSandBoxMode());
         setNetworkManager(mConfigs.getAuthToken());
         setNotificationManager(mConfigs.getNotificationIconId());
         mSetUp = true;
     }
 
-    public RoverConfigs getConfigurations() {
-
-        return (RoverConfigs)RoverUtils.readObjectFromSharedPrefs(mContext, RoverConfigs.class, null);
-    }
-
-    public RoverCustomer getCustomer() {
-
-        return (RoverCustomer)RoverUtils.readObjectFromSharedPrefs(mContext, RoverCustomer.class, null);
-    }
-
     private void setRegionManager(String uuid) {
-        
+
         mRegionManager = RoverRegionManager.getInstance(mContext);
         mRegionManager.setMonitorRegion(uuid);
     }
-    
-    private void setVisitManager(RoverCustomer customer, boolean sandBoxMode) {
-        
+
+    private void setVisitManager(boolean sandBoxMode) {
+
         mVisitManager = RoverVisitManager.getInstance(mContext);
-        //mVisitManager.setCustomer(customer);
         mVisitManager.setSandBoxMode(sandBoxMode);
     }
-    
+
     private void setNetworkManager(String authToken) {
-        
+
         mNetworkManager = RoverNetworkManager.getInstance();
         mNetworkManager.setAuthToken(authToken);
     }
-    
+
     private void setNotificationManager(int notificationIconId) {
-        
+
         mNotificationManager = RoverNotificationManager.getInstance(mContext);
         mNotificationManager.setNotificationIconId(notificationIconId);
     }
 
-    public String getCustomerId() {
+    public RoverConfigs getConfigurations() {
 
-        String customerId = RoverUtils.readStringFromSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, null);
-        if(customerId == null) {
-            customerId = createCustomerId();
-        }
-        return customerId;
+        mConfigs = (RoverConfigs)RoverUtils.readObjectFromSharedPrefs(mContext, RoverConfigs.class, null);
+        return mConfigs;
     }
 
-    public String createCustomerId() {
+    public RoverCustomer getCustomer() {
 
-        String customerId = UUID.randomUUID().toString();
-        RoverUtils.writeStringToSharedPrefs(mContext, RoverConstants.SHARED_PREFS_NAME_CUSTOMER_ID, customerId);
-        return customerId;
+        mCustomer = (RoverCustomer)RoverUtils.readObjectFromSharedPrefs(mContext, RoverCustomer.class, null);
+        if(mCustomer == null) {
+            Log.d(TAG, "Creating a new customer");
+            mCustomer = new RoverCustomer();
+            mCustomer.setId(createCustomerId());
+            RoverUtils.writeObjectToSharedPrefs(mContext, mCustomer);
+            Log.d(TAG, "Customer ID is " + mCustomer.getId());
+        }
+        return mCustomer;
+    }
+
+    private String createCustomerId() {
+
+        return UUID.randomUUID().toString();
     }
 
     public boolean isMonitoring() {

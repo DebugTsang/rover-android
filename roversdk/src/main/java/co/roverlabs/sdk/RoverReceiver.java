@@ -21,7 +21,9 @@ public class RoverReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         final String action = intent.getAction();
+
         Log.d(TAG, "The action received is " + action);
+
         if(action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
             final int extraStateInt = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
             String extraStateString;
@@ -48,6 +50,11 @@ public class RoverReceiver extends BroadcastReceiver {
                     return;
             }
         }
-        Rover.getInstance(context.getApplicationContext()).startMonitoring();
+
+        Rover rover = Rover.getInstance(context.getApplicationContext());
+
+        if(rover.getCustomer() != null && !rover.isMonitoring()) {
+            rover.startMonitoring();
+        }
     }
 }
