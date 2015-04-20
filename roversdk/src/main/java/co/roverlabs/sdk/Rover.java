@@ -81,8 +81,6 @@ public class Rover {
 
         getCustomer();
 
-        Log.d(TAG, "In setCustomer, customer ID is " + mCustomer.getId());
-
         if(name != null && !TextUtils.isEmpty(name)) {
             mCustomer.setName(name);
         }
@@ -105,7 +103,7 @@ public class Rover {
         mConfigs = configs;
         RoverUtils.writeObjectToSharedPrefs(mContext, configs);
     }
-    
+
     private void completeSetUp() {
 
         Log.d(TAG, "Setting up Rover");
@@ -208,7 +206,7 @@ public class Rover {
             Log.d(TAG, "Rover has not been set up yet - do nothing");
         }
     }
-    
+
     @Subscribe
     public void onEnteredLocation(final RoverEnteredLocationEvent event) {
 

@@ -4,14 +4,4 @@
     <string name="app_name">Rover Demo</string>
     <string name="welcome">Welcome to the Rover demo!</string>
 
-    <string name="prompt_name">Name</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_phone">Phone Number (Optional)</string>
-    <string name="monitoring_message">Rover is now monitoring for beacons!</string>
-    <string name="reset_message">Rover has been reset</string>
-    <string name="default_greet_message">Hi, you!</string>
-    <string name="action_customer_save">Save</string>
-    <string name="action_customer_new">Create New Customer</string>
-    <string name="action_reset">Reset</string>
-
 </resources>
