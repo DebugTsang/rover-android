@@ -108,7 +108,7 @@ public class RoverVisitManager {
                     didEnterSubRegion(subRegion);
                 }
                 RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_START));
-                mRangeTimer = new RoverTimer(mLatestVisit.getKeepAliveTime(), COUNT_DOWN_INTERVAL);
+                //mRangeTimer = new RoverTimer(mLatestVisit.getKeepAliveTime(), COUNT_DOWN_INTERVAL);
                 RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             }
 
@@ -123,9 +123,11 @@ public class RoverVisitManager {
     @Subscribe
     public void didExitRegion(RoverExitedRegionEvent event) {
 
+        mLatestVisit.setLastBeaconDetectionTime(Calendar.getInstance());
+
         if(event.getRegionType().equals(RoverConstants.REGION_TYPE_MAIN)) {
-            Calendar now = Calendar.getInstance();
-            mLatestVisit.setLastBeaconDetectionTime(now);
+            //Calendar now = Calendar.getInstance();
+            //mLatestVisit.setLastBeaconDetectionTime(now);
             if(mLatestVisit.currentlyContainsWildCardTouchpoints()) {
                 exitAllWildCardTouchpoints();
             }
@@ -134,10 +136,11 @@ public class RoverVisitManager {
             }
             RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             RoverEventBus.getInstance().post(new RoverExitedLocationEvent(mLatestVisit));
-            if(mRangeTimer != null) {
-                mRangeTimer.start();
-                mRangeTimer.setCountDownStarted(true);
+            if(mRangeTimer == null) {
+                mRangeTimer = new RoverTimer(mLatestVisit.getKeepAliveTime(), COUNT_DOWN_INTERVAL);
             }
+            mRangeTimer.start();
+            mRangeTimer.setCountDownStarted(true);
         }
         else if(event.getRegionType().equals(RoverConstants.REGION_TYPE_SUB)) {
             RoverRegion subRegion = event.getRegion();
