@@ -2,6 +2,10 @@ package co.roverlabs.sdk.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
+import co.roverlabs.sdk.utilities.RoverConstants;
+
 /**
  * Created by SherryYang on 2015-02-20.
  */
@@ -9,24 +13,23 @@ public class RoverCard extends RoverObject {
 
     //JSON members
     @SerializedName("title") private String mTitle;
-    //TODO: View object needs to be added
-    
-    //TODO: Remove these (used for testing)
-    private String mMessage;
-    private int mImageResourceId;
+    @SerializedName("views") private List<RoverView> mViewDefinitions;
     
     //Constructor
     public RoverCard() { mObjectName = "card"; }
 
     //Getters
     public String getTitle() { return mTitle; }
-    //TODO: Remove these (used for testing)
-    public String getMessage() { return mMessage; }
-    public int getImageResourceId() { return mImageResourceId; }
 
-    //Setters
-    public void setTitle(String title) { mTitle = title; }
-    //TODO: Remove these (used for testing)
-    public void setMessage(String message) { mMessage = message; }
-    public void setImageResourceId(int imageResourceId) { mImageResourceId = imageResourceId; }
+    public RoverView getListViewDefinition() {
+
+        if(mViewDefinitions!= null) {
+            for(RoverView viewDefinition : mViewDefinitions) {
+                if(viewDefinition.getType().equals(RoverConstants.VIEW_DEF_TYPE_LIST)) {
+                    return viewDefinition;
+                }
+            }
+        }
+        return null;
+    }
 }

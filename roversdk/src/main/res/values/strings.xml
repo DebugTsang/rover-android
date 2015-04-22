@@ -1,3 +1,6 @@
 <resources>
+
     <string name="app_name">RoverSDK</string>
+    <string name="dismiss_cards">Close</string>
+
 </resources>

@@ -30,7 +30,7 @@ public class DemoActivity extends ActionBarActivity {
         roverConfigs.setAppId("eae9edb6352b8fec6618d3d9cb96f2e795e1c2df1ad5388af807b05d8dfcd7d6");
         roverConfigs.setLaunchActivityName(this.getClass().getName());
         roverConfigs.setNotificationIconId(R.drawable.icon);
-        roverConfigs.setSandBoxMode(false);
+        roverConfigs.setSandBoxMode(true);
 
         rover.setCustomer(roverCustomer);
         rover.setConfigurations(roverConfigs);
