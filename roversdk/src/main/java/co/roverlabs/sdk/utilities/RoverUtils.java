@@ -119,4 +119,10 @@ public class RoverUtils {
         result.removeAll(list1);
         return result;
     }
+
+    public static int convertDpToPx(Context con, float dp) {
+
+        final float scale = con.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
 }

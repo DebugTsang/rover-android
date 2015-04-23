@@ -20,7 +20,6 @@ public class RoverNotificationManager {
     public static final String TAG = RoverNotificationManager.class.getSimpleName();
     private static RoverNotificationManager sNotificationManagerInstance;
     private Context mContext;
-    private NotificationCompat.Builder mNotificationBuilder;
     private NotificationManager mNotificationManager;
     private int mNotificationIconId;
     
@@ -48,8 +47,8 @@ public class RoverNotificationManager {
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        
-        mNotificationBuilder = new NotificationCompat.Builder(mContext)
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(mNotificationIconId)
                 .setContentTitle(event.getTitle())
                 .setContentText(event.getMessage())
@@ -58,6 +57,6 @@ public class RoverNotificationManager {
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true);
         
-        mNotificationManager.notify(event.getId(), mNotificationBuilder.build());
+        mNotificationManager.notify(event.getId(), notificationBuilder.build());
     }
 }

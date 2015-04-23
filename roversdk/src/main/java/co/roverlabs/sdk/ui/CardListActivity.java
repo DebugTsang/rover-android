@@ -1,52 +1,55 @@
 package co.roverlabs.sdk.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import java.util.List;
 
 import co.roverlabs.sdk.R;
+import co.roverlabs.sdk.RoverConfigs;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
-import co.roverlabs.sdk.models.RoverVisit;
+import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
  * Created by SherryYang on 2015-03-03.
  */
 public class CardListActivity extends Activity {
 
-    private RoverVisitManager mVisitManager;
+    public static final String TAG = CardListActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_list);
-        mVisitManager = RoverVisitManager.getInstance(this.getApplicationContext());
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.cardList);
-        recyclerView.setHasFixedSize(true);
+        setContentView(R.layout.card_list);
+
+        RecyclerView cardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        //TODO: Shallow copy of the RoverVisit object, need to implement deep copy
-        RoverVisit latestVisit = mVisitManager.getLatestVisit();
-        List<RoverCard> latestCards = latestVisit.getCurrentTouchpoints().get(0).getCards();
-        CardListAdapter cardListAdapter = new CardListAdapter(createImageInCardList(latestCards), this);
-        recyclerView.setAdapter(cardListAdapter);
-    }
-    
-    private List<RoverCard> createImageInCardList(List<RoverCard> cards) {
-        
-        for(int i = 0; i < cards.size(); i++) {
-            if(i % 2 == 0) {
-                cards.get(i).setImageResourceId(R.drawable.image1);
+        cardListRecyclerView.setLayoutManager(linearLayoutManager);
+
+        List<RoverCard> latestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
+
+        if(latestCards.isEmpty()) {
+            String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
+            try {
+                Intent intent = new Intent(this, Class.forName(launchActivityName));
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
             }
-            else {
-                cards.get(i).setImageResourceId(R.drawable.image2);
+            catch (ClassNotFoundException e) {
+                Log.e(TAG, "Cannot launch application - cannot find launch activity name", e);
             }
+            finish();
         }
-        return cards;
+
+        CardListAdapter cardListAdapter = new CardListAdapter(latestCards, this);
+        cardListRecyclerView.setAdapter(cardListAdapter);
     }
 }

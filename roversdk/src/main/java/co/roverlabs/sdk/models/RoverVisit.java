@@ -101,6 +101,21 @@ public class RoverVisit extends RoverObject {
         return null;
     }
 
+    public List<RoverCard> getAccumulatedCards() {
+
+        List<RoverCard> accumulatedCards = new ArrayList<>();
+        if(mVisitedTouchpoints != null) {
+            for(RoverTouchpoint touchpoint : mVisitedTouchpoints) {
+                if(touchpoint.getCards() != null) {
+                    for(RoverCard card : touchpoint.getCards()) {
+                        accumulatedCards.add(card);
+                    }
+                }
+            }
+        }
+        return accumulatedCards;
+    }
+
     //Setter
     public void setKeepAliveTime(long keepAliveTime) { mKeepAliveTimeInMinutes = keepAliveTime; }
     public void setOrganization(RoverOrganization organization) { mOrganization = organization; }
@@ -182,7 +197,8 @@ public class RoverVisit extends RoverObject {
 
         RoverVisit visit = (RoverVisit)object;
         super.update(visit);
-        mKeepAliveTimeInMinutes = visit.getKeepAliveTime();
+        //mKeepAliveTimeInMinutes = visit.getKeepAliveTime();
+        mKeepAliveTimeInMinutes = 1;
         mOrganization = visit.getOrganization();
         mLocation = visit.getLocation();
         mCustomer = visit.getCustomer();

@@ -26,15 +26,9 @@
         </receiver>
 
         <activity
-            android:name=".ui.CardActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Transparent">
-        </activity>
-
-        <activity
             android:name=".ui.CardListActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.Transparent">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
 
         <!-- Estimote service responsible for scanning beacons -->

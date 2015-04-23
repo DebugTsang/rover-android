@@ -23,6 +23,7 @@ import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverTouchpoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
+import co.roverlabs.sdk.ui.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
@@ -210,39 +211,43 @@ public class Rover {
     @Subscribe
     public void onEnteredLocation(final RoverEnteredLocationEvent event) {
 
-        event.send(new RoverEventSaveListener() {
+        if(!mConfigs.getSandBoxMode()) {
+            event.send(new RoverEventSaveListener() {
 
-            @Override
-            public void onSaveSuccess() {
+                @Override
+                public void onSaveSuccess() {
 
-                Log.d(TAG, "Event sent successfully - enter location");
-            }
+                    Log.d(TAG, "Event sent successfully - enter location");
+                }
 
-            @Override
-            public void onSaveFailure() {
+                @Override
+                public void onSaveFailure() {
 
-                Log.d(TAG, "Event sent unsuccessfully - enter location");
-            }
-        });
+                    Log.d(TAG, "Event sent unsuccessfully - enter location");
+                }
+            });
+        }
     }
 
     @Subscribe
     public void onExitedLocation(final RoverExitedLocationEvent event) {
 
-        event.send(new RoverEventSaveListener() {
+        if(!mConfigs.getSandBoxMode()) {
+            event.send(new RoverEventSaveListener() {
 
-            @Override
-            public void onSaveSuccess() {
+                @Override
+                public void onSaveSuccess() {
 
-                Log.d(TAG, "Event sent successfully - exit location");
-            }
+                    Log.d(TAG, "Event sent successfully - exit location");
+                }
 
-            @Override
-            public void onSaveFailure() {
+                @Override
+                public void onSaveFailure() {
 
-                Log.d(TAG, "Event sent unsuccessfully - exit location");
-            }
-        });
+                    Log.d(TAG, "Event sent unsuccessfully - exit location");
+                }
+            });
+        }
     }
 
     @Subscribe
@@ -267,75 +272,83 @@ public class Rover {
             int id = Integer.valueOf(numberOnlyId);
             String title = touchpoint.getTitle();
             String message = touchpoint.getNotification();
-            RoverNotificationEvent notificationEvent = null;
-            try {
-                notificationEvent = new RoverNotificationEvent(id, title, message, Class.forName(mConfigs.getLaunchActivityName()));
-                if(touchpoint.getMinor() != null) {
-                    Log.d(TAG, "Sending notification - touchpoint minor " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ")");
-                }
-                else {
-                    Log.d(TAG, "Sending notification - touchpoint wild card (" + touchpoint.getTitle() + ")");
-                }
-                RoverEventBus.getInstance().post(notificationEvent);
-            }
-            catch (ClassNotFoundException e) {
-                Log.e(TAG, "Cannot send notification - cannot find launch activity name", e);
-            }
+
+//            RoverNotificationEvent notificationEvent = null;
+//            try {
+//                notificationEvent = new RoverNotificationEvent(id, title, message, Class.forName(mConfigs.getLaunchActivityName()));
+//                if(touchpoint.getMinor() != null) {
+//                    Log.d(TAG, "Sending notification - touchpoint minor " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ")");
+//                }
+//                else {
+//                    Log.d(TAG, "Sending notification - touchpoint wild card (" + touchpoint.getTitle() + ")");
+//                }
+//                RoverEventBus.getInstance().post(notificationEvent);
+//            }
+//            catch (ClassNotFoundException e) {
+//                Log.e(TAG, "Cannot send notification - cannot find launch activity name", e);
+//            }
+
+            RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, CardListActivity.class);
+            RoverEventBus.getInstance().post(notificationEvent);
         }
 
-        event.send(new RoverEventSaveListener() {
+        if(!mConfigs.getSandBoxMode()) {
+            event.send(new RoverEventSaveListener() {
 
-            @Override
-            public void onSaveSuccess() {
+                @Override
+                public void onSaveSuccess() {
 
-                if(event.getTouchpoint().getMinor() != null) {
-                    Log.d(TAG, "Event sent successfully - enter touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                    if (event.getTouchpoint().getMinor() != null) {
+                        Log.d(TAG, "Event sent successfully - enter touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                    }
+                    else {
+                        Log.d(TAG, "Event sent successfully - enter touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
+                    }
                 }
-                else {
-                    Log.d(TAG, "Event sent successfully - enter touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
-                }
-            }
 
-            @Override
-            public void onSaveFailure() {
+                @Override
+                public void onSaveFailure() {
 
-                if(event.getTouchpoint().getMinor() != null) {
-                    Log.d(TAG, "Event sent unsuccessfully - enter touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                    if (event.getTouchpoint().getMinor() != null) {
+                        Log.d(TAG, "Event sent unsuccessfully - enter touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                    }
+                    else {
+                        Log.d(TAG, "Event sent unsuccessfully - enter touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
+                    }
                 }
-                else {
-                    Log.d(TAG, "Event sent unsuccessfully - enter touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
-                }
-            }
-        });
+            });
+        }
 
     }
 
     @Subscribe
     public void onExitedTouchpoint(final RoverExitedTouchpointEvent event) {
 
-        event.send(new RoverEventSaveListener() {
+        if(!mConfigs.getSandBoxMode()) {
+            event.send(new RoverEventSaveListener() {
 
-            @Override
-            public void onSaveSuccess() {
+                @Override
+                public void onSaveSuccess() {
 
-                if(event.getTouchpoint().getMinor() != null) {
-                    Log.d(TAG, "Event sent successfully - exit touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                    if (event.getTouchpoint().getMinor() != null) {
+                        Log.d(TAG, "Event sent successfully - exit touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                    }
+                    else {
+                        Log.d(TAG, "Event sent successfully - exit touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
+                    }
                 }
-                else {
-                    Log.d(TAG, "Event sent successfully - exit touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
-                }
-            }
 
-            @Override
-            public void onSaveFailure() {
+                @Override
+                public void onSaveFailure() {
 
-                if(event.getTouchpoint().getMinor() != null) {
-                    Log.d(TAG, "Event sent unsuccessfully - exit touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                    if (event.getTouchpoint().getMinor() != null) {
+                        Log.d(TAG, "Event sent unsuccessfully - exit touchpoint minor " + event.getTouchpoint().getMinor() + " (" + event.getTouchpoint().getTitle() + ")");
+                    }
+                    else {
+                        Log.d(TAG, "Event sent unsuccessfully - exit touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
+                    }
                 }
-                else {
-                    Log.d(TAG, "Event sent unsuccessfully - exit touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
-                }
-            }
-        });
+            });
+        }
     }
 }

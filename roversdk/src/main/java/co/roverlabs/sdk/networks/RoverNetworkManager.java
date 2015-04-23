@@ -1,5 +1,7 @@
 package co.roverlabs.sdk.networks;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -56,13 +58,14 @@ public class RoverNetworkManager {
             
             @Override
             public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
-                
+
                 networkListener.onNetworkCallSuccess(roverObjectWrapper.get());
             }
 
             @Override
             public void failure(RetrofitError error) {
 
+                Log.d(TAG, "Network call failed - "  + error);
                 networkListener.onNetworkCallFailure();
             }
         };

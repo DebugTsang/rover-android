@@ -13,7 +13,7 @@ public class RoverCard extends RoverObject {
 
     //JSON members
     @SerializedName("title") private String mTitle;
-    @SerializedName("views") private List<RoverView> mViewDefinitions;
+    @SerializedName("views") private List<RoverView> mViews;
     
     //Constructor
     public RoverCard() { mObjectName = "card"; }
@@ -21,12 +21,12 @@ public class RoverCard extends RoverObject {
     //Getters
     public String getTitle() { return mTitle; }
 
-    public RoverView getListViewDefinition() {
+    public RoverView getListView() {
 
-        if(mViewDefinitions!= null) {
-            for(RoverView viewDefinition : mViewDefinitions) {
-                if(viewDefinition.getType().equals(RoverConstants.VIEW_DEF_TYPE_LIST)) {
-                    return viewDefinition;
+        if(mViews!= null) {
+            for(RoverView view : mViews) {
+                if(view.getType().equals(RoverConstants.VIEW_DEF_TYPE_LIST)) {
+                    return view;
                 }
             }
         }
