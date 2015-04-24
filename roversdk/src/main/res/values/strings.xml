@@ -1,5 +1,6 @@
 <resources>
 
     <string name="app_name">RoverSDK</string>
+    <string name="no_cards_text">There are no cards yet!</string>
 
 </resources>

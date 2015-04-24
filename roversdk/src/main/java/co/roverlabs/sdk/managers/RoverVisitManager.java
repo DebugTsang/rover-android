@@ -1,8 +1,10 @@
 package co.roverlabs.sdk.managers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -10,6 +12,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
+import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
 import co.roverlabs.sdk.events.RoverEnteredTouchpointEvent;
@@ -23,6 +26,7 @@ import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverTouchpoint;
 import co.roverlabs.sdk.models.RoverVisit;
+import co.roverlabs.sdk.ui.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
@@ -63,6 +67,19 @@ public class RoverVisitManager {
 
         mLatestVisit = null;
         RoverUtils.removeObjectFromSharedPrefs(mContext, RoverVisit.class);
+    }
+
+    //TODO: Remove after testing
+    public void showCards() {
+
+        if(mLatestVisit != null) {
+            Intent intent = new Intent(mContext, CardListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+        }
+        else {
+            Toast.makeText(mContext, R.string.no_cards_text, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Subscribe

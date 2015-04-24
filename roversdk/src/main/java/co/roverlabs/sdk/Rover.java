@@ -3,6 +3,7 @@ package co.roverlabs.sdk;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
@@ -205,6 +206,17 @@ public class Rover {
         }
         else {
             Log.d(TAG, "Rover has not been set up yet - do nothing");
+        }
+    }
+
+    //TODO: Remove, used for testing
+    public void showCards() {
+
+        if(mVisitManager != null) {
+            mVisitManager.showCards();
+        }
+        else {
+            Toast.makeText(mContext, R.string.no_cards_text, Toast.LENGTH_SHORT).show();
         }
     }
 

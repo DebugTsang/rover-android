@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     }
 
     @Override
-    public void onBindViewHolder(CardViewHolder holder, int position) {
+    public void onBindViewHolder(final CardViewHolder holder, int position) {
 
         RoverCard card = mCards.get(position);
         RoverView view = card.getListView();
@@ -68,9 +67,29 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         //Set elevation
         holder.cardView.setCardElevation(0);
 
-        //Testing
-        holder.cardTitle.setText(card.getTitle());
-        holder.cardTitle.setTextColor(Color.BLACK);
+//        //Testing image loading
+//        RoverView.RoverBlock imageBlock = view.getImageBlock();
+//        if(imageBlock != null) {
+//            holder.imageProgressBar.setVisibility(View.VISIBLE);
+//            Picasso.with(mContext)
+//                    .load(imageBlock.getImageUrl())
+//                    .into(holder.cardImage, new com.squareup.picasso.Callback() {
+//
+//                        @Override
+//                        public void onSuccess() {
+//                            holder.imageProgressBar.setVisibility(View.GONE);
+//                            holder.cardImage.setVisibility(View.VISIBLE);
+//                        }
+//
+//                        @Override
+//                        public void onError() {
+//
+//                        }
+//                    });
+//        }
+//        else {
+//            holder.cardImage.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -80,16 +99,14 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         return new CardViewHolder(itemView);
     }
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder {
+    public class CardViewHolder extends RecyclerView.ViewHolder {
 
         protected CardView cardView;
-        protected TextView cardTitle;
 
         public CardViewHolder(View view) {
 
             super(view);
-            cardView = (CardView)view.findViewById(R.id.single_card_view);
-            cardTitle = (TextView)view.findViewById(R.id.card_title);
+            cardView = (CardView) view.findViewById(R.id.single_card_view);
         }
     }
 }

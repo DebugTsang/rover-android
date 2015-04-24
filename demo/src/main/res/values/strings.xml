@@ -3,5 +3,6 @@
 
     <string name="app_name">Rover Demo</string>
     <string name="welcome">Welcome to the Rover demo!</string>
+    <string name="show_cards">Show Cards</string>
 
 </resources>

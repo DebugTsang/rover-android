@@ -15,6 +15,6 @@ public class RoverConstants {
     public static final String RANGE_ACTION_START = "RangeStart";
     public static final String RANGE_ACTION_STOP = "RangeStop";
     public static final String WILD_CARD_TOUCHPOINT_TRIGGER = "visit";
-    public static final String VIEW_DEF_TYPE_LIST = "listView";
-    public static final String VIEW_DEF_TYPE_DETAIL = "detailView";
+    public static final String VIEW_TYPE_LIST = "listView";
+    public static final String VIEW_TYPE_DETAIL = "detailView";
 }

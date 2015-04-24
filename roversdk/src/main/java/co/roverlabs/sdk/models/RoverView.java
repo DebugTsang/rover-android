@@ -15,6 +15,8 @@ public class RoverView extends RoverObject {
     @SerializedName("borderRadius") private Integer mBorderRadius;
     @SerializedName("backgroundColor") private List<Float> mBackgroundColor;
     @SerializedName("blocks") private List<RoverBlock> mBlocks;
+    @SerializedName("backgroundImageUrl") private String mBackgroundImageUrl;
+    @SerializedName("backgroundContentMode") private String mBackgroundContentMode;
 
     //Constructor
     public RoverView() { mObjectName = "view"; }
@@ -25,6 +27,8 @@ public class RoverView extends RoverObject {
     public Integer getBorderRadius() { return mBorderRadius; }
     public List<Float> getBackgroundColor() { return mBackgroundColor; }
     public List<RoverBlock> getBlocks() { return mBlocks; }
+    public String getBackgroundImageUrl() { return mBackgroundImageUrl; }
+    public String getBackgroundContentMode() { return mBackgroundContentMode; }
     public Integer getTopMargin() { return mMargin.get(0); }
     public Integer getRightMargin() { return mMargin.get(1); }
     public Integer getBottomMargin() { return mMargin.get(2); }

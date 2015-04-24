@@ -25,7 +25,7 @@ public class RoverCard extends RoverObject {
 
         if(mViews!= null) {
             for(RoverView view : mViews) {
-                if(view.getType().equals(RoverConstants.VIEW_DEF_TYPE_LIST)) {
+                if(view.getType().equals(RoverConstants.VIEW_TYPE_LIST)) {
                     return view;
                 }
             }
