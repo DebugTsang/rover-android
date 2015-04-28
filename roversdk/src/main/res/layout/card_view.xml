@@ -2,15 +2,14 @@
 
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/single_card_view"
+    android:id="@+id/single_card_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:id="@+id/single_card_view_layout"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:id="@+id/card_background"
+        android:visibility="gone"/>
     
 </android.support.v7.widget.CardView>

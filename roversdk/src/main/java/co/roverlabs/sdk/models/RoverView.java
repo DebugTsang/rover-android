@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import co.roverlabs.sdk.utilities.RoverConstants;
+
 /**
  * Created by SherryYang on 2015-04-21.
  */
@@ -37,6 +39,30 @@ public class RoverView extends RoverObject {
     public Integer getBlueBackgroundValue() { return mBackgroundColor.get(1).intValue(); }
     public Integer getGreenBackgroundValue() { return mBackgroundColor.get(2).intValue(); }
     public Integer getAlphaBackgroundValue() { return (int)(mBackgroundColor.get(3) * 255); }
+
+    public RoverBlock getTextBlock() {
+
+        if(mBlocks != null && !mBlocks.isEmpty()) {
+            for(RoverBlock block : mBlocks) {
+                if(block.getType().equals(RoverConstants.VIEW_BLOCK_TYPE_TEXT)) {
+                    return block;
+                }
+            }
+        }
+        return null;
+    }
+
+    public RoverBlock getImageBlock() {
+
+        if(mBlocks != null && !mBlocks.isEmpty()) {
+            for(RoverBlock block : mBlocks) {
+                if(block.getType().equals(RoverConstants.VIEW_BLOCK_TYPE_IMAGE)) {
+                    return block;
+                }
+            }
+        }
+        return null;
+    }
 
     public class RoverBlock {
 
