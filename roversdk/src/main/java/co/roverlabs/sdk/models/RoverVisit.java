@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import co.roverlabs.sdk.events.RoverCardsAddedEvent;
+import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
@@ -138,6 +140,11 @@ public class RoverVisit extends RoverObject {
         mCurrentTouchpoints.add(touchpoint);
         if(!mVisitedTouchpoints.contains(touchpoint)) {
             mVisitedTouchpoints.add(touchpoint);
+            if(touchpoint.getCards() != null) {
+                List<RoverCard> cards = touchpoint.getCards();
+                RoverCardsAddedEvent cardsAddedEvent = new RoverCardsAddedEvent(cards);
+                RoverEventBus.getInstance().post(cardsAddedEvent);
+            }
         }
     }
 
@@ -199,7 +206,7 @@ public class RoverVisit extends RoverObject {
         super.update(visit);
         //mKeepAliveTimeInMinutes = visit.getKeepAliveTime();
         //TODO: Change keep alive time back to regular after testing is done
-        mKeepAliveTimeInMinutes = 0;
+        mKeepAliveTimeInMinutes = 1;
         mOrganization = visit.getOrganization();
         mLocation = visit.getLocation();
         mCustomer = visit.getCustomer();

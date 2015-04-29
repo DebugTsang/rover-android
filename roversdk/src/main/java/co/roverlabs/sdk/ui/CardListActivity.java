@@ -7,10 +7,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.List;
 
 import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.RoverConfigs;
+import co.roverlabs.sdk.events.RoverCardsAddedEvent;
+import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.utilities.RoverUtils;
@@ -21,23 +25,32 @@ import co.roverlabs.sdk.utilities.RoverUtils;
 public class CardListActivity extends Activity {
 
     public static final String TAG = CardListActivity.class.getSimpleName();
+    private RecyclerView mCardListRecyclerView;
+    private CardListAdapter mCardListAdapter;
+    private List<RoverCard> mLatestCards;
+    //private Button mCardButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        Log.d(TAG, "onCreate is called");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_list);
 
-        RecyclerView cardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
+        RoverEventBus.getInstance().register(this);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        cardListRecyclerView.setLayoutManager(linearLayoutManager);
+        mCardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
+        //mCardButton = (Button)findViewById(R.id.new_card_button);
 
-        List<RoverCard> latestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
+        LinearLayoutManager cardListLayoutManager = new LinearLayoutManager(this);
+        cardListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mCardListRecyclerView.setLayoutManager(cardListLayoutManager);
 
-        if(latestCards.isEmpty()) {
-            String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
+        mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
+
+        if(mLatestCards.isEmpty()) {
+            String launchActivityName = ((RoverConfigs) RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
             try {
                 Intent intent = new Intent(this, Class.forName(launchActivityName));
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -49,7 +62,51 @@ public class CardListActivity extends Activity {
             finish();
         }
 
-        CardListAdapter cardListAdapter = new CardListAdapter(latestCards, this);
-        cardListRecyclerView.setAdapter(cardListAdapter);
+        mCardListAdapter = new CardListAdapter(mLatestCards, this);
+        mCardListRecyclerView.setAdapter(mCardListAdapter);
+
+        /*
+        mCardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cardListRecyclerView.smoothScrollToPosition(0);
+            }
+        });
+        */
     }
+
+    @Subscribe
+    public void onCardsAdded(RoverCardsAddedEvent event) {
+
+        List<RoverCard> cards = event.getAddedCards();
+        for(RoverCard card : cards) {
+            mLatestCards.add(0, card);
+        }
+        mCardListAdapter.notifyDataSetChanged();
+    }
+
+    /*
+    @Subscribe
+    public void onCardPositionChange(CardPositionChangeEvent event) {
+
+        Log.d(TAG, "The card position is " + event.getPosition());
+        if(event.getPosition() != 0) {
+            mCardButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            mCardButton.setVisibility(View.GONE);
+        }
+
+    }
+
+    public static class CardPositionChangeEvent {
+
+        private int mPosition;
+
+        CardPositionChangeEvent(int position) { mPosition = position; }
+
+        public int getPosition() { return mPosition; }
+    }
+    */
+
 }
