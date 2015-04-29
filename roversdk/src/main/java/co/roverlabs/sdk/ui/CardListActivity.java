@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.squareup.otto.Subscribe;
 
@@ -28,12 +30,10 @@ public class CardListActivity extends Activity {
     private RecyclerView mCardListRecyclerView;
     private CardListAdapter mCardListAdapter;
     private List<RoverCard> mLatestCards;
-    //private Button mCardButton;
+    private Button mNewCardButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        Log.d(TAG, "onCreate is called");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_list);
@@ -41,7 +41,7 @@ public class CardListActivity extends Activity {
         RoverEventBus.getInstance().register(this);
 
         mCardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
-        //mCardButton = (Button)findViewById(R.id.new_card_button);
+        mNewCardButton = (Button)findViewById(R.id.new_card_button);
 
         LinearLayoutManager cardListLayoutManager = new LinearLayoutManager(this);
         cardListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -65,14 +65,14 @@ public class CardListActivity extends Activity {
         mCardListAdapter = new CardListAdapter(mLatestCards, this);
         mCardListRecyclerView.setAdapter(mCardListAdapter);
 
-        /*
-        mCardButton.setOnClickListener(new View.OnClickListener() {
+        mNewCardButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                cardListRecyclerView.smoothScrollToPosition(0);
+
+                mCardListRecyclerView.smoothScrollToPosition(0);
             }
         });
-        */
     }
 
     @Subscribe
@@ -83,6 +83,7 @@ public class CardListActivity extends Activity {
             mLatestCards.add(0, card);
         }
         mCardListAdapter.notifyDataSetChanged();
+        mNewCardButton.setVisibility(View.VISIBLE);
     }
 
     /*
