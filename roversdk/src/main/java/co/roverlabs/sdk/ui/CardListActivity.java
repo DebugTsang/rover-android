@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
 import com.squareup.otto.Subscribe;
@@ -17,8 +19,10 @@ import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.RoverConfigs;
 import co.roverlabs.sdk.events.RoverCardsAddedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
+import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
@@ -28,9 +32,12 @@ public class CardListActivity extends Activity {
 
     public static final String TAG = CardListActivity.class.getSimpleName();
     private RecyclerView mCardListRecyclerView;
+    private LinearLayoutManager mCardListLayoutManager;
     private CardListAdapter mCardListAdapter;
     private List<RoverCard> mLatestCards;
     private Button mNewCardButton;
+    private Animation mSlideIn;
+    private Animation mSlidOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +49,17 @@ public class CardListActivity extends Activity {
 
         mCardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
         mNewCardButton = (Button)findViewById(R.id.new_card_button);
+        mSlideIn = AnimationUtils.loadAnimation(this, R.anim.button_slide_in);
+        mSlidOut = AnimationUtils.loadAnimation(this, R.anim.button_slide_out);
 
-        LinearLayoutManager cardListLayoutManager = new LinearLayoutManager(this);
-        cardListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mCardListRecyclerView.setLayoutManager(cardListLayoutManager);
+        mCardListLayoutManager = new LinearLayoutManager(this);
+        mCardListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mCardListRecyclerView.setLayoutManager(mCardListLayoutManager);
 
         mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
 
         if(mLatestCards.isEmpty()) {
-            String launchActivityName = ((RoverConfigs) RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
+            String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
             try {
                 Intent intent = new Intent(this, Class.forName(launchActivityName));
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -65,12 +74,30 @@ public class CardListActivity extends Activity {
         mCardListAdapter = new CardListAdapter(mLatestCards, this);
         mCardListRecyclerView.setAdapter(mCardListAdapter);
 
+        mCardListRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (mCardListLayoutManager.findFirstVisibleItemPosition() == 0) {
+                    if(mNewCardButton.getVisibility() == View.VISIBLE) {
+                        mNewCardButton.startAnimation(mSlidOut);
+                        mNewCardButton.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+
         mNewCardButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
                 mCardListRecyclerView.smoothScrollToPosition(0);
+                mNewCardButton.startAnimation(mSlidOut);
+                mNewCardButton.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -79,11 +106,29 @@ public class CardListActivity extends Activity {
     public void onCardsAdded(RoverCardsAddedEvent event) {
 
         List<RoverCard> cards = event.getAddedCards();
+
         for(RoverCard card : cards) {
             mLatestCards.add(0, card);
+            mCardListAdapter.notifyItemInserted(0);
         }
-        mCardListAdapter.notifyDataSetChanged();
+
         mNewCardButton.setVisibility(View.VISIBLE);
+        mNewCardButton.startAnimation(mSlideIn);
+    }
+
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
+    }
+
+    @Override
+    protected void onStop() {
+
+        super.onStop();
+        mNewCardButton.setVisibility(View.INVISIBLE);
+        RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
     }
 
     /*

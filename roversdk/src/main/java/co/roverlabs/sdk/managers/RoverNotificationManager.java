@@ -11,6 +11,7 @@ import com.squareup.otto.Subscribe;
 
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverNotificationEvent;
+import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
  * Created by SherryYang on 2015-01-26.
@@ -43,6 +44,10 @@ public class RoverNotificationManager {
     @Subscribe
     public void sendNotification(RoverNotificationEvent event) {
 
+        if(event.getAction().equals(RoverConstants.NOTIFICATION_ACTION_CANCEL)) {
+            return;
+        }
+
         Intent intent = new Intent(mContext, event.getIntentClass());
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -58,5 +63,15 @@ public class RoverNotificationManager {
                 .setAutoCancel(true);
         
         mNotificationManager.notify(event.getId(), notificationBuilder.build());
+    }
+
+    @Subscribe
+    public void cancelNotification(RoverNotificationEvent event) {
+
+        if(event.getAction().equals(RoverConstants.NOTIFICATION_ACTION_SEND)) {
+            return;
+        }
+
+        mNotificationManager.cancelAll();
     }
 }
