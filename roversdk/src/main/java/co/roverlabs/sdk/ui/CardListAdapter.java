@@ -1,28 +1,25 @@
 package co.roverlabs.sdk.ui;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
 import co.roverlabs.sdk.R;
+import co.roverlabs.sdk.models.RoverBlock;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.models.RoverView;
-import co.roverlabs.sdk.utilities.RoverUtils;
+import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
  * Created by SherryYang on 2015-03-03.
@@ -32,11 +29,14 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     public static final String TAG = CardListAdapter.class.getSimpleName();
     private List<RoverCard> mCards;
     private Context mContext;
+    private Picasso mPicasso;
 
     public CardListAdapter(List<RoverCard> cards, Context con) {
 
         mCards = cards;
-        mContext = con;
+        mContext = con.getApplicationContext();
+        mPicasso = Picasso.with(mContext);
+        mPicasso.setLoggingEnabled(true);
     }
 
     @Override
@@ -48,70 +48,104 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     @Override
     public void onBindViewHolder(final CardViewHolder holder, int position) {
 
-        final RoverCard card = mCards.get(position);
-        final RoverView view = card.getListView();
+        RoverCard card = mCards.get(position);
+        RoverView listView = card.getListView();
 
         //Set margins
-        int leftMargin = RoverUtils.convertDpToPx(mContext, view.getLeftMargin());
-        int topMargin = RoverUtils.convertDpToPx(mContext, view.getTopMargin());
-        int rightMargin = RoverUtils.convertDpToPx(mContext, view.getRightMargin());
-        final int bottomMargin = RoverUtils.convertDpToPx(mContext, view.getBottomMargin());
-        //TODO: Remove hard coded height
-        CardView.LayoutParams cardLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 2000);
-        cardLayoutParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+        BoxModelDimens margin = listView.getMargin(mContext);
+        CardView.LayoutParams cardLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ImageUtils.convertDpToPx(mContext, 600));
+        cardLayoutParams.setMargins(margin.left, margin.top, margin.right, margin.bottom);
         holder.cardLayout.setLayoutParams(cardLayoutParams);
 
         //Set border radius
-        int borderRadius = RoverUtils.convertDpToPx(mContext, view.getBorderRadius());
-        holder.cardLayout.setRadius(borderRadius);
+        holder.cardLayout.setRadius(listView.getBorderRadius(mContext));
 
         //Set elevation
         holder.cardLayout.setCardElevation(0);
 
         //Set background color
-        int alphaBackgroundValue = view.getAlphaBackgroundValue();
-        int redBackgroundValue = view.getRedBackgroundValue();
-        int greenBackgroundValue = view.getGreenBackgroundValue();
-        int blueBackgroundValue = view.getBlueBackgroundValue();
-        int backgroundColor = Color.argb(alphaBackgroundValue, redBackgroundValue, greenBackgroundValue, blueBackgroundValue);
-        holder.cardLayout.setCardBackgroundColor(backgroundColor);
+        holder.cardLayout.setCardBackgroundColor(listView.getBackgroundColor());
 
         //Set background image if there is one
-        String backgroundImageUrl = view.getBackgroundImageUrl();
-        if(backgroundImageUrl != null) {
-            holder.cardBackgroundImage.setBackground(null);
-            holder.cardBackgroundImage.setImageDrawable(null);
-            Picasso.with(mContext)
-                    .load(backgroundImageUrl)
-                    .into(new Target() {
-
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-                            RoverUtils.setImageMode(mContext, bitmap, holder.cardBackgroundImage, view.getBackgroundContentMode());
-                            holder.cardBackgroundImage.setVisibility(View.VISIBLE);
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-
-                            holder.cardBackgroundImage.setImageDrawable(errorDrawable);
-                            Log.d(TAG, "Card background cannot be set - card ID " + card.getId());
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                            holder.cardBackgroundImage.setImageDrawable(placeHolderDrawable);
-                        }
-                    });
+        String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
+        if(cardBackgroundImageUrl != null) {
+            holder.cardBackground.setBackground(null);
+            holder.cardBackground.setImageDrawable(null);
+            holder.cardBackground.setImageBitmap(null);
+            loadImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+            holder.cardBackground.setVisibility(View.VISIBLE);
         }
         else {
-            holder.cardBackgroundImage.setVisibility(View.GONE);
+            holder.cardBackground.setVisibility(View.GONE);
         }
 
-        //TODO: Set card text, remove after testing
-        holder.cardText.setText(card.getTitle());
+        //Arrange blocks
+        holder.cardContentLayout.removeAllViews();
+
+        for(RoverBlock block : listView.getBlocks()) {
+
+            BoxModelDimens padding = block.getPadding(mContext);
+            Border border = block.getBorder(mContext);
+            int backgroundColor = block.getBackgroundColor();
+            String blockBackgroundImageUrl = block.getBackgroundImageUrl();
+            String blockBackgroundImageMode = block.getmBackgroundContentMode();
+
+            switch(block.getType()) {
+
+                case RoverConstants.VIEW_BLOCK_TYPE_TEXT:
+                    holder.cardContentLayout.addView(holder.cardTextLayout);
+                    holder.cardTextLayout.setBackgroundColor(backgroundColor);
+                    setBackgroundImage(holder.cardTextBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    setBorder(holder.cardTextBorder, border);
+                    setPadding(holder.cardText, padding, border);
+                    //TODO: Remove after testing
+                    holder.cardText.setText(block.getTextContent());
+//                    ViewTreeObserver vto = holder.cardText.getViewTreeObserver();
+//                    vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//                        public boolean onPreDraw() {
+//                            holder.cardText.getViewTreeObserver().removeOnPreDrawListener(this);
+//                            int finalHeight = holder.cardText.getMeasuredHeight();
+//                            int finalWidth = holder.cardText.getMeasuredWidth();
+//                            Log.d(TAG, "Height: " + finalHeight + " Width: " + finalWidth);
+//                            return true;
+//                        }
+//                    });
+                    break;
+
+                case RoverConstants.VIEW_BLOCK_TYPE_IMAGE:
+                    holder.cardContentLayout.addView(holder.cardImageLayout);
+                    holder.cardImageLayout.setBackgroundColor(backgroundColor);
+                    setBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    setBorder(holder.cardImageBorder, border);
+                    //TODO: Remove after testing
+                    mPicasso.load(R.drawable.test).fit().into(holder.cardImage);
+                    holder.cardImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                    setPadding(holder.cardImage, padding, border);
+                    break;
+
+                case RoverConstants.VIEW_BLOCK_TYPE_BUTTON:
+                    holder.cardContentLayout.addView(holder.cardButtonLayout);
+                    holder.cardButtonLayout.setBackgroundColor(backgroundColor);
+                    setBackgroundImage(holder.cardButtonBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    setBorder(holder.cardButtonBorder, border);
+                    //TODO: Remove after testing
+                    mPicasso.load(R.drawable.button).fit().into(holder.cardButton);
+                    holder.cardButton.setScaleType(ImageView.ScaleType.FIT_XY);
+                    setPadding(holder.cardButton, padding, border);
+                    break;
+
+                case RoverConstants.VIEW_BLOCK_TYPE_BARCODE:
+                    holder.cardContentLayout.addView(holder.cardBarcodeLayout);
+                    holder.cardBarcodeLayout.setBackgroundColor(backgroundColor);
+                    setBackgroundImage(holder.cardBarcodeBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    setBorder(holder.cardBarcodeBorder, border);
+                    //TODO: Remove after testing
+                    mPicasso.load(R.drawable.barcode).fit().into(holder.cardBarcode);
+                    holder.cardBarcode.setScaleType(ImageView.ScaleType.FIT_XY);
+                    setPadding(holder.cardBarcode, padding, border);
+                    break;
+            }
+        }
     }
 
     @Override
@@ -123,16 +157,124 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
     public class CardViewHolder extends RecyclerView.ViewHolder {
 
+        //Card
         protected CardView cardLayout;
-        protected ImageView cardBackgroundImage;
+        protected ImageView cardBackground;
+        protected LinearLayout cardContentLayout;
+        //Image block
+        protected FrameLayout cardImageLayout;
+        protected ImageView cardImageBackground;
+        protected BorderedView cardImageBorder;
+        protected ImageView cardImage;
+        //Text block
+        protected FrameLayout cardTextLayout;
+        protected ImageView cardTextBackground;
+        protected BorderedView cardTextBorder;
         protected TextView cardText;
+        //Button block
+        protected FrameLayout cardButtonLayout;
+        protected ImageView cardButtonBackground;
+        protected BorderedView cardButtonBorder;
+        protected ImageView cardButton;
+        //Barcode block
+        protected FrameLayout cardBarcodeLayout;
+        protected ImageView cardBarcodeBackground;
+        protected BorderedView cardBarcodeBorder;
+        protected ImageView cardBarcode;
 
         public CardViewHolder(View view) {
 
             super(view);
+            //Card
             cardLayout = (CardView)view.findViewById(R.id.card_layout);
-            cardBackgroundImage = (ImageView)view.findViewById(R.id.card_background);
+            cardBackground = (ImageView)view.findViewById(R.id.card_background);
+            cardContentLayout = (LinearLayout)view.findViewById(R.id.card_content_layout);
+            //Image block
+            cardImageLayout = (FrameLayout)view.findViewById(R.id.card_image_layout);
+            cardImageBackground = (ImageView)view.findViewById(R.id.card_image_background);
+            cardImageBorder = (BorderedView)view.findViewById(R.id.card_image_border);
+            cardImage = (ImageView)view.findViewById(R.id.card_image);
+            //Text block
+            cardTextLayout = (FrameLayout)view.findViewById(R.id.card_text_layout);
+            cardTextBackground = (ImageView)view.findViewById(R.id.card_text_background);
+            cardTextBorder = (BorderedView)view.findViewById(R.id.card_text_border);
             cardText = (TextView)view.findViewById(R.id.card_text);
+            //Button block
+            cardButtonLayout = (FrameLayout)view.findViewById(R.id.card_button_layout);
+            cardButtonBackground = (ImageView)view.findViewById(R.id.card_button_background);
+            cardButtonBorder = (BorderedView)view.findViewById(R.id.card_button_border);
+            cardButton = (ImageView)view.findViewById(R.id.card_button);
+            //Barcode block
+            cardBarcodeLayout = (FrameLayout)view.findViewById(R.id.card_barcode_layout);
+            cardBarcodeBackground = (ImageView)view.findViewById(R.id.card_barcode_background);
+            cardBarcodeBorder = (BorderedView)view.findViewById(R.id.card_barcode_border);
+            cardBarcode = (ImageView)view.findViewById(R.id.card_barcode);
+        }
+    }
+
+    public void setBackgroundImage(ImageView imageView, String imageUrl, String imageMode) {
+
+        if(imageUrl != null) {
+            imageView.setBackground(null);
+            imageView.setImageDrawable(null);
+            imageView.setImageBitmap(null);
+            loadImage(imageView, imageUrl, imageMode);
+            imageView.setVisibility(View.VISIBLE);
+        }
+        else {
+            imageView.setVisibility(View.GONE);
+        }
+    }
+
+    public void setBorder(BorderedView borderView, Border border) {
+
+        if(border.hasBorder()) {
+            borderView.setBorder(border);
+            borderView.setVisibility(View.VISIBLE);
+        }
+        else {
+            borderView.setVisibility(View.GONE);
+        }
+    }
+
+    public void setPadding(View view, BoxModelDimens padding, Border border) {
+
+        if(border.hasBorder()) {
+            padding.top += border.top;
+            padding.right += border.right;
+            padding.bottom += border.bottom;
+            padding.left += border.left;
+        }
+        view.setPadding(padding.left, padding.top, padding.right, padding.bottom);
+    }
+
+    public void loadImage(ImageView imageView, String imageUrl, String imageMode) {
+
+        switch(imageMode) {
+
+            case RoverConstants.IMAGE_MODE_STRETCH:
+                mPicasso.load(imageUrl).fit().into(imageView);
+                break;
+
+            //TODO: Tile mode
+            //case RoverConstants.IMAGE_MODE_TILE:
+            //    break;
+
+            case RoverConstants.IMAGE_MODE_FILL:
+                mPicasso.load(imageUrl).fit().centerCrop().into(imageView);
+                break;
+
+            case RoverConstants.IMAGE_MODE_FIT:
+                mPicasso.load(imageUrl).fit().centerInside().into(imageView);
+                break;
+
+            //TODO: Original size
+            //case RoverConstants.IMAGE_MODE_ORIGINAL:
+            //    imageView.setImageDrawable(backgroundDrawable);
+            //    imageView.setScaleType(ImageView.ScaleType.CENTER);
+
+            default:
+                mPicasso.load(imageUrl).fit().centerCrop().into(imageView);
         }
     }
 }

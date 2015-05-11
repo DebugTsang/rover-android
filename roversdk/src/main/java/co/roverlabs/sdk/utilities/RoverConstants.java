@@ -20,8 +20,13 @@ public class RoverConstants {
     public static final String VIEW_TYPE_DETAIL = "detailView";
     public static final String VIEW_BLOCK_TYPE_TEXT = "textBlock";
     public static final String VIEW_BLOCK_TYPE_IMAGE = "imageBlock";
+    public static final String VIEW_BLOCK_TYPE_BUTTON = "buttonBlock";
+    public static final String VIEW_BLOCK_TYPE_BARCODE = "barcodeBlock";
+    public static final String VIEW_BLOCK_TYPE_HEADER = "headerBlock";
+    public static final String VIEW_CARD = "card";
     public static final String IMAGE_MODE_STRETCH = "stretch";
     public static final String IMAGE_MODE_TILE = "tile";
     public static final String IMAGE_MODE_FILL = "fill";
     public static final String IMAGE_MODE_FIT = "fit";
+    public static final String IMAGE_MODE_ORIGINAL = "original";
 }

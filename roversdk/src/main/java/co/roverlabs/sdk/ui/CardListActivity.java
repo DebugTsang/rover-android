@@ -130,29 +130,4 @@ public class CardListActivity extends Activity {
         mNewCardButton.setVisibility(View.INVISIBLE);
         RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
     }
-
-    /*
-    @Subscribe
-    public void onCardPositionChange(CardPositionChangeEvent event) {
-
-        Log.d(TAG, "The card position is " + event.getPosition());
-        if(event.getPosition() != 0) {
-            mCardButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            mCardButton.setVisibility(View.GONE);
-        }
-
-    }
-
-    public static class CardPositionChangeEvent {
-
-        private int mPosition;
-
-        CardPositionChangeEvent(int position) { mPosition = position; }
-
-        public int getPosition() { return mPosition; }
-    }
-    */
-
 }
