@@ -34,6 +34,22 @@ public class ImageUtils {
         return (int)(dp * scale + 0.5f);
     }
 
+    public static int convertPxToDp(Context con, int px) {
+
+        final float scale = con.getResources().getDisplayMetrics().density;
+        return (int)(px / scale + 0.5f);
+    }
+
+    public static int getDeviceWidth(Context con) {
+
+        return convertPxToDp(con, con.getResources().getDisplayMetrics().widthPixels);
+    }
+
+    public static int getDeviceHeight(Context con) {
+
+        return convertPxToDp(con, con.getResources().getDisplayMetrics().heightPixels);
+    }
+
     public static Bitmap getScaledBitmap(Context con, Bitmap bitmap) {
 
         int width = bitmap.getWidth();

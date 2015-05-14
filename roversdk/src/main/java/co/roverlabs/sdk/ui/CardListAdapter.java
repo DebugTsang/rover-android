@@ -1,8 +1,11 @@
 package co.roverlabs.sdk.ui;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.models.RoverBlock;
@@ -48,12 +58,14 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     @Override
     public void onBindViewHolder(final CardViewHolder holder, int position) {
 
-        RoverCard card = mCards.get(position);
-        RoverView listView = card.getListView();
+        holder.setIsRecyclable(false);
+
+        final RoverCard card = mCards.get(position);
+        final RoverView listView = card.getListView();
 
         //Set margins
         BoxModelDimens margin = listView.getMargin(mContext);
-        CardView.LayoutParams cardLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ImageUtils.convertDpToPx(mContext, 600));
+        final CardView.LayoutParams cardLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         cardLayoutParams.setMargins(margin.left, margin.top, margin.right, margin.bottom);
         holder.cardLayout.setLayoutParams(cardLayoutParams);
 
@@ -66,19 +78,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         //Set background color
         holder.cardLayout.setCardBackgroundColor(listView.getBackgroundColor());
 
-        //Set background image if there is one
-        String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
-        if(cardBackgroundImageUrl != null) {
-            holder.cardBackground.setBackground(null);
-            holder.cardBackground.setImageDrawable(null);
-            holder.cardBackground.setImageBitmap(null);
-            loadImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
-            holder.cardBackground.setVisibility(View.VISIBLE);
-        }
-        else {
-            holder.cardBackground.setVisibility(View.GONE);
-        }
-
         //Arrange blocks
         holder.cardContentLayout.removeAllViews();
 
@@ -90,50 +89,41 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
             String blockBackgroundImageUrl = block.getBackgroundImageUrl();
             String blockBackgroundImageMode = block.getmBackgroundContentMode();
 
+            FrameLayout blockLayout = null;
+
             switch(block.getType()) {
 
                 case RoverConstants.VIEW_BLOCK_TYPE_TEXT:
+                    blockLayout = holder.cardTextLayout;
                     holder.cardContentLayout.addView(holder.cardTextLayout);
                     holder.cardTextLayout.setBackgroundColor(backgroundColor);
                     setBackgroundImage(holder.cardTextBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     setBorder(holder.cardTextBorder, border);
-                    setPadding(holder.cardText, padding, border);
-                    //TODO: Remove after testing
-                    holder.cardText.setText(block.getTextContent());
-//                    ViewTreeObserver vto = holder.cardText.getViewTreeObserver();
-//                    vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//                        public boolean onPreDraw() {
-//                            holder.cardText.getViewTreeObserver().removeOnPreDrawListener(this);
-//                            int finalHeight = holder.cardText.getMeasuredHeight();
-//                            int finalWidth = holder.cardText.getMeasuredWidth();
-//                            Log.d(TAG, "Height: " + finalHeight + " Width: " + finalWidth);
-//                            return true;
-//                        }
-//                    });
+                    setPadding(holder.cardTextContentLayout, padding, border);
+                    setTextBlockText(holder.cardTextContentLayout, block.getTextContent(), block.getTextBlockStyles(mContext));
                     break;
 
                 case RoverConstants.VIEW_BLOCK_TYPE_IMAGE:
+                    blockLayout = holder.cardImageLayout;
                     holder.cardContentLayout.addView(holder.cardImageLayout);
                     holder.cardImageLayout.setBackgroundColor(backgroundColor);
                     setBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     setBorder(holder.cardImageBorder, border);
-                    //TODO: Remove after testing
-                    mPicasso.load(R.drawable.test).fit().into(holder.cardImage);
-                    holder.cardImage.setScaleType(ImageView.ScaleType.FIT_XY);
+                    setImage(holder.cardImage, block.getImageUrl(), block.getImageWidth(), block.getImageHeight(), block.getImageOffsetRatio(), block.getImageAspectRatio());
                     setPadding(holder.cardImage, padding, border);
                     break;
 
                 case RoverConstants.VIEW_BLOCK_TYPE_BUTTON:
+                    blockLayout = holder.cardButtonLayout;
                     holder.cardContentLayout.addView(holder.cardButtonLayout);
                     holder.cardButtonLayout.setBackgroundColor(backgroundColor);
                     setBackgroundImage(holder.cardButtonBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     setBorder(holder.cardButtonBorder, border);
-                    //TODO: Remove after testing
-                    mPicasso.load(R.drawable.button).fit().into(holder.cardButton);
-                    holder.cardButton.setScaleType(ImageView.ScaleType.FIT_XY);
+                    setButtonBlockText(holder.cardButton, block.getButtonLabel(), block.getLabelTextStyle(mContext));
                     setPadding(holder.cardButton, padding, border);
                     break;
 
+                /*
                 case RoverConstants.VIEW_BLOCK_TYPE_BARCODE:
                     holder.cardContentLayout.addView(holder.cardBarcodeLayout);
                     holder.cardBarcodeLayout.setBackgroundColor(backgroundColor);
@@ -144,7 +134,19 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     holder.cardBarcode.setScaleType(ImageView.ScaleType.FIT_XY);
                     setPadding(holder.cardBarcode, padding, border);
                     break;
+                    */
             }
+
+        }
+
+        //Set background image if there is one
+        String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
+        if(cardBackgroundImageUrl != null) {
+            loadImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+            holder.cardBackground.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.cardBackground.setVisibility(View.GONE);
         }
     }
 
@@ -170,12 +172,12 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         protected FrameLayout cardTextLayout;
         protected ImageView cardTextBackground;
         protected BorderedView cardTextBorder;
-        protected TextView cardText;
+        protected LinearLayout cardTextContentLayout;
         //Button block
         protected FrameLayout cardButtonLayout;
         protected ImageView cardButtonBackground;
         protected BorderedView cardButtonBorder;
-        protected ImageView cardButton;
+        protected TextView cardButton;
         //Barcode block
         protected FrameLayout cardBarcodeLayout;
         protected ImageView cardBarcodeBackground;
@@ -198,12 +200,12 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
             cardTextLayout = (FrameLayout)view.findViewById(R.id.card_text_layout);
             cardTextBackground = (ImageView)view.findViewById(R.id.card_text_background);
             cardTextBorder = (BorderedView)view.findViewById(R.id.card_text_border);
-            cardText = (TextView)view.findViewById(R.id.card_text);
+            cardTextContentLayout = (LinearLayout)view.findViewById(R.id.card_text_content_layout);
             //Button block
             cardButtonLayout = (FrameLayout)view.findViewById(R.id.card_button_layout);
             cardButtonBackground = (ImageView)view.findViewById(R.id.card_button_background);
             cardButtonBorder = (BorderedView)view.findViewById(R.id.card_button_border);
-            cardButton = (ImageView)view.findViewById(R.id.card_button);
+            cardButton = (TextView)view.findViewById(R.id.card_button);
             //Barcode block
             cardBarcodeLayout = (FrameLayout)view.findViewById(R.id.card_barcode_layout);
             cardBarcodeBackground = (ImageView)view.findViewById(R.id.card_barcode_background);
@@ -254,6 +256,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
             case RoverConstants.IMAGE_MODE_STRETCH:
                 mPicasso.load(imageUrl).fit().into(imageView);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 break;
 
             //TODO: Tile mode
@@ -262,6 +265,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
             case RoverConstants.IMAGE_MODE_FILL:
                 mPicasso.load(imageUrl).fit().centerCrop().into(imageView);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 break;
 
             case RoverConstants.IMAGE_MODE_FIT:
@@ -275,9 +279,143 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
             default:
                 mPicasso.load(imageUrl).fit().centerCrop().into(imageView);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
     }
+
+    public void setTextBlockText(LinearLayout layout, String text, List<TextStyle> styles) {
+
+        layout.removeAllViews();
+
+        Document textContent = Jsoup.parseBodyFragment(text);
+
+        for(Element textElement : textContent.getAllElements()) {
+
+            if(textElement.tag().equals(Tag.valueOf(RoverConstants.TEXT_H1))) {
+                TextView textView = new TextView(mContext);
+                layout.addView(textView);
+                //TODO: Write helper function for this
+                String original = textElement.toString();
+                Matcher matcher = Pattern.compile("<h1>(.*?)</h1>").matcher(original);
+                if(matcher.find()) {
+                    setTextFormat(RoverConstants.VIEW_BLOCK_TYPE_TEXT, textView, matcher.group(1), styles.get(0));
+                }
+            }
+
+            if(textElement.tag().equals(Tag.valueOf(RoverConstants.TEXT_H2))) {
+                TextView textView = new TextView(mContext);
+                layout.addView(textView);
+                //TODO: Write helper function for this
+                String original = textElement.toString();
+                Matcher matcher = Pattern.compile("<h2>(.*?)</h2>").matcher(original);
+                if(matcher.find()) {
+                    setTextFormat(RoverConstants.VIEW_BLOCK_TYPE_TEXT, textView, matcher.group(1), styles.get(1));
+                }
+            }
+
+            if(textElement.tag().equals(Tag.valueOf(RoverConstants.TEXT_P))) {
+                TextView textView = new TextView(mContext);
+                layout.addView(textView);
+                //TODO: Write helper function for this
+                String original = textElement.toString();
+                Matcher matcher = Pattern.compile("<p>(.*?)</p>").matcher(original);
+                if(matcher.find()) {
+                    setTextFormat(RoverConstants.VIEW_BLOCK_TYPE_TEXT, textView, matcher.group(1), styles.get(2));
+                }
+            }
+        }
+    }
+
+    public void setButtonBlockText(TextView textView, String text, TextStyle style) {
+
+        Document textContent = Jsoup.parseBodyFragment(text);
+
+        for (Element textElement : textContent.getAllElements()) {
+
+            if(textElement.tag().equals(Tag.valueOf(RoverConstants.TEXT_DIV))) {
+                //TODO: Write helper function for this
+                String original = textElement.toString();
+                Matcher matcher = Pattern.compile("<div>(.*?)</div>", Pattern.DOTALL).matcher(original);
+                if(matcher.find()) {
+                    setTextFormat(RoverConstants.VIEW_BLOCK_TYPE_BUTTON, textView, matcher.group(1), style);
+                }
+            }
+        }
+    }
+
+    public void setTextFormat(String blockType, TextView textView, String text, TextStyle style) {
+
+        textView.setText(Html.fromHtml(text));
+        textView.setTextSize(style.size);
+
+        if(style.type.equals(RoverConstants.TEXT_H1) || style.type.equals(RoverConstants.TEXT_H2)) {
+            textView.setTypeface(Typeface.DEFAULT_BOLD);
+        }
+        else {
+            textView.setTypeface(Typeface.DEFAULT);
+        }
+
+        if(style.align.equals(RoverConstants.TEXT_ALIGN_CENTER)) {
+            textView.setGravity(Gravity.CENTER);
+        }
+        else if(style.align.equals(RoverConstants.TEXT_ALIGN_RIGHT)) {
+            textView.setGravity(Gravity.RIGHT);
+        }
+        else {
+            textView.setGravity(Gravity.LEFT);
+        }
+
+        textView.setTextColor(style.color);
+        textView.setLineSpacing(style.lineHeight - textView.getLineHeight(), 1);
+
+        if(blockType.equals(RoverConstants.VIEW_BLOCK_TYPE_BUTTON)) {
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(style.margin.left, style.margin.top, style.margin.right, style.margin.bottom);
+            textView.setLayoutParams(layoutParams);
+        }
+        else {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(style.margin.left, style.margin.top, style.margin.right, style.margin.bottom);
+            textView.setLayoutParams(layoutParams);
+        }
+    }
+
+    public void setImage(ImageView imageView, String url, Integer width, Integer height, Float offsetRatio, Float aspectRatio) {
+
+        int deviceWidth = ImageUtils.getDeviceWidth(mContext);
+
+        if(width != null && height != null) {
+            url += "?w=" + deviceWidth + "&rect=0," + (int)((-offsetRatio) * height) + "," + width + ","+ (int)(width / aspectRatio);
+        }
+        else {
+            url += "?w=" + deviceWidth + "&h" + (int)(deviceWidth / aspectRatio);
+        }
+
+        mPicasso.load(url).into(imageView);
+    }
 }
+
+//        int fontSize3 = 14;
+//        int fontWeight3 = Typeface.NORMAL;
+//        int textAlign3 = View.TEXT_ALIGNMENT_VIEW_START;
+//        int fontColor3 = Color.argb(1 * 255, 53, 107, 232);
+//        int marginTop3 = ImageUtils.convertDpToPx(mContext, 0);
+//        int marginRight3 = ImageUtils.convertDpToPx(mContext, 0);
+//        int marginBottom3 = ImageUtils.convertDpToPx(mContext, 10);
+//        int marginLeft3 = ImageUtils.convertDpToPx(mContext, 0);
+//        int lineHeight = ImageUtils.convertDpToPx(mContext, 20);
+//
+//        textView.setText(Html.fromHtml(text));
+//        textView.setTextSize(fontSize3);
+//        textView.setTypeface(Typeface.DEFAULT, fontWeight3);
+//        textView.setTextAlignment(textAlign3);
+//        textView.setTextColor(fontColor3);
+//        //textView.setPadding(0, 0, 0, 0);
+//        textView.setLineSpacing(lineHeight - textView.getLineHeight(), 1);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//        layoutParams.setMargins(marginLeft3, marginTop3, marginRight3, marginBottom3);
+//        textView.setLayoutParams(layoutParams);
+
 
 //    @Override
 //    public void onBindViewHolder(CardViewHolder holder, int position) {
@@ -309,83 +447,3 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 //        });
 //    }
 
-//        RoverView.RoverBlock textBlock = view.getTextBlock();
-//        if(textBlock != null) {
-//            holder.webView.loadData(textBlock.getTextContent(), "text/html", "utf-8");
-//            holder.webView.setVisibility(View.VISIBLE);
-//        }
-//        else {
-//            holder.webView.setVisibility(View.GONE);
-//        }
-
-//        String text ="<style type=\"text/css\">" +
-//                "h1{font-weight:normal;" +
-//                "font-family: GillSans-Bold;" +
-//                "font-size:22px;text-align:center;" +
-//                "line-height:24px;" +
-//                "min-height:24px;" +
-//                "color:rgba(255,255,255,1);" +
-//                "margin:0px 0px 10px 0px;}" +
-//                "h2{font-weight:normal;" +
-//                "font-family: GillSans;" +
-//                "font-size:20px;" +
-//                "text-align:center;" +
-//                "line-height:22px;" +
-//                "min-height:22px;" +
-//                "color:rgba(255,255,255,1);" +
-//                "margin:0px 0px 10px 0px;}" +
-//
-//                "p" +
-//                //"{font-weight:normal;" +
-//                //"font-family: GillSans;" + (Only certain ones are supported)
-//                //"font-size:18px;" +
-//                //"text-align:center;" +
-//                //"line-height:20px;" +
-//                //"min-height:20px;" +
-//                //"color:rgba(255,255,255,0.7);" +
-//                "margin:0px 0px 10px 0px;" +
-//                "}</style>" +
-//                "<p>They&#39;re in season and on sale: Fresh, local organic peaches.</p>";
-//        String htmlText = //"<html>" +
-//                //"<head>" +
-//                "<style type=\"text/css\">" +
-//                "p{" +
-//                "margin:100px 100px 100px 100px;" +
-//                "font-weight:bold;" +
-//                "color:rgba(255, 84, 67, 1);" +
-//                "font-family: Gill Sans;" +
-//                "line-height:120px;" +
-//                "text-align:center;" +
-//                "font-size:20px;" +
-//                "min-height:20px;" +
-//                "}</style>" +
-//                //"</head>" +
-//                //"<body>" +
-//                "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>";
-//                //"</body>" +
-//                //"</html>";
-//        holder.webView.loadData(htmlText, "text/html", "utf-8");
-
-//        //Testing image loading
-//        RoverView.RoverBlock imageBlock = view.getImageBlock();
-//        if(imageBlock != null) {
-//            holder.imageProgressBar.setVisibility(View.VISIBLE);
-//            Picasso.with(mContext)
-//                    .load(imageBlock.getImageUrl())
-//                    .into(holder.cardImage, new com.squareup.picasso.Callback() {
-//
-//                        @Override
-//                        public void onSuccess() {
-//                            holder.imageProgressBar.setVisibility(View.GONE);
-//                            holder.cardImage.setVisibility(View.VISIBLE);
-//                        }
-//
-//                        @Override
-//                        public void onError() {
-//
-//                        }
-//                    });
-//        }
-//        else {
-//            holder.cardImage.setVisibility(View.GONE);
-//        }
