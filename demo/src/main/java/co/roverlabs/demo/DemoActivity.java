@@ -45,7 +45,6 @@ public class DemoActivity extends ActionBarActivity {
 
         //TODO: Remove after testing
         Button showCardsButton = (Button)findViewById(R.id.show_cards_button);
-
         showCardsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -53,5 +52,16 @@ public class DemoActivity extends ActionBarActivity {
                 rover.showCards();
             }
         });
+
+        //TODO: Remove after testing
+        Button simulateButton = (Button)findViewById(R.id.simulate_button);
+        simulateButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                rover.simulate();
+            }
+        });
+
     }
 }

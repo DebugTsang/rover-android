@@ -58,7 +58,7 @@ public class RoverRegionManager {
     public void startMonitoring() {
 
         mBeaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
-            
+
             @Override
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
@@ -74,7 +74,7 @@ public class RoverRegionManager {
 
             @Override
             public void onExitedRegion(Region region) {
-                
+
                 Log.d(TAG, "Region exited - main");
                 RoverRegion exitedMainRegion = new RoverRegion(region.getProximityUUID(), null, null);
                 RoverEventBus.getInstance().post(new RoverExitedRegionEvent(exitedMainRegion, RoverConstants.REGION_TYPE_MAIN));
@@ -150,6 +150,10 @@ public class RoverRegionManager {
         if(mIsBeaconServiceReady) {
             try {
                 if(!mRangeStarted) {
+                    // TODO: this is ugly remove this,...pass region along instead of using iVars
+                    if(mRangeRegion == null) {
+                        mRangeRegion = new Region("Range Region", "7931D3AA-299B-4A12-9FCC-D66F2C5D2462", 18347, null);
+                    }
                     mBeaconManager.startRanging(mRangeRegion);
                     Log.d(TAG, "Ranging now");
                     mRangeStarted = true;
@@ -172,6 +176,10 @@ public class RoverRegionManager {
 
                     try {
                         if(!mRangeStarted) {
+                            // TODO: this is ugly remove this,...pass region along instead of using iVars
+                            if(mRangeRegion == null) {
+                                mRangeRegion = new Region("Range Region", "7931D3AA-299B-4A12-9FCC-D66F2C5D2462", 18347, null);
+                            }
                             mBeaconManager.startRanging(mRangeRegion);
                             Log.d(TAG, "Ranging now");
                             mRangeStarted = true;

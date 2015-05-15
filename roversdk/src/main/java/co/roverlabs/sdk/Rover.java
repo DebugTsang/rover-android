@@ -11,9 +11,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
+import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
 import co.roverlabs.sdk.events.RoverEnteredTouchpointEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverExitedLocationEvent;
+import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.events.RoverExitedTouchpointEvent;
 import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.events.RoverRangeEvent;
@@ -22,6 +24,7 @@ import co.roverlabs.sdk.managers.RoverNotificationManager;
 import co.roverlabs.sdk.managers.RoverRegionManager;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCustomer;
+import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverTouchpoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 import co.roverlabs.sdk.ui.CardListActivity;
@@ -218,6 +221,16 @@ public class Rover {
         else {
             Toast.makeText(mContext, R.string.no_cards_text, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //TODO: Remove, used for testing
+    public void simulate() {
+
+        stopMonitoring();
+        RoverRegion enteredRegion = new RoverRegion("7931D3AA-299B-4A12-9FCC-D66F2C5D2462", 18347, 11111);
+        RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
+        RoverRegion exitedMainRegion = new RoverRegion("7931D3AA-299B-4A12-9FCC-D66F2C5D2462", null, null);
+        RoverEventBus.getInstance().post(new RoverExitedRegionEvent(exitedMainRegion, RoverConstants.REGION_TYPE_MAIN));
     }
 
     @Subscribe
