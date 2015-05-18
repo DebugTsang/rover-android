@@ -17,10 +17,10 @@ public class BoxModelDimens {
 
     public BoxModelDimens(Context con, Integer top, Integer right, Integer bottom, Integer left) {
 
-        this.top = ImageUtils.convertDpToPx(con, top);
-        this.right = ImageUtils.convertDpToPx(con, right);
-        this.bottom = ImageUtils.convertDpToPx(con, bottom);
-        this.left = ImageUtils.convertDpToPx(con, left);
+        this.top = UiUtils.convertDpToPx(con, top);
+        this.right = UiUtils.convertDpToPx(con, right);
+        this.bottom = UiUtils.convertDpToPx(con, bottom);
+        this.left = UiUtils.convertDpToPx(con, left);
     }
 
     @Override

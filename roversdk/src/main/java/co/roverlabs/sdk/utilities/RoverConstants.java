@@ -36,4 +36,5 @@ public class RoverConstants {
     public static final String TEXT_ALIGN_RIGHT = "right";
     public static final String TEXT_ALIGN_LEFT = "left";
     public static final String TEXT_ALIGN_CENTER = "center";
+    public static final String URL_SCHEME_ROVER = "rover";
 }

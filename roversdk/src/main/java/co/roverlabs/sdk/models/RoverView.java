@@ -7,7 +7,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import co.roverlabs.sdk.ui.BoxModelDimens;
-import co.roverlabs.sdk.ui.ImageUtils;
+import co.roverlabs.sdk.ui.UiUtils;
+import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
  * Created by SherryYang on 2015-04-21.
@@ -39,11 +40,33 @@ public class RoverView extends RoverObject {
 
     public int getBorderRadius(Context con) {
 
-        return ImageUtils.convertDpToPx(con, mBorderRadius);
+        return UiUtils.convertDpToPx(con, mBorderRadius);
     }
 
     public int getBackgroundColor() {
 
-        return ImageUtils.getARGBColor(mBackgroundColor);
+        return UiUtils.getARGBColor(mBackgroundColor);
+    }
+
+    public RoverBlock getHeaderBlock() {
+
+        if(mBlocks != null) {
+            for(RoverBlock block : mBlocks) {
+                if(block.getType().equals(RoverConstants.VIEW_BLOCK_TYPE_HEADER)) {
+                    return block;
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean isButtonBlockLast() {
+
+        if(mBlocks != null) {
+            if(mBlocks.get(mBlocks.size() - 1).getType().equals(RoverConstants.VIEW_BLOCK_TYPE_BUTTON)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

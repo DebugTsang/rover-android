@@ -9,7 +9,7 @@ import java.util.List;
 
 import co.roverlabs.sdk.ui.Border;
 import co.roverlabs.sdk.ui.BoxModelDimens;
-import co.roverlabs.sdk.ui.ImageUtils;
+import co.roverlabs.sdk.ui.UiUtils;
 import co.roverlabs.sdk.ui.TextStyle;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
@@ -105,12 +105,12 @@ public class RoverBlock {
 
     public int getBorderColor() {
 
-        return ImageUtils.getARGBColor(mBorderColor);
+        return UiUtils.getARGBColor(mBorderColor);
     }
 
     public int getBackgroundColor() {
 
-        return ImageUtils.getARGBColor(mBackgroundColor);
+        return UiUtils.getARGBColor(mBackgroundColor);
     }
 
     public Border getBorder(Context con) {
@@ -124,9 +124,9 @@ public class RoverBlock {
         style.type = RoverConstants.TEXT_H1;
         style.font = mH1Font;
         style.size = mH1FontSize;
-        style.lineHeight = ImageUtils.convertDpToPx(con, mH1LineHeight.intValue());
+        style.lineHeight = UiUtils.convertDpToPx(con, mH1LineHeight.intValue());
         style.align = mH1TextAlign;
-        style.color = ImageUtils.getARGBColor(mH1Color);
+        style.color = UiUtils.getARGBColor(mH1Color);
         style.margin = new BoxModelDimens(con, mH1Margin.get(0), mH1Margin.get(1), mH1Margin.get(2), mH1Margin.get(3));
         return style;
     }
@@ -137,9 +137,9 @@ public class RoverBlock {
         style.type = RoverConstants.TEXT_H2;
         style.font = mH2Font;
         style.size = mH2FontSize;
-        style.lineHeight = ImageUtils.convertDpToPx(con, mH2LineHeight.intValue());
+        style.lineHeight = UiUtils.convertDpToPx(con, mH2LineHeight.intValue());
         style.align = mH2TextAlign;
-        style.color = ImageUtils.getARGBColor(mH2Color);
+        style.color = UiUtils.getARGBColor(mH2Color);
         style.margin = new BoxModelDimens(con, mH2Margin.get(0), mH2Margin.get(1), mH2Margin.get(2), mH2Margin.get(3));
         return style;
     }
@@ -150,9 +150,9 @@ public class RoverBlock {
         style.type = RoverConstants.TEXT_P;
         style.font = mPFont;
         style.size = mPFontSize;
-        style.lineHeight = ImageUtils.convertDpToPx(con, mPLineHeight.intValue());
+        style.lineHeight = UiUtils.convertDpToPx(con, mPLineHeight.intValue());
         style.align = mPTextAlign;
-        style.color = ImageUtils.getARGBColor(mPColor);
+        style.color = UiUtils.getARGBColor(mPColor);
         style.margin = new BoxModelDimens(con, mPMargin.get(0), mPMargin.get(1), mPMargin.get(2), mPMargin.get(3));
         return style;
     }
@@ -172,9 +172,9 @@ public class RoverBlock {
         style.type = RoverConstants.TEXT_DIV;
         style.font = mLabelFont;
         style.size = mLabelFontSize;
-        style.lineHeight = ImageUtils.convertDpToPx(con, mLabelLineHeight.intValue());
+        style.lineHeight = UiUtils.convertDpToPx(con, mLabelLineHeight.intValue());
         style.align = mLabelTextAlign;
-        style.color = ImageUtils.getARGBColor(mLabelFontColor);
+        style.color = UiUtils.getARGBColor(mLabelFontColor);
         style.margin = new BoxModelDimens(con, mLabelMargin.get(0), mLabelMargin.get(1), mLabelMargin.get(2), mLabelMargin.get(3));
         return style;
     }
@@ -185,9 +185,9 @@ public class RoverBlock {
         style.type = RoverConstants.TEXT_DIV;
         style.font = mHeaderFont;
         style.size = mHeaderFontSize;
-        style.lineHeight = ImageUtils.convertDpToPx(con, mHeaderLineHeight.intValue());
+        style.lineHeight = UiUtils.convertDpToPx(con, mHeaderLineHeight.intValue());
         style.align = mHeaderTextAlign;
-        style.color = ImageUtils.getARGBColor(mHeaderFontColor);
+        style.color = UiUtils.getARGBColor(mHeaderFontColor);
         style.margin = new BoxModelDimens(con, mHeaderMargin.get(0), mHeaderMargin.get(1), mHeaderMargin.get(2), mHeaderMargin.get(3));
         return style;
     }

@@ -1,11 +1,10 @@
 package co.roverlabs.sdk.ui;
 
 import android.content.Context;
-import android.graphics.Typeface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +13,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.parser.Tag;
-
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.models.RoverBlock;
@@ -81,7 +74,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         //Arrange blocks
         holder.cardContentLayout.removeAllViews();
 
-        for(RoverBlock block : listView.getBlocks()) {
+        for (RoverBlock block : listView.getBlocks()) {
 
             BoxModelDimens padding = block.getPadding(mContext);
             Border border = block.getBorder(mContext);
@@ -91,36 +84,36 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
             FrameLayout blockLayout = null;
 
-            switch(block.getType()) {
+            switch (block.getType()) {
 
                 case RoverConstants.VIEW_BLOCK_TYPE_TEXT:
                     blockLayout = holder.cardTextLayout;
                     holder.cardContentLayout.addView(holder.cardTextLayout);
                     holder.cardTextLayout.setBackgroundColor(backgroundColor);
-                    setBackgroundImage(holder.cardTextBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
-                    setBorder(holder.cardTextBorder, border);
-                    setPadding(holder.cardTextContentLayout, padding, border);
-                    setTextBlockText(holder.cardTextContentLayout, block.getTextContent(), block.getTextBlockStyles(mContext));
+                    UiUtils.setBackgroundImage(holder.cardTextBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    UiUtils.setBorder(holder.cardTextBorder, border);
+                    UiUtils.setPadding(holder.cardTextContentLayout, padding, border);
+                    UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_TEXT, holder.cardTextContentLayout, block.getTextContent(), block.getTextBlockStyles(mContext));
                     break;
 
                 case RoverConstants.VIEW_BLOCK_TYPE_IMAGE:
                     blockLayout = holder.cardImageLayout;
                     holder.cardContentLayout.addView(holder.cardImageLayout);
                     holder.cardImageLayout.setBackgroundColor(backgroundColor);
-                    setBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
-                    setBorder(holder.cardImageBorder, border);
-                    setImage(holder.cardImage, block.getImageUrl(), block.getImageWidth(), block.getImageHeight(), block.getImageOffsetRatio(), block.getImageAspectRatio());
-                    setPadding(holder.cardImage, padding, border);
+                    UiUtils.setBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    UiUtils.setBorder(holder.cardImageBorder, border);
+                    UiUtils.setImageBlockImage(mContext, holder.cardImage, block.getImageUrl(), block.getImageWidth(), block.getImageHeight(), block.getImageOffsetRatio(), block.getImageAspectRatio());
+                    UiUtils.setPadding(holder.cardImage, padding, border);
                     break;
 
                 case RoverConstants.VIEW_BLOCK_TYPE_BUTTON:
                     blockLayout = holder.cardButtonLayout;
                     holder.cardContentLayout.addView(holder.cardButtonLayout);
                     holder.cardButtonLayout.setBackgroundColor(backgroundColor);
-                    setBackgroundImage(holder.cardButtonBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
-                    setBorder(holder.cardButtonBorder, border);
-                    setButtonBlockText(holder.cardButton, block.getButtonLabel(), block.getLabelTextStyle(mContext));
-                    setPadding(holder.cardButton, padding, border);
+                    UiUtils.setBackgroundImage(holder.cardButtonBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    UiUtils.setBorder(holder.cardButtonBorder, border);
+                    UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_BUTTON, holder.cardButton, block.getButtonLabel(), block.getLabelTextStyle(mContext));
+                    UiUtils.setPadding(holder.cardButton, padding, border);
                     break;
 
                 /*
@@ -137,12 +130,44 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     */
             }
 
+            final String blockUrl = block.getUrl();
+
+            if(blockLayout != null && blockUrl != null) {
+
+                blockLayout.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+
+                        Uri blockUri = Uri.parse(blockUrl);
+                        String blockScheme = blockUri.getScheme();
+                        String blockUriString = blockUri.toString();
+                        Intent intent = new Intent();
+
+                        if(blockScheme != null) {
+                            if(blockScheme.equals(RoverConstants.URL_SCHEME_ROVER)) {
+                                RoverView detailView = card.getDetailView(blockUriString.substring(blockUriString.lastIndexOf("/") + 1));
+                                intent.setClass(mContext, CardDetailActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra(RoverConstants.VIEW_TYPE_DETAIL, new Gson().toJson(detailView));
+                                mContext.startActivity(intent);
+                            }
+                            else {
+                                intent.setAction(Intent.ACTION_VIEW);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.setData(blockUri);
+                                mContext.startActivity(intent);
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         //Set background image if there is one
         String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
         if(cardBackgroundImageUrl != null) {
-            loadImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+            UiUtils.loadImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
             holder.cardBackground.setVisibility(View.VISIBLE);
         }
         else {
@@ -188,210 +213,30 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
             super(view);
             //Card
-            cardLayout = (CardView)view.findViewById(R.id.card_layout);
-            cardBackground = (ImageView)view.findViewById(R.id.card_background);
-            cardContentLayout = (LinearLayout)view.findViewById(R.id.card_content_layout);
+            cardLayout = (CardView) view.findViewById(R.id.card_list);
+            cardBackground = (ImageView) view.findViewById(R.id.list_background);
+            cardContentLayout = (LinearLayout) view.findViewById(R.id.list_blocks_layout);
             //Image block
-            cardImageLayout = (FrameLayout)view.findViewById(R.id.card_image_layout);
-            cardImageBackground = (ImageView)view.findViewById(R.id.card_image_background);
-            cardImageBorder = (BorderedView)view.findViewById(R.id.card_image_border);
-            cardImage = (ImageView)view.findViewById(R.id.card_image);
+            cardImageLayout = (FrameLayout) view.findViewById(R.id.list_image_block_layout);
+            cardImageBackground = (ImageView) view.findViewById(R.id.list_image_block_background);
+            cardImageBorder = (BorderedView) view.findViewById(R.id.list_image_block_border);
+            cardImage = (ImageView) view.findViewById(R.id.list_image_block_image);
             //Text block
-            cardTextLayout = (FrameLayout)view.findViewById(R.id.card_text_layout);
-            cardTextBackground = (ImageView)view.findViewById(R.id.card_text_background);
-            cardTextBorder = (BorderedView)view.findViewById(R.id.card_text_border);
-            cardTextContentLayout = (LinearLayout)view.findViewById(R.id.card_text_content_layout);
+            cardTextLayout = (FrameLayout) view.findViewById(R.id.list_text_block_layout);
+            cardTextBackground = (ImageView) view.findViewById(R.id.list_text_block_background);
+            cardTextBorder = (BorderedView) view.findViewById(R.id.list_text_block_border);
+            cardTextContentLayout = (LinearLayout) view.findViewById(R.id.list_text_block_text_layout);
             //Button block
-            cardButtonLayout = (FrameLayout)view.findViewById(R.id.card_button_layout);
-            cardButtonBackground = (ImageView)view.findViewById(R.id.card_button_background);
-            cardButtonBorder = (BorderedView)view.findViewById(R.id.card_button_border);
-            cardButton = (TextView)view.findViewById(R.id.card_button);
+            cardButtonLayout = (FrameLayout) view.findViewById(R.id.list_button_block_layout);
+            cardButtonBackground = (ImageView) view.findViewById(R.id.list_button_block_background);
+            cardButtonBorder = (BorderedView) view.findViewById(R.id.list_button_block_border);
+            cardButton = (TextView) view.findViewById(R.id.list_button_block_button);
             //Barcode block
-            cardBarcodeLayout = (FrameLayout)view.findViewById(R.id.card_barcode_layout);
-            cardBarcodeBackground = (ImageView)view.findViewById(R.id.card_barcode_background);
-            cardBarcodeBorder = (BorderedView)view.findViewById(R.id.card_barcode_border);
-            cardBarcode = (ImageView)view.findViewById(R.id.card_barcode);
+            cardBarcodeLayout = (FrameLayout) view.findViewById(R.id.list_barcode_block_layout);
+            cardBarcodeBackground = (ImageView) view.findViewById(R.id.list_barcode_block_background);
+            cardBarcodeBorder = (BorderedView) view.findViewById(R.id.list_barcode_block_border);
+            cardBarcode = (ImageView) view.findViewById(R.id.list_barcode_block_barcode);
         }
-    }
-
-    public void setBackgroundImage(ImageView imageView, String imageUrl, String imageMode) {
-
-        if(imageUrl != null) {
-            imageView.setBackground(null);
-            imageView.setImageDrawable(null);
-            imageView.setImageBitmap(null);
-            loadImage(imageView, imageUrl, imageMode);
-            imageView.setVisibility(View.VISIBLE);
-        }
-        else {
-            imageView.setVisibility(View.GONE);
-        }
-    }
-
-    public void setBorder(BorderedView borderView, Border border) {
-
-        if(border.hasBorder()) {
-            borderView.setBorder(border);
-            borderView.setVisibility(View.VISIBLE);
-        }
-        else {
-            borderView.setVisibility(View.GONE);
-        }
-    }
-
-    public void setPadding(View view, BoxModelDimens padding, Border border) {
-
-        if(border.hasBorder()) {
-            padding.top += border.top;
-            padding.right += border.right;
-            padding.bottom += border.bottom;
-            padding.left += border.left;
-        }
-        view.setPadding(padding.left, padding.top, padding.right, padding.bottom);
-    }
-
-    public void loadImage(ImageView imageView, String imageUrl, String imageMode) {
-
-        switch(imageMode) {
-
-            case RoverConstants.IMAGE_MODE_STRETCH:
-                mPicasso.load(imageUrl).fit().into(imageView);
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                break;
-
-            //TODO: Tile mode
-            //case RoverConstants.IMAGE_MODE_TILE:
-            //    break;
-
-            case RoverConstants.IMAGE_MODE_FILL:
-                mPicasso.load(imageUrl).fit().centerCrop().into(imageView);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                break;
-
-            case RoverConstants.IMAGE_MODE_FIT:
-                mPicasso.load(imageUrl).fit().centerInside().into(imageView);
-                break;
-
-            //TODO: Original size
-            //case RoverConstants.IMAGE_MODE_ORIGINAL:
-            //    imageView.setImageDrawable(backgroundDrawable);
-            //    imageView.setScaleType(ImageView.ScaleType.CENTER);
-
-            default:
-                mPicasso.load(imageUrl).fit().centerCrop().into(imageView);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        }
-    }
-
-    public void setTextBlockText(LinearLayout layout, String text, List<TextStyle> styles) {
-
-        layout.removeAllViews();
-
-        Document textContent = Jsoup.parseBodyFragment(text);
-
-        for(Element textElement : textContent.getAllElements()) {
-
-            if(textElement.tag().equals(Tag.valueOf(RoverConstants.TEXT_H1))) {
-                TextView textView = new TextView(mContext);
-                layout.addView(textView);
-                //TODO: Write helper function for this
-                String original = textElement.toString();
-                Matcher matcher = Pattern.compile("<h1>(.*?)</h1>").matcher(original);
-                if(matcher.find()) {
-                    setTextFormat(RoverConstants.VIEW_BLOCK_TYPE_TEXT, textView, matcher.group(1), styles.get(0));
-                }
-            }
-
-            if(textElement.tag().equals(Tag.valueOf(RoverConstants.TEXT_H2))) {
-                TextView textView = new TextView(mContext);
-                layout.addView(textView);
-                //TODO: Write helper function for this
-                String original = textElement.toString();
-                Matcher matcher = Pattern.compile("<h2>(.*?)</h2>").matcher(original);
-                if(matcher.find()) {
-                    setTextFormat(RoverConstants.VIEW_BLOCK_TYPE_TEXT, textView, matcher.group(1), styles.get(1));
-                }
-            }
-
-            if(textElement.tag().equals(Tag.valueOf(RoverConstants.TEXT_P))) {
-                TextView textView = new TextView(mContext);
-                layout.addView(textView);
-                //TODO: Write helper function for this
-                String original = textElement.toString();
-                Matcher matcher = Pattern.compile("<p>(.*?)</p>").matcher(original);
-                if(matcher.find()) {
-                    setTextFormat(RoverConstants.VIEW_BLOCK_TYPE_TEXT, textView, matcher.group(1), styles.get(2));
-                }
-            }
-        }
-    }
-
-    public void setButtonBlockText(TextView textView, String text, TextStyle style) {
-
-        Document textContent = Jsoup.parseBodyFragment(text);
-
-        for (Element textElement : textContent.getAllElements()) {
-
-            if(textElement.tag().equals(Tag.valueOf(RoverConstants.TEXT_DIV))) {
-                //TODO: Write helper function for this
-                String original = textElement.toString();
-                Matcher matcher = Pattern.compile("<div>(.*?)</div>", Pattern.DOTALL).matcher(original);
-                if(matcher.find()) {
-                    setTextFormat(RoverConstants.VIEW_BLOCK_TYPE_BUTTON, textView, matcher.group(1), style);
-                }
-            }
-        }
-    }
-
-    public void setTextFormat(String blockType, TextView textView, String text, TextStyle style) {
-
-        textView.setText(Html.fromHtml(text));
-        textView.setTextSize(style.size);
-
-        if(style.type.equals(RoverConstants.TEXT_H1) || style.type.equals(RoverConstants.TEXT_H2)) {
-            textView.setTypeface(Typeface.DEFAULT_BOLD);
-        }
-        else {
-            textView.setTypeface(Typeface.DEFAULT);
-        }
-
-        if(style.align.equals(RoverConstants.TEXT_ALIGN_CENTER)) {
-            textView.setGravity(Gravity.CENTER);
-        }
-        else if(style.align.equals(RoverConstants.TEXT_ALIGN_RIGHT)) {
-            textView.setGravity(Gravity.RIGHT);
-        }
-        else {
-            textView.setGravity(Gravity.LEFT);
-        }
-
-        textView.setTextColor(style.color);
-        textView.setLineSpacing(style.lineHeight - textView.getLineHeight(), 1);
-
-        if(blockType.equals(RoverConstants.VIEW_BLOCK_TYPE_BUTTON)) {
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(style.margin.left, style.margin.top, style.margin.right, style.margin.bottom);
-            textView.setLayoutParams(layoutParams);
-        }
-        else {
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(style.margin.left, style.margin.top, style.margin.right, style.margin.bottom);
-            textView.setLayoutParams(layoutParams);
-        }
-    }
-
-    public void setImage(ImageView imageView, String url, Integer width, Integer height, Float offsetRatio, Float aspectRatio) {
-
-        int deviceWidth = ImageUtils.getDeviceWidth(mContext);
-
-        if(width != null && height != null) {
-            url += "?w=" + deviceWidth + "&rect=0," + (int)((-offsetRatio) * height) + "," + width + ","+ (int)(width / aspectRatio);
-        }
-        else {
-            url += "?w=" + deviceWidth + "&h" + (int)(deviceWidth / aspectRatio);
-        }
-
-        mPicasso.load(url).into(imageView);
     }
 }
 
@@ -399,11 +244,11 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 //        int fontWeight3 = Typeface.NORMAL;
 //        int textAlign3 = View.TEXT_ALIGNMENT_VIEW_START;
 //        int fontColor3 = Color.argb(1 * 255, 53, 107, 232);
-//        int marginTop3 = ImageUtils.convertDpToPx(mContext, 0);
-//        int marginRight3 = ImageUtils.convertDpToPx(mContext, 0);
-//        int marginBottom3 = ImageUtils.convertDpToPx(mContext, 10);
-//        int marginLeft3 = ImageUtils.convertDpToPx(mContext, 0);
-//        int lineHeight = ImageUtils.convertDpToPx(mContext, 20);
+//        int marginTop3 = UiUtils.convertDpToPx(mContext, 0);
+//        int marginRight3 = UiUtils.convertDpToPx(mContext, 0);
+//        int marginBottom3 = UiUtils.convertDpToPx(mContext, 10);
+//        int marginLeft3 = UiUtils.convertDpToPx(mContext, 0);
+//        int lineHeight = UiUtils.convertDpToPx(mContext, 20);
 //
 //        textView.setText(Html.fromHtml(text));
 //        textView.setTextSize(fontSize3);

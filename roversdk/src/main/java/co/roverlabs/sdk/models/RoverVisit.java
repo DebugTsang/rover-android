@@ -204,9 +204,9 @@ public class RoverVisit extends RoverObject {
 
         RoverVisit visit = (RoverVisit)object;
         super.update(visit);
-        //mKeepAliveTimeInMinutes = visit.getKeepAliveTime();
         //TODO: Change keep alive time back to regular after testing is done
-        mKeepAliveTimeInMinutes = 1;
+        //mKeepAliveTimeInMinutes = visit.getKeepAliveTime();
+        mKeepAliveTimeInMinutes = 0;
         mOrganization = visit.getOrganization();
         mLocation = visit.getLocation();
         mCustomer = visit.getCustomer();

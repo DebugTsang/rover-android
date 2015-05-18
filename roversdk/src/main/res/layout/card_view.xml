@@ -2,41 +2,42 @@
 
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/card_layout"
+    android:id="@+id/card_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/card_background"
+        android:id="@+id/list_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"/>
+        android:adjustViewBounds="true"/>
 
     <LinearLayout
-        android:id="@+id/card_content_layout"
+        android:id="@+id/list_blocks_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <FrameLayout
-            android:id="@+id/card_image_layout"
+            android:id="@+id/list_image_block_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/card_image_background"
+                android:id="@+id/list_image_block_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:adjustViewBounds="true"/>
 
             <co.roverlabs.sdk.ui.BorderedView
-                android:id="@+id/card_image_border"
+                android:id="@+id/list_image_block_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/card_image"
+                android:id="@+id/list_image_block_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"/>
@@ -44,24 +45,25 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/card_text_layout"
+            android:id="@+id/list_text_block_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/card_text_background"
+                android:id="@+id/list_text_block_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:adjustViewBounds="true"/>
 
             <co.roverlabs.sdk.ui.BorderedView
-                android:id="@+id/card_text_border"
+                android:id="@+id/list_text_block_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
 
             <LinearLayout
-                android:id="@+id/card_text_content_layout"
+                android:id="@+id/list_text_block_text_layout"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -71,48 +73,50 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/card_button_layout"
+            android:id="@+id/list_button_block_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/card_button_background"
+                android:id="@+id/list_button_block_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:adjustViewBounds="true"/>
 
             <co.roverlabs.sdk.ui.BorderedView
-                android:id="@+id/card_button_border"
+                android:id="@+id/list_button_block_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/card_button"
+                android:id="@+id/list_button_block_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/card_barcode_layout"
+            android:id="@+id/list_barcode_block_layout"
             android:layout_width="match_parent"
             android:layout_height="100dp">
 
             <ImageView
-                android:id="@+id/card_barcode_background"
+                android:id="@+id/list_barcode_block_background"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:adjustViewBounds="true"/>
 
             <co.roverlabs.sdk.ui.BorderedView
-                android:id="@+id/card_barcode_border"
+                android:id="@+id/list_barcode_block_border"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/card_barcode"
+                android:id="@+id/list_barcode_block_barcode"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"/>
 

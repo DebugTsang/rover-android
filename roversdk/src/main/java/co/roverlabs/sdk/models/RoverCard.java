@@ -32,4 +32,18 @@ public class RoverCard extends RoverObject {
         }
         return null;
     }
+
+    public RoverView getDetailView(String id) {
+
+        if(mViews!= null) {
+            for(RoverView view : mViews) {
+                if(view.getType().equals(RoverConstants.VIEW_TYPE_DETAIL)) {
+                    if(view.getId().equals(id)) {
+                        return view;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

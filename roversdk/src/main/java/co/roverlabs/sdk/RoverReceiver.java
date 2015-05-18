@@ -51,10 +51,11 @@ public class RoverReceiver extends BroadcastReceiver {
             }
         }
 
-        Rover rover = Rover.getInstance(context.getApplicationContext());
-
-        if(rover.getCustomer() != null && !rover.isMonitoring()) {
-            rover.startMonitoring();
-        }
+        //TODO: Enable again after UI testing
+//        Rover rover = Rover.getInstance(context.getApplicationContext());
+//
+//        if(rover.getCustomer() != null && !rover.isMonitoring()) {
+//            rover.startMonitoring();
+//        }
     }
 }
