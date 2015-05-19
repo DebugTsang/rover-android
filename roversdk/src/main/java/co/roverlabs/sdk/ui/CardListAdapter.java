@@ -39,7 +39,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         mCards = cards;
         mContext = con.getApplicationContext();
         mPicasso = Picasso.with(mContext);
-        mPicasso.setLoggingEnabled(true);
     }
 
     @Override
@@ -102,7 +101,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     holder.cardImageLayout.setBackgroundColor(backgroundColor);
                     UiUtils.setBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(holder.cardImageBorder, border);
-                    UiUtils.setImageBlockImage(mContext, holder.cardImage, block.getImageUrl(), block.getImageWidth(), block.getImageHeight(), block.getImageOffsetRatio(), block.getImageAspectRatio());
+                    PicassoUtils.loadBlockImage(mContext, holder.cardImage, block);
                     UiUtils.setPadding(holder.cardImage, padding, border);
                     break;
 
@@ -167,7 +166,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         //Set background image if there is one
         String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
         if(cardBackgroundImageUrl != null) {
-            UiUtils.loadImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+            PicassoUtils.loadBackgroundImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
             holder.cardBackground.setVisibility(View.VISIBLE);
         }
         else {

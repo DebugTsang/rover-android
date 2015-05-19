@@ -11,6 +11,7 @@ import com.squareup.otto.Subscribe;
 
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverNotificationEvent;
+import co.roverlabs.sdk.ui.PicassoUtils;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
@@ -61,7 +62,11 @@ public class RoverNotificationManager {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(event.getMessage()))
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true);
-        
+
+
+        //prefetch images before notifying the use
+        PicassoUtils.prefetchImages(mContext.getApplicationContext());
+
         mNotificationManager.notify(event.getId(), notificationBuilder.build());
     }
 

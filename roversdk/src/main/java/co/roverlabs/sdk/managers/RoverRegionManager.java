@@ -64,13 +64,15 @@ public class RoverRegionManager {
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
                 Log.d(TAG, "Region entered - main");
-                Beacon beacon = beacons.get(0);
-                mCurrentBeacons = new ArrayList<>();
-                mCurrentBeacons.add(beacon);
-                mRangeRegion = new Region("Range Region", beacon.getProximityUUID(), beacon.getMajor(), null);
-                Log.d(TAG, "Region entered - minor " + beacon.getMinor());
-                RoverRegion enteredRegion = new RoverRegion(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
-                RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
+                if(beacons.size() != 0) {
+                    Beacon beacon = beacons.get(0);
+                    mCurrentBeacons = new ArrayList<>();
+                    mCurrentBeacons.add(beacon);
+                    mRangeRegion = new Region("Range Region", beacon.getProximityUUID(), beacon.getMajor(), null);
+                    Log.d(TAG, "Region entered - minor " + beacon.getMinor());
+                    RoverRegion enteredRegion = new RoverRegion(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
+                    RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
+                }
             }
 
             @Override
