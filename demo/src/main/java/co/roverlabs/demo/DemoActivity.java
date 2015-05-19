@@ -40,6 +40,8 @@ public class DemoActivity extends ActionBarActivity {
         //Personal account for testing
         //roverConfigs.setUuid("F352DB29-6A05-4EA2-A356-9BFAC2BB3316");
         //roverConfigs.setAppId("ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0");
+        //roverConfigs.setUuid("B435CE53-9EC2-4B20-99D1-070FEF1CDA2E");
+        //roverConfigs.setAppId("2d0ca52a350d03b6dcce601088bcdfbb");
         roverConfigs.setLaunchActivityName(this.getClass().getName());
         roverConfigs.setNotificationIconId(R.drawable.icon);
         roverConfigs.setSandBoxMode(false);

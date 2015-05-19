@@ -111,7 +111,7 @@ public class CardDetailActivity extends Activity {
     private void setBackground() {
 
         mBlocksLayout.setBackgroundColor(mDetailView.getBackgroundColor());
-        UiUtils.loadImage(mBlocksBackground, mDetailView.getBackgroundImageUrl(), mDetailView.getBackgroundContentMode());
+        UiUtils.setBackgroundImage(mBlocksBackground, mDetailView.getBackgroundImageUrl(), mDetailView.getBackgroundContentMode());
     }
 
     private void setContentBlocks() {
