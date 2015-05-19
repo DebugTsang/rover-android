@@ -34,6 +34,7 @@ public class CardListActivity extends Activity {
     private RecyclerView mCardListRecyclerView;
     private LinearLayoutManager mCardListLayoutManager;
     private CardListAdapter mCardListAdapter;
+    private String mLatestVisitId;
     private List<RoverCard> mLatestCards;
     private Button mNewCardButton;
     private Animation mSlideIn;
@@ -56,6 +57,7 @@ public class CardListActivity extends Activity {
         mCardListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mCardListRecyclerView.setLayoutManager(mCardListLayoutManager);
 
+        mLatestVisitId = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getId();
         mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
 
         if(mLatestCards.isEmpty()) {
@@ -71,7 +73,7 @@ public class CardListActivity extends Activity {
             finish();
         }
 
-        mCardListAdapter = new CardListAdapter(mLatestCards, this);
+        mCardListAdapter = new CardListAdapter(mLatestVisitId, mLatestCards, this);
         mCardListRecyclerView.setAdapter(mCardListAdapter);
 
         mCardListRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {

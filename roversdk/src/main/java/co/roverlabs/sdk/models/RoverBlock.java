@@ -83,7 +83,33 @@ public class RoverBlock {
     public String getType() { return mType; }
     public String getBackgroundImageUrl() { return mBackgroundImageUrl; }
     public String getmBackgroundContentMode() { return mBackgroundContentMode; }
+
     public String getImageUrl() { return mImageUrl; }
+    public String getImageUrl(int deviceWidth) {
+        String imageUrl = null;
+
+        String baseUrl = getImageUrl();
+        if (baseUrl == null){ //there is no image for this block, so we return null
+            return null;
+        }
+
+        //get the dimensions to generate the url
+        Integer width = getImageWidth();
+        Integer height = getImageHeight();
+        Float offsetRatio = getImageOffsetRatio();
+        Float aspectRatio = getImageAspectRatio();
+
+        if (aspectRatio != null && aspectRatio > 0) {
+            if (width != null && height != null) {
+                imageUrl = baseUrl + "?w=" + deviceWidth + "&rect=0," + (int) ((-offsetRatio) * height) + "," + width + "," + (int) (width / aspectRatio);
+            } else {
+                imageUrl = baseUrl + "?w=" + deviceWidth + "&h" + (int) (deviceWidth / aspectRatio);
+            }
+        }
+
+        return imageUrl;
+    }
+
     public Integer getImageWidth() { return mImageWidth; }
     public Integer getImageHeight() { return mImageHeight; }
     public Float getImageOffsetRatio() { return mImageOffsetRatio; }

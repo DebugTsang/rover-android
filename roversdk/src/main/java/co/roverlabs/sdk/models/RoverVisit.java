@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
 import co.roverlabs.sdk.events.RoverCardsAddedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
@@ -142,8 +143,10 @@ public class RoverVisit extends RoverObject {
             mVisitedTouchpoints.add(touchpoint);
             if(touchpoint.getCards() != null) {
                 List<RoverCard> cards = touchpoint.getCards();
-                RoverCardsAddedEvent cardsAddedEvent = new RoverCardsAddedEvent(cards);
-                RoverEventBus.getInstance().post(cardsAddedEvent);
+                RoverEventBus.getInstance().post(new RoverCardsAddedEvent(cards));
+                for(RoverCard card : cards) {
+                    RoverEventBus.getInstance().post(new RoverCardDeliveredEvent(mId, card.getId()));
+                }
             }
         }
     }
