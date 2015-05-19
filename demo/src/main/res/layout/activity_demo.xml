@@ -17,12 +17,20 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/beacons_in_range"
+        android:layout_below="@+id/welcome_text_view"
+        android:layout_centerHorizontal="true" />
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/show_cards"
         android:id="@+id/show_cards_button"
-        android:layout_below="@+id/welcome_text_view"
+        android:layout_below="@+id/beacons_in_range"
         android:layout_centerHorizontal="true" />
 
     <Button

@@ -14,6 +14,7 @@ import java.util.List;
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
+import co.roverlabs.sdk.events.RoverRangeResultEvent;
 import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
@@ -128,6 +129,9 @@ public class RoverRegionManager {
             
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> beacons) {
+
+                //TODO: Remove after testing
+                RoverEventBus.getInstance().post(new RoverRangeResultEvent(beacons));
 
                 List<Beacon> addedBeacons = new ArrayList<>();
                 List<Beacon> subtractedBeacons = new ArrayList<>();
