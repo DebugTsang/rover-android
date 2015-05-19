@@ -19,6 +19,9 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import co.roverlabs.sdk.R;
+import co.roverlabs.sdk.events.RoverCardClickedEvent;
+import co.roverlabs.sdk.events.RoverCardViewedEvent;
+import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.models.RoverBlock;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.models.RoverView;
@@ -30,12 +33,14 @@ import co.roverlabs.sdk.utilities.RoverConstants;
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardViewHolder> {
 
     public static final String TAG = CardListAdapter.class.getSimpleName();
+    private String mVisitId;
     private List<RoverCard> mCards;
     private Context mContext;
     private Picasso mPicasso;
 
-    public CardListAdapter(List<RoverCard> cards, Context con) {
+    public CardListAdapter(String visitId, List<RoverCard> cards, Context con) {
 
+        mVisitId = visitId;
         mCards = cards;
         mContext = con.getApplicationContext();
         mPicasso = Picasso.with(mContext);
@@ -54,6 +59,12 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
         final RoverCard card = mCards.get(position);
         final RoverView listView = card.getListView();
+
+        if(!card.hasBeenViewed()) {
+            RoverEventBus.getInstance().post(new RoverCardViewedEvent(mVisitId, card.getId()));
+        }
+
+        card.setViewed(true);
 
         //Set margins
         BoxModelDimens margin = listView.getMargin(mContext);
@@ -137,6 +148,8 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
                     @Override
                     public void onClick(View v) {
+
+                        RoverEventBus.getInstance().post(new RoverCardClickedEvent(mVisitId, card.getId(), blockUrl));
 
                         Uri blockUri = Uri.parse(blockUrl);
                         String blockScheme = blockUri.getScheme();

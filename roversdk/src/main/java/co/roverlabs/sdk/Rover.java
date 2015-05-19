@@ -10,6 +10,9 @@ import com.squareup.otto.Subscribe;
 import java.util.Map;
 import java.util.UUID;
 
+import co.roverlabs.sdk.events.RoverCardClickedEvent;
+import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
+import co.roverlabs.sdk.events.RoverCardViewedEvent;
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
 import co.roverlabs.sdk.events.RoverEnteredTouchpointEvent;
@@ -372,6 +375,69 @@ public class Rover {
                     else {
                         Log.d(TAG, "Event sent unsuccessfully - exit touchpoint wild card (" + event.getTouchpoint().getTitle() + ")");
                     }
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void onCardDelivered(final RoverCardDeliveredEvent event) {
+
+        if(!mConfigs.getSandBoxMode()) {
+            event.send(new RoverEventSaveListener() {
+
+                @Override
+                public void onSaveSuccess() {
+
+                    Log.d(TAG, "Event sent successfully - deliver card " + event.getCardId());
+                }
+
+                @Override
+                public void onSaveFailure() {
+
+                    Log.d(TAG, "Event sent unsuccessfully - deliver card " + event.getCardId());
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void onCardViewed(final RoverCardViewedEvent event) {
+
+        if(!mConfigs.getSandBoxMode()) {
+            event.send(new RoverEventSaveListener() {
+
+                @Override
+                public void onSaveSuccess() {
+
+                    Log.d(TAG, "Event sent successfully - view card " + event.getCardId());
+                }
+
+                @Override
+                public void onSaveFailure() {
+
+                    Log.d(TAG, "Event sent unsuccessfully - view card " + event.getCardId());
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void onCardClicked(final RoverCardClickedEvent event) {
+
+        if(!mConfigs.getSandBoxMode()) {
+            event.send(new RoverEventSaveListener() {
+
+                @Override
+                public void onSaveSuccess() {
+
+                    Log.d(TAG, "Event sent successfully - click card " + event.getCardId());
+                }
+
+                @Override
+                public void onSaveFailure() {
+
+                    Log.d(TAG, "Event sent unsuccessfully - click card " + event.getCardId());
                 }
             });
         }
