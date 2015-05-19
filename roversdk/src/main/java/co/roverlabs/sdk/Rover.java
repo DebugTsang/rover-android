@@ -25,7 +25,7 @@ import co.roverlabs.sdk.managers.RoverRegionManager;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverRegion;
-import co.roverlabs.sdk.models.RoverTouchpoint;
+import co.roverlabs.sdk.models.RoverTouchPoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 import co.roverlabs.sdk.ui.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverConstants;
@@ -290,7 +290,7 @@ public class Rover {
     public void onEnteredTouchpoint(final RoverEnteredTouchpointEvent event) {
 
         if(!event.hasBeenVisited()) {
-            RoverTouchpoint touchpoint = event.getTouchpoint();
+            RoverTouchPoint touchpoint = event.getTouchpoint();
             String touchpointId = touchpoint.getId();
             String numberOnlyId = touchpointId.replaceAll("[^0-9]", "");
             numberOnlyId = numberOnlyId.substring(Math.max(0, numberOnlyId.length() - 7));

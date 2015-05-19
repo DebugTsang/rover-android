@@ -24,7 +24,7 @@ import co.roverlabs.sdk.events.RoverRangeEvent;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverRegion;
-import co.roverlabs.sdk.models.RoverTouchpoint;
+import co.roverlabs.sdk.models.RoverTouchPoint;
 import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.ui.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverConstants;
@@ -158,9 +158,9 @@ public class RoverVisitManager {
 
     public void exitAllWildCardTouchpoints() {
 
-        Iterator<RoverTouchpoint> iterator = mLatestVisit.getCurrentTouchpoints().iterator();
+        Iterator<RoverTouchPoint> iterator = mLatestVisit.getCurrentTouchpoints().iterator();
         while(iterator.hasNext()) {
-            RoverTouchpoint touchpoint = iterator.next();
+            RoverTouchPoint touchpoint = iterator.next();
             if(touchpoint.getTrigger().equals(RoverConstants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
                 RoverEventBus.getInstance().post(new RoverExitedTouchpointEvent(mLatestVisit.getId(), touchpoint));
                 iterator.remove();
@@ -170,7 +170,7 @@ public class RoverVisitManager {
 
     public void exitAllTouchpoints() {
 
-        Iterator<RoverTouchpoint> iterator = mLatestVisit.getCurrentTouchpoints().iterator();
+        Iterator<RoverTouchPoint> iterator = mLatestVisit.getCurrentTouchpoints().iterator();
         while(iterator.hasNext()) {
             RoverEventBus.getInstance().post(new RoverExitedTouchpointEvent(mLatestVisit.getId(), iterator.next()));
             iterator.remove();
@@ -180,7 +180,7 @@ public class RoverVisitManager {
     public void didEnterSubRegion(RoverRegion subRegion) {
 
         if(!mLatestVisit.currentlyContainsWildCardTouchpoints()) {
-            for(RoverTouchpoint wildCardTouchpoint : mLatestVisit.getWildCardTouchpoints()) {
+            for(RoverTouchPoint wildCardTouchpoint : mLatestVisit.getWildCardTouchpoints()) {
                 RoverEnteredTouchpointEvent enteredTouchpointEvent = new RoverEnteredTouchpointEvent(mLatestVisit.getId(), wildCardTouchpoint);
                 if(!mLatestVisit.getVisitedTouchpoints().contains(wildCardTouchpoint)) {
                     Log.d(TAG, "Touchpoint wild card (" + wildCardTouchpoint.getTitle() + ") - not seen before");
@@ -195,7 +195,7 @@ public class RoverVisitManager {
             }
         }
 
-        RoverTouchpoint touchpoint = mLatestVisit.getTouchpoint(subRegion);
+        RoverTouchPoint touchpoint = mLatestVisit.getTouchpoint(subRegion);
 
         if(touchpoint != null) {
             RoverEnteredTouchpointEvent enteredTouchpointEvent = new RoverEnteredTouchpointEvent(mLatestVisit.getId(), touchpoint);
@@ -214,7 +214,7 @@ public class RoverVisitManager {
 
     public void didExitSubRegion(RoverRegion subRegion) {
 
-        RoverTouchpoint touchpoint = mLatestVisit.getTouchpoint(subRegion);
+        RoverTouchPoint touchpoint = mLatestVisit.getTouchpoint(subRegion);
         if(touchpoint != null) {
             mLatestVisit.removeFromCurrentTouchpoints(touchpoint);
             RoverEventBus.getInstance().post(new RoverExitedTouchpointEvent(mLatestVisit.getId(), touchpoint));

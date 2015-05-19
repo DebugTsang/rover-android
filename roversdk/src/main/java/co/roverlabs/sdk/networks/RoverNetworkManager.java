@@ -12,6 +12,7 @@ import co.roverlabs.sdk.utilities.RoverConstants;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.ApacheClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
@@ -43,6 +44,7 @@ public class RoverNetworkManager {
                 .create();
         
         RoverNetworkInterface call = new RestAdapter.Builder()
+                .setClient(new ApacheClient())
                 .setEndpoint(RoverConstants.ROVER_URL)
                 .setConverter(new GsonConverter(gson))
                 .setLogLevel(RestAdapter.LogLevel.FULL)

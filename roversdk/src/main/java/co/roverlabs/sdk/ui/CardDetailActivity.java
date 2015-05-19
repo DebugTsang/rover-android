@@ -64,7 +64,6 @@ public class CardDetailActivity extends Activity {
         mDetailView = new Gson().fromJson(detailViewString, RoverView.class);
 
         mPicasso = Picasso.with(getApplicationContext());
-        mPicasso.setLoggingEnabled(true);
 
         //Header block
         mHeader = (TextView)findViewById(R.id.detail_header_title);
@@ -145,7 +144,7 @@ public class CardDetailActivity extends Activity {
                     mImageBlockLayout.setBackgroundColor(backgroundColor);
                     UiUtils.setBackgroundImage(mImageBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(mImageBlockBorder, border);
-                    UiUtils.setImageBlockImage(getApplicationContext(), mImage, block.getImageUrl(), block.getImageWidth(), block.getImageHeight(), block.getImageOffsetRatio(), block.getImageAspectRatio());
+                    PicassoUtils.loadBlockImage(getApplicationContext(), mImage, block);
                     UiUtils.setPadding(mImage, padding, border);
                     break;
 

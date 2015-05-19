@@ -11,8 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -68,44 +66,11 @@ public class UiUtils {
             imageView.setBackground(null);
             imageView.setImageDrawable(null);
             imageView.setImageBitmap(null);
-            loadImage(imageView, imageUrl, imageMode);
+            PicassoUtils.loadBackgroundImage(imageView, imageUrl, imageMode);
             imageView.setVisibility(View.VISIBLE);
         }
         else {
             imageView.setVisibility(View.GONE);
-        }
-    }
-
-    public static void loadImage(ImageView imageView, String imageUrl, String imageMode) {
-
-        switch(imageMode) {
-
-            case RoverConstants.IMAGE_MODE_STRETCH:
-                Picasso.with(imageView.getContext()).load(imageUrl).fit().into(imageView);
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                break;
-
-            //TODO: Tile mode
-            //case RoverConstants.IMAGE_MODE_TILE:
-            //    break;
-
-            case RoverConstants.IMAGE_MODE_FILL:
-                Picasso.with(imageView.getContext()).load(imageUrl).fit().centerCrop().into(imageView);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                break;
-
-            case RoverConstants.IMAGE_MODE_FIT:
-                Picasso.with(imageView.getContext()).load(imageUrl).fit().centerInside().into(imageView);
-                break;
-
-            //TODO: Original size
-            //case RoverConstants.IMAGE_MODE_ORIGINAL:
-            //    imageView.setImageDrawable(backgroundDrawable);
-            //    imageView.setScaleType(ImageView.ScaleType.CENTER);
-
-            default:
-                Picasso.with(imageView.getContext()).load(imageUrl).fit().centerCrop().into(imageView);
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
     }
 
@@ -130,20 +95,6 @@ public class UiUtils {
         }
 
         view.setPadding(padding.left, padding.top, padding.right, padding.bottom);
-    }
-
-    public static void setImageBlockImage(Context con, ImageView imageView, String url, Integer width, Integer height, Float offsetRatio, Float aspectRatio) {
-
-        int deviceWidth = UiUtils.getDeviceWidth(con);
-
-        if(width != null && height != null) {
-            url += "?w=" + deviceWidth + "&rect=0," + (int)((-offsetRatio) * height) + "," + width + ","+ (int)(width / aspectRatio);
-        }
-        else {
-            url += "?w=" + deviceWidth + "&h" + (int)(deviceWidth / aspectRatio);
-        }
-
-        Picasso.with(imageView.getContext()).load(url).into(imageView);
     }
 
     public static void setText(String blockType, LinearLayout layout, String text, List<TextStyle> styles) {

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by SherryYang on 2015-02-20.
  */
-public class RoverTouchpoint extends RoverObject {
+public class RoverTouchPoint extends RoverObject {
     
     //JSON members
     @SerializedName("title") private String mTitle;
@@ -17,7 +17,7 @@ public class RoverTouchpoint extends RoverObject {
     @SerializedName("cards") private List<RoverCard> mCards;
 
     //Constructor
-    public RoverTouchpoint() { mObjectName = "touchpoint"; }
+    public RoverTouchPoint() { mObjectName = "touchpoint"; }
     
     //Getters
     public String getTitle() { return mTitle; }
@@ -46,7 +46,7 @@ public class RoverTouchpoint extends RoverObject {
             return false;
         }
 
-        RoverTouchpoint touchpoint = (RoverTouchpoint)o;
+        RoverTouchPoint touchpoint = (RoverTouchPoint)o;
 
         if(mId != null ? !mId.equals(touchpoint.getId()) : touchpoint.getId() != null) {
             return false;

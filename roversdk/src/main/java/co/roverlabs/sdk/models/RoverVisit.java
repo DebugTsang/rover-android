@@ -26,7 +26,7 @@ public class RoverVisit extends RoverObject {
     @SerializedName("organization") private RoverOrganization mOrganization;
     @SerializedName("location") private RoverLocation mLocation;
     @SerializedName("customer") private RoverCustomer mCustomer;
-    @SerializedName("touchpoints") private List<RoverTouchpoint> mTouchpoints;
+    @SerializedName("touchpoints") private List<RoverTouchPoint> mTouchpoints;
     @SerializedName("uuid") private String mUuid;
     @SerializedName("majorNumber") private Integer mMajor;
     @SerializedName("device") private String mDevice;
@@ -40,8 +40,8 @@ public class RoverVisit extends RoverObject {
     public static final String TAG = RoverVisit.class.getSimpleName();
     private RoverRegion mRegion;
     private Calendar mLastBeaconDetectionTime;
-    private List<RoverTouchpoint> mCurrentTouchpoints;
-    private List<RoverTouchpoint> mVisitedTouchpoints;
+    private List<RoverTouchPoint> mCurrentTouchpoints;
+    private List<RoverTouchPoint> mVisitedTouchpoints;
     
     //Constructor
     public RoverVisit() {
@@ -60,7 +60,7 @@ public class RoverVisit extends RoverObject {
     public RoverOrganization getOrganization() { return mOrganization; }
     public RoverLocation getLocation() { return mLocation; }
     public RoverCustomer getCustomer() { return mCustomer; }
-    public List<RoverTouchpoint> getTouchpoints() { return mTouchpoints; }
+    public List<RoverTouchPoint> getTouchpoints() { return mTouchpoints; }
     public String getUuid() { return mUuid; }
     public Integer getMajor() { return mMajor; }
     public String getDevice() { return mDevice; }
@@ -70,15 +70,15 @@ public class RoverVisit extends RoverObject {
     public Date getTimeStamp() { return mTimeStamp; }
     public RoverRegion getRegion() { return mRegion; }
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
-    public List<RoverTouchpoint> getCurrentTouchpoints() { return mCurrentTouchpoints; }
-    public List<RoverTouchpoint> getVisitedTouchpoints() { return mVisitedTouchpoints; }
+    public List<RoverTouchPoint> getCurrentTouchpoints() { return mCurrentTouchpoints; }
+    public List<RoverTouchPoint> getVisitedTouchpoints() { return mVisitedTouchpoints; }
     public boolean getIsSimulation() { return mIsSimulation; }
 
-    public List<RoverTouchpoint> getWildCardTouchpoints() {
+    public List<RoverTouchPoint> getWildCardTouchpoints() {
 
-        List<RoverTouchpoint> wildCardTouchpoints = new ArrayList<>();
+        List<RoverTouchPoint> wildCardTouchpoints = new ArrayList<>();
         if(mTouchpoints != null) {
-            for(RoverTouchpoint touchpoint : mTouchpoints) {
+            for(RoverTouchPoint touchpoint : mTouchpoints) {
                 if(touchpoint.getTrigger().equals(RoverConstants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
                     wildCardTouchpoints.add(touchpoint);
                 }
@@ -87,10 +87,10 @@ public class RoverVisit extends RoverObject {
         return wildCardTouchpoints;
     }
     
-    public RoverTouchpoint getTouchpoint(RoverRegion region) {
+    public RoverTouchPoint getTouchpoint(RoverRegion region) {
 
         if(mTouchpoints != null) {
-            for(RoverTouchpoint touchpoint : mTouchpoints) {
+            for(RoverTouchPoint touchpoint : mTouchpoints) {
                 if(touchpoint.getMinor() != null) {
                     if ((touchpoint.getMinor()).equals(region.getMinor())) {
                         Log.d(TAG, "Minor " + region.getMinor() + " corresponds to a valid touchpoint");
@@ -107,7 +107,7 @@ public class RoverVisit extends RoverObject {
 
         List<RoverCard> accumulatedCards = new ArrayList<>();
         if(mVisitedTouchpoints != null) {
-            for(RoverTouchpoint touchpoint : mVisitedTouchpoints) {
+            for(RoverTouchPoint touchpoint : mVisitedTouchpoints) {
                 if(touchpoint.getCards() != null) {
                     for(RoverCard card : touchpoint.getCards()) {
                         accumulatedCards.add(card);
@@ -123,7 +123,7 @@ public class RoverVisit extends RoverObject {
     public void setOrganization(RoverOrganization organization) { mOrganization = organization; }
     public void setLocation(RoverLocation location) { mLocation = location; }
     public void setCustomer(RoverCustomer customer) { mCustomer = customer; }
-    public void setTouchpoints(List<RoverTouchpoint> touchpoints) { mTouchpoints = touchpoints; }
+    public void setTouchpoints(List<RoverTouchPoint> touchpoints) { mTouchpoints = touchpoints; }
     public void setUuid(String uuid) { mUuid = uuid; }
     public void setMajor(Integer major) { mMajor = major; }
     public void setDevice(String device) { mDevice = device; }
@@ -135,7 +135,7 @@ public class RoverVisit extends RoverObject {
     public void setLastBeaconDetectionTime(Calendar lastBeaconDetectionTime) { mLastBeaconDetectionTime = lastBeaconDetectionTime; }
     public void setSimulation(boolean isSimulation) { mIsSimulation = isSimulation; }
     
-    public void addToCurrentTouchpoints(RoverTouchpoint touchpoint) {
+    public void addToCurrentTouchpoints(RoverTouchPoint touchpoint) {
 
         mCurrentTouchpoints.add(touchpoint);
         if(!mVisitedTouchpoints.contains(touchpoint)) {
@@ -148,7 +148,7 @@ public class RoverVisit extends RoverObject {
         }
     }
 
-    public void removeFromCurrentTouchpoints(RoverTouchpoint touchpoint) {
+    public void removeFromCurrentTouchpoints(RoverTouchPoint touchpoint) {
 
         mCurrentTouchpoints.remove(touchpoint);
     }
@@ -160,7 +160,7 @@ public class RoverVisit extends RoverObject {
 
     public boolean isInSubRegion(RoverRegion region) {
 
-        for(RoverTouchpoint touchpoint : mCurrentTouchpoints) {
+        for(RoverTouchPoint touchpoint : mCurrentTouchpoints) {
             if(touchpoint.getMinor() != null) {
                 if(touchpoint.getMinor().equals(region.getMinor())) {
                     return true;
@@ -180,7 +180,7 @@ public class RoverVisit extends RoverObject {
 
     public boolean currentlyContainsWildCardTouchpoints() {
 
-        for(RoverTouchpoint touchpoint : mCurrentTouchpoints) {
+        for(RoverTouchPoint touchpoint : mCurrentTouchpoints) {
             if(touchpoint.getTrigger().equals(RoverConstants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
                 return true;
             }
