@@ -14,9 +14,21 @@ public class RoverCard extends RoverObject {
     //JSON members
     @SerializedName("title") private String mTitle;
     @SerializedName("views") private List<RoverView> mViews;
+
+    //Local members
+    public static final String TAG = RoverCard.class.getSimpleName();
+    private boolean mViewed;
     
     //Constructor
-    public RoverCard() { mObjectName = "card"; }
+    public RoverCard() {
+
+        mObjectName = "card";
+        mViewed = false;
+    }
+
+    public boolean hasBeenViewed() { return mViewed; }
+
+    public void setViewed(boolean viewed) { mViewed = viewed; }
 
     //Getters
     public String getTitle() { return mTitle; }
