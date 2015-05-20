@@ -2,6 +2,7 @@ package co.roverlabs.sdk.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -52,6 +53,13 @@ public class CardDetailActivity extends Activity {
     private ImageView mStickyButtonBlockBackground;
     private BorderedView mStickyButtonBlockBorder;
     private TextView mStickyButton;
+    //Barcode block
+    private FrameLayout mBarcodeBlockLayout;
+    private ImageView mBarcodeBlockBackground;
+    private BorderedView mBarcodeBlockBorder;
+    private LinearLayout mBarcodeContentLayout;
+    private ImageView mBarcode128;
+    private TextView mBarcodeLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +97,13 @@ public class CardDetailActivity extends Activity {
         mStickyButtonBlockBackground = (ImageView)findViewById(R.id.detail_sticky_button_block_background);
         mStickyButtonBlockBorder = (BorderedView)findViewById(R.id.detail_sticky_button_block_border);
         mStickyButton = (TextView)findViewById(R.id.detail_sticky_button_block_button);
+        //Barcode block
+        mBarcodeBlockLayout = (FrameLayout)findViewById(R.id.detail_barcode_block_layout);
+        mBarcodeBlockBackground = (ImageView)findViewById(R.id.detail_barcode_block_background);
+        mBarcodeBlockBorder = (BorderedView)findViewById(R.id.detail_barcode_block_border);
+        mBarcodeContentLayout = (LinearLayout)findViewById(R.id.detail_barcode_block_barcode_layout);
+        mBarcode128 = (ImageView)findViewById(R.id.detail_barcode_block_barcode_128);
+        mBarcodeLabel = (TextView)findViewById(R.id.detail_barcode_block_barcode_label);
 
         setHeaderBlock();
         setBackground();
@@ -166,18 +181,30 @@ public class CardDetailActivity extends Activity {
                     }
                     break;
 
-                /*
                 case RoverConstants.VIEW_BLOCK_TYPE_BARCODE:
-                    holder.cardContentLayout.addView(holder.cardBarcodeLayout);
-                    holder.cardBarcodeLayout.setBackgroundColor(backgroundColor);
-                    setBackgroundImage(holder.cardBarcodeBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
-                    setBorder(holder.cardBarcodeBorder, border);
-                    //TODO: Remove after testing
-                    mPicasso.load(R.drawable.barcode).fit().into(holder.cardBarcode);
-                    holder.cardBarcode.setScaleType(ImageView.ScaleType.FIT_XY);
-                    setPadding(holder.cardBarcode, padding, border);
+                    blockLayout = mBarcodeBlockLayout;
+                    mBlocksScrollLayout.addView(mBarcodeBlockLayout);
+                    mBarcodeBlockLayout.setBackgroundColor(backgroundColor);
+                    UiUtils.setBackgroundImage(mBarcodeBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    UiUtils.setBorder(mBarcodeBlockBorder, border);
+                    TextStyle barcodeLabelStyle = new TextStyle();
+                    if(block.getBarcodeFormat().equals(RoverConstants.BARCODE_FORMAT_PLU)) {
+                        barcodeLabelStyle = block.getPluTextStyle(getApplicationContext());
+                        mBarcode128.setVisibility(View.GONE);
+                    }
+                    else if(block.getBarcodeFormat().equals(RoverConstants.BARCODE_FORMAT_128)) {
+                        barcodeLabelStyle = block.getLabelTextStyle(getApplicationContext());
+                        int barcodeWidth = UiUtils.getDeviceWidthInPx(getApplicationContext());
+                        int barcodeHeight = UiUtils.convertDpToPx(getApplicationContext(), RoverConstants.BARCODE_HEIGHT);
+                        int barcodeColor = Color.BLACK;
+                        String barcodeContent = block.getBarcodeString();
+                        mBarcode128.setImageBitmap(UiUtils.generateBarcode(barcodeContent, barcodeWidth, barcodeHeight, barcodeColor));
+                        mBarcode128.setScaleType(ImageView.ScaleType.FIT_XY);
+                        mBarcode128.setVisibility(View.VISIBLE);
+                    }
+                    UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_BARCODE, mBarcodeLabel, block.getBarcodeLabel(), barcodeLabelStyle);
+                    UiUtils.setPadding(mBarcodeContentLayout, padding, border);
                     break;
-                    */
             }
 
             final String blockUrl = block.getUrl();

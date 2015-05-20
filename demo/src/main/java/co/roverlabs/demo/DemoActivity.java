@@ -29,9 +29,9 @@ public class DemoActivity extends ActionBarActivity {
         final Rover rover = Rover.getInstance(this.getApplicationContext());
 
         RoverCustomer roverCustomer = new RoverCustomer();
-        roverCustomer.setName("Sherry Yang");
-        roverCustomer.setEmail("sherry@roverlabs.co");
-        roverCustomer.addTraits("gender", "female");
+        //roverCustomer.setName("Sherry Yang");
+        //roverCustomer.setEmail("sherry@roverlabs.co");
+        //roverCustomer.addTraits("gender", "female");
 
         RoverConfigs roverConfigs = new RoverConfigs();
         //Sean's account

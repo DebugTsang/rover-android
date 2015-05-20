@@ -2,6 +2,7 @@ package co.roverlabs.sdk.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -126,18 +127,30 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     UiUtils.setPadding(holder.cardButton, padding, border);
                     break;
 
-                /*
                 case RoverConstants.VIEW_BLOCK_TYPE_BARCODE:
+                    blockLayout = holder.cardBarcodeLayout;
                     holder.cardContentLayout.addView(holder.cardBarcodeLayout);
                     holder.cardBarcodeLayout.setBackgroundColor(backgroundColor);
-                    setBackgroundImage(holder.cardBarcodeBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
-                    setBorder(holder.cardBarcodeBorder, border);
-                    //TODO: Remove after testing
-                    mPicasso.load(R.drawable.barcode).fit().into(holder.cardBarcode);
-                    holder.cardBarcode.setScaleType(ImageView.ScaleType.FIT_XY);
-                    setPadding(holder.cardBarcode, padding, border);
+                    UiUtils.setBackgroundImage(holder.cardBarcodeBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    UiUtils.setBorder(holder.cardBarcodeBorder, border);
+                    TextStyle barcodeLabelStyle = new TextStyle();
+                    if(block.getBarcodeFormat().equals(RoverConstants.BARCODE_FORMAT_PLU)) {
+                        barcodeLabelStyle = block.getPluTextStyle(mContext);
+                        holder.cardBarcode128.setVisibility(View.GONE);
+                    }
+                    else if(block.getBarcodeFormat().equals(RoverConstants.BARCODE_FORMAT_128)) {
+                        barcodeLabelStyle = block.getLabelTextStyle(mContext);
+                        int barcodeWidth = UiUtils.getDeviceWidthInPx(mContext);
+                        int barcodeHeight = UiUtils.convertDpToPx(mContext, RoverConstants.BARCODE_HEIGHT);
+                        int barcodeColor = Color.BLACK;
+                        String barcodeContent = block.getBarcodeString();
+                        holder.cardBarcode128.setImageBitmap(UiUtils.generateBarcode(barcodeContent, barcodeWidth, barcodeHeight, barcodeColor));
+                        holder.cardBarcode128.setScaleType(ImageView.ScaleType.FIT_XY);
+                        holder.cardBarcode128.setVisibility(View.VISIBLE);
+                    }
+                    UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_BARCODE, holder.cardBarcodeLabel, block.getBarcodeLabel(), barcodeLabelStyle);
+                    UiUtils.setPadding(holder.cardBarcodeContentLayout, padding, border);
                     break;
-                    */
             }
 
             final String blockUrl = block.getUrl();
@@ -156,7 +169,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                         String blockUriString = blockUri.toString();
                         Intent intent = new Intent();
 
-                        if(blockScheme != null) {
+                        if (blockScheme != null) {
                             if(blockScheme.equals(RoverConstants.URL_SCHEME_ROVER)) {
                                 RoverView detailView = card.getDetailView(blockUriString.substring(blockUriString.lastIndexOf("/") + 1));
                                 intent.setClass(mContext, CardDetailActivity.class);
@@ -219,35 +232,39 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         protected FrameLayout cardBarcodeLayout;
         protected ImageView cardBarcodeBackground;
         protected BorderedView cardBarcodeBorder;
-        protected ImageView cardBarcode;
+        protected LinearLayout cardBarcodeContentLayout;
+        protected ImageView cardBarcode128;
+        protected TextView cardBarcodeLabel;
 
         public CardViewHolder(View view) {
 
             super(view);
             //Card
-            cardLayout = (CardView) view.findViewById(R.id.card_list);
-            cardBackground = (ImageView) view.findViewById(R.id.list_background);
-            cardContentLayout = (LinearLayout) view.findViewById(R.id.list_blocks_layout);
+            cardLayout = (CardView)view.findViewById(R.id.card_list);
+            cardBackground = (ImageView)view.findViewById(R.id.list_background);
+            cardContentLayout = (LinearLayout)view.findViewById(R.id.list_blocks_layout);
             //Image block
-            cardImageLayout = (FrameLayout) view.findViewById(R.id.list_image_block_layout);
-            cardImageBackground = (ImageView) view.findViewById(R.id.list_image_block_background);
-            cardImageBorder = (BorderedView) view.findViewById(R.id.list_image_block_border);
-            cardImage = (ImageView) view.findViewById(R.id.list_image_block_image);
+            cardImageLayout = (FrameLayout)view.findViewById(R.id.list_image_block_layout);
+            cardImageBackground = (ImageView)view.findViewById(R.id.list_image_block_background);
+            cardImageBorder = (BorderedView)view.findViewById(R.id.list_image_block_border);
+            cardImage = (ImageView)view.findViewById(R.id.list_image_block_image);
             //Text block
-            cardTextLayout = (FrameLayout) view.findViewById(R.id.list_text_block_layout);
-            cardTextBackground = (ImageView) view.findViewById(R.id.list_text_block_background);
-            cardTextBorder = (BorderedView) view.findViewById(R.id.list_text_block_border);
-            cardTextContentLayout = (LinearLayout) view.findViewById(R.id.list_text_block_text_layout);
+            cardTextLayout = (FrameLayout)view.findViewById(R.id.list_text_block_layout);
+            cardTextBackground = (ImageView)view.findViewById(R.id.list_text_block_background);
+            cardTextBorder = (BorderedView)view.findViewById(R.id.list_text_block_border);
+            cardTextContentLayout = (LinearLayout)view.findViewById(R.id.list_text_block_text_layout);
             //Button block
-            cardButtonLayout = (FrameLayout) view.findViewById(R.id.list_button_block_layout);
-            cardButtonBackground = (ImageView) view.findViewById(R.id.list_button_block_background);
-            cardButtonBorder = (BorderedView) view.findViewById(R.id.list_button_block_border);
-            cardButton = (TextView) view.findViewById(R.id.list_button_block_button);
+            cardButtonLayout = (FrameLayout)view.findViewById(R.id.list_button_block_layout);
+            cardButtonBackground = (ImageView)view.findViewById(R.id.list_button_block_background);
+            cardButtonBorder = (BorderedView)view.findViewById(R.id.list_button_block_border);
+            cardButton = (TextView)view.findViewById(R.id.list_button_block_button);
             //Barcode block
-            cardBarcodeLayout = (FrameLayout) view.findViewById(R.id.list_barcode_block_layout);
-            cardBarcodeBackground = (ImageView) view.findViewById(R.id.list_barcode_block_background);
-            cardBarcodeBorder = (BorderedView) view.findViewById(R.id.list_barcode_block_border);
-            cardBarcode = (ImageView) view.findViewById(R.id.list_barcode_block_barcode);
+            cardBarcodeLayout = (FrameLayout)view.findViewById(R.id.list_barcode_block_layout);
+            cardBarcodeBackground = (ImageView)view.findViewById(R.id.list_barcode_block_background);
+            cardBarcodeBorder = (BorderedView)view.findViewById(R.id.list_barcode_block_border);
+            cardBarcodeContentLayout = (LinearLayout)view.findViewById(R.id.list_barcode_block_barcode_layout);
+            cardBarcode128 = (ImageView)view.findViewById(R.id.list_barcode_block_barcode_128);
+            cardBarcodeLabel = (TextView)view.findViewById(R.id.list_barcode_block_barcode_label);
         }
     }
 }

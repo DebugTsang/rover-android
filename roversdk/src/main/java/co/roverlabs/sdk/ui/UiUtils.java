@@ -3,11 +3,9 @@ package co.roverlabs.sdk.ui;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -15,12 +13,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.squareup.picasso.Picasso;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,14 +61,24 @@ public class UiUtils {
         return (int)(px / scale + 0.5f);
     }
 
-    public static int getDeviceWidth(Context con) {
+    public static int getDeviceWidthInDp(Context con) {
 
         return convertPxToDp(con, con.getResources().getDisplayMetrics().widthPixels);
     }
 
-    public static int getDeviceHeight(Context con) {
+    public static int getDeviceWidthInPx(Context con) {
+
+        return con.getResources().getDisplayMetrics().widthPixels;
+    }
+
+    public static int getDeviceHeightInDp(Context con) {
 
         return convertPxToDp(con, con.getResources().getDisplayMetrics().heightPixels);
+    }
+
+    public static int getDeviceHeightInPx(Context con) {
+
+        return con.getResources().getDisplayMetrics().heightPixels;
     }
 
     public static void setBackgroundImage(ImageView imageView, String imageUrl, String imageMode) {
@@ -99,6 +116,20 @@ public class UiUtils {
         }
 
         view.setPadding(padding.left, padding.top, padding.right, padding.bottom);
+    }
+
+    public static void setImageBlockImage(Context con, ImageView imageView, String url, Integer width, Integer height, Float offsetRatio, Float aspectRatio) {
+
+        int deviceWidth = UiUtils.getDeviceWidthInDp(con);
+
+        if(width != null && height != null) {
+            url += "?w=" + deviceWidth + "&rect=0," + (int)((-offsetRatio) * height) + "," + width + ","+ (int)(width / aspectRatio);
+        }
+        else {
+            url += "?w=" + deviceWidth + "&h" + (int)(deviceWidth / aspectRatio);
+        }
+
+        Picasso.with(imageView.getContext()).load(url).into(imageView);
     }
 
     public static void setText(String blockType, LinearLayout layout, String text, List<TextStyle> styles) {
@@ -166,7 +197,7 @@ public class UiUtils {
         textView.setText(Html.fromHtml(text));
         textView.setTextSize(style.size);
 
-        if(style.type.equals(RoverConstants.TEXT_H1) || style.type.equals(RoverConstants.TEXT_H2)) {
+        if(style.type.equals(RoverConstants.TEXT_H1) || style.type.equals(RoverConstants.TEXT_H2) || blockType.equals(RoverConstants.VIEW_BLOCK_TYPE_BARCODE)) {
             textView.setTypeface(Typeface.DEFAULT_BOLD);
         }
         else {
@@ -189,7 +220,7 @@ public class UiUtils {
         textView.setTextColor(style.color);
         textView.setLineSpacing(style.lineHeight - textView.getLineHeight(), 1);
 
-        if(blockType.equals(RoverConstants.VIEW_BLOCK_TYPE_TEXT)) {
+        if(blockType.equals(RoverConstants.VIEW_BLOCK_TYPE_TEXT) || blockType.equals(RoverConstants.VIEW_BLOCK_TYPE_BARCODE)) {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             layoutParams.setMargins(style.margin.left, style.margin.top, style.margin.right, style.margin.bottom);
             textView.setLayoutParams(layoutParams);
@@ -201,6 +232,38 @@ public class UiUtils {
         }
     }
 
+
+    public static Bitmap generateBarcode(String contents, int width, int height, int color) {
+
+        Map<EncodeHintType, Object> hints = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+
+        MultiFormatWriter writer = new MultiFormatWriter();
+
+        BitMatrix result = null;
+
+        try {
+            result = writer.encode(contents, BarcodeFormat.CODE_128, width, height, hints);
+        }
+        catch (WriterException e) {
+            Log.e(TAG, "Cannot encode barcode " + e);
+        }
+
+        int resultWidth = result.getWidth();
+        int resultHeight = result.getHeight();
+        int[] pixels = new int[width * height];
+
+        for(int y = 0; y < height; y++) {
+            int offset = y * width;
+            for(int x = 0; x < width; x++) {
+                pixels[offset + x] = result.get(x, y) ? color : Color.TRANSPARENT;
+            }
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_4444);
+        bitmap.setPixels(pixels, 0, resultWidth, 0, 0, resultWidth, resultHeight);
+        return bitmap;
+    }
 
 
 

@@ -37,36 +37,39 @@ public class RoverBlock {
     @SerializedName("url") private String mUrl;
     @SerializedName("buttonLabel") private String mButtonLabel;
     @SerializedName("headerTitle") private String mHeaderTitle;
+    @SerializedName("barcodeString") private String mBarcodeString;
+    @SerializedName("barcodeLabel") private String mBarcodeLabel;
+    @SerializedName("barcodeFormat") private String mBarcodeFormat;
     //Text block text format
     //TODO: Remove hard coded values after testing
     //H1 format
-    @SerializedName("h1Font") private String mH1Font;// = "HelveticaNeue-Bold";
-    @SerializedName("h1FontSize") private Float mH1FontSize;// = (float)20;
-    @SerializedName("h1LineHeight") private Float mH1LineHeight;// = (float)24;
-    @SerializedName("h1TextAlign") private String mH1TextAlign;// = "right";
-    @SerializedName("h1Color") private List<Float> mH1Color;// = Arrays.asList((float)12, (float)237, (float)53, (float)0.4);
-    @SerializedName("h1Margin") private List<Integer> mH1Margin;// = Arrays.asList(0, 0, 20, 0);
+    @SerializedName("h1Font") private String mH1Font;
+    @SerializedName("h1FontSize") private Float mH1FontSize;
+    @SerializedName("h1LineHeight") private Float mH1LineHeight;
+    @SerializedName("h1TextAlign") private String mH1TextAlign;
+    @SerializedName("h1Color") private List<Float> mH1Color;
+    @SerializedName("h1Margin") private List<Integer> mH1Margin;
     //H2 format
-    @SerializedName("h2Font") private String mH2Font;// = "HelveticaNeue-Bold";
-    @SerializedName("h2FontSize") private Float mH2FontSize;// = (float)16;
-    @SerializedName("h2LineHeight") private Float mH2LineHeight;// = (float)22;
-    @SerializedName("h2TextAlign") private String mH2TextAlign;// = "right";
-    @SerializedName("h2Color") private List<Float> mH2Color;// = Arrays.asList((float)237, (float)12, (float)196, (float)1);
-    @SerializedName("h2Margin") private List<Integer> mH2Margin;// = Arrays.asList(0, 0, 10, 0);
+    @SerializedName("h2Font") private String mH2Font;
+    @SerializedName("h2FontSize") private Float mH2FontSize;
+    @SerializedName("h2LineHeight") private Float mH2LineHeight;
+    @SerializedName("h2TextAlign") private String mH2TextAlign;
+    @SerializedName("h2Color") private List<Float> mH2Color;
+    @SerializedName("h2Margin") private List<Integer> mH2Margin;
     //P format
-    @SerializedName("pFont") private String mPFont;// = "HelveticaNeue-Light";
-    @SerializedName("pFontSize") private Float mPFontSize;// = (float)14;
-    @SerializedName("pLineHeight") private Float mPLineHeight;// = (float)10;
-    @SerializedName("pTextAlign") private String mPTextAlign;// = "right";
-    @SerializedName("pColor") private List<Float> mPColor;// = Arrays.asList((float)53, (float)107, (float)232, (float)1);
-    @SerializedName("pMargin") private List<Integer> mPMargin;// = Arrays.asList(0, 0, 10, 0);
+    @SerializedName("pFont") private String mPFont;
+    @SerializedName("pFontSize") private Float mPFontSize;
+    @SerializedName("pLineHeight") private Float mPLineHeight;
+    @SerializedName("pTextAlign") private String mPTextAlign;
+    @SerializedName("pColor") private List<Float> mPColor;
+    @SerializedName("pMargin") private List<Integer> mPMargin;
     //Button block text format
-    @SerializedName("labelFont") private String mLabelFont;// = "HelveticaNeue";
-    @SerializedName("labelFontSize") private Float mLabelFontSize;// = (float)25;
-    @SerializedName("labelLineHeight") private Float mLabelLineHeight;// = (float)18;
-    @SerializedName("labelTextAlign") private String mLabelTextAlign;// = "center";
-    @SerializedName("labelColor") private List<Float> mLabelFontColor;// = Arrays.asList((float)0, (float)0, (float)0, (float)1);
-    @SerializedName("labelMargin") private List<Integer> mLabelMargin;// = Arrays.asList(20, 20, 20, 20);
+    @SerializedName("labelFont") private String mLabelFont;
+    @SerializedName("labelFontSize") private Float mLabelFontSize;
+    @SerializedName("labelLineHeight") private Float mLabelLineHeight;
+    @SerializedName("labelTextAlign") private String mLabelTextAlign;
+    @SerializedName("labelColor") private List<Float> mLabelFontColor;
+    @SerializedName("labelMargin") private List<Integer> mLabelMargin;
     //Header block text format
     @SerializedName("titleFont") private String mHeaderFont;
     @SerializedName("titleFontSize") private Float mHeaderFontSize;
@@ -74,7 +77,13 @@ public class RoverBlock {
     @SerializedName("titleTextAlign") private String mHeaderTextAlign;
     @SerializedName("titleColor") private List<Float> mHeaderFontColor;
     @SerializedName("titleMargin") private List<Integer> mHeaderMargin;
-
+    //Barcode block text format
+    @SerializedName("pluFont") private String mPluFont;
+    @SerializedName("pluFontSize") private Float mPluFontSize;
+    @SerializedName("pluLineHeight") private Float mPluLineHeight;
+    @SerializedName("pluTextAlign") private String mPluTextAlign;
+    @SerializedName("pluColor") private List<Float> mPluFontColor;
+    @SerializedName("pluMargin") private List<Integer> mPluMargin;
 
     //Constructor
     public RoverBlock() { }
@@ -118,6 +127,9 @@ public class RoverBlock {
     public String getUrl() { return mUrl; }
     public String getButtonLabel() { return mButtonLabel; }
     public String getHeaderTitle() { return mHeaderTitle; }
+    public String getBarcodeLabel() { return mBarcodeLabel; }
+    public String getBarcodeFormat() { return mBarcodeFormat; }
+    public String getBarcodeString() { return mBarcodeString; }
 
     public BoxModelDimens getPadding(Context con) {
 
@@ -142,6 +154,11 @@ public class RoverBlock {
     public Border getBorder(Context con) {
 
         return new Border(getBorderWidth(con), getBorderColor());
+    }
+
+    public boolean hasBackgroundImage() {
+
+        return mBackgroundImageUrl != null;
     }
 
     public TextStyle getH1TextStyle(Context con) {
@@ -215,6 +232,19 @@ public class RoverBlock {
         style.align = mHeaderTextAlign;
         style.color = UiUtils.getARGBColor(mHeaderFontColor);
         style.margin = new BoxModelDimens(con, mHeaderMargin.get(0), mHeaderMargin.get(1), mHeaderMargin.get(2), mHeaderMargin.get(3));
+        return style;
+    }
+
+    public TextStyle getPluTextStyle(Context con) {
+
+        TextStyle style = new TextStyle();
+        style.type = RoverConstants.TEXT_DIV;
+        style.font = mPluFont;
+        style.size = mPluFontSize;
+        style.lineHeight = UiUtils.convertDpToPx(con, mPluLineHeight.intValue());
+        style.align = mPluTextAlign;
+        style.color = UiUtils.getARGBColor(mPluFontColor);
+        style.margin = new BoxModelDimens(con, mPluMargin.get(0), mPluMargin.get(1), mPluMargin.get(2), mPluMargin.get(3));
         return style;
     }
 }

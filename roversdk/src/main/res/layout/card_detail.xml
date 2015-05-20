@@ -138,10 +138,25 @@
                         android:layout_height="match_parent"
                         android:visibility="gone"/>
 
-                    <ImageView
-                        android:id="@+id/detail_barcode_block_barcode"
+                    <LinearLayout
+                        android:id="@+id/detail_barcode_block_barcode_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <ImageView
+                            android:id="@+id/detail_barcode_block_barcode_128"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginBottom="4dp"/>
+
+                        <TextView
+                            android:id="@+id/detail_barcode_block_barcode_label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
 
                 </FrameLayout>
 
