@@ -16,6 +16,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
@@ -67,17 +68,21 @@ public class PicassoUtils {
 
             //load background images
             String imageUrl = listView.getBackgroundImageUrl();
-            String imageMode = listView.getBackgroundContentMode();
             if (!TextUtils.isEmpty(imageUrl)) {
                 Picasso.with(appContext).load(imageUrl).fetch();
             }
 
             //load block images
-            for (RoverBlock block : listView.getBlocks()) {
+            List<RoverBlock> blocks = listView.getBlocks();
+            for (RoverBlock block : blocks) {
                 String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidth(appContext));
-
                 if (blockImageUrl != null){
                     Picasso.with(appContext).load(blockImageUrl).fetch();
+                }
+
+                String blockBgImageUrl = block.getBackgroundImageUrl();
+                if (blockBgImageUrl != null){
+                    Picasso.with(appContext).load(blockBgImageUrl).fetch();
                 }
             }
         }
@@ -111,10 +116,10 @@ public class PicassoUtils {
         String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidth(context));
         Picasso.with(imageView.getContext())
                 .load(blockImageUrl)
-                .fit()
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        imageView.setMinimumHeight(0);
                         imageView.setAdjustViewBounds(true);
                     }
 
@@ -132,7 +137,17 @@ public class PicassoUtils {
      * @param imageUrl
      * @param imageMode
      */
-    public static void loadBackgroundImage(final ImageView imageView, String imageUrl, String imageMode) {
+    public static void loadBackgroundImage(ImageView imageView, String imageUrl, String imageMode) {
+
+        if(imageUrl == null) {
+            imageView.setVisibility(View.GONE);
+            return;
+        }
+
+        imageView.setBackground(null);
+        imageView.setImageDrawable(null);
+        imageView.setImageBitmap(null);
+        imageView.setVisibility(View.VISIBLE);
 
         switch (imageMode) {
 

@@ -64,20 +64,6 @@ public class UiUtils {
         return convertPxToDp(con, con.getResources().getDisplayMetrics().heightPixels);
     }
 
-    public static void setBackgroundImage(ImageView imageView, String imageUrl, String imageMode) {
-
-        if(imageUrl != null) {
-            imageView.setBackground(null);
-            imageView.setImageDrawable(null);
-            imageView.setImageBitmap(null);
-            PicassoUtils.loadBackgroundImage(imageView, imageUrl, imageMode);
-            imageView.setVisibility(View.VISIBLE);
-        }
-        else {
-            imageView.setVisibility(View.GONE);
-        }
-    }
-
     public static void setBorder(BorderedView borderView, Border border) {
 
         if(border.hasBorder()) {
