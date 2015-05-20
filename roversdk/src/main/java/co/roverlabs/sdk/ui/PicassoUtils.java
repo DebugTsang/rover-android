@@ -3,6 +3,7 @@ package co.roverlabs.sdk.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -110,6 +111,7 @@ public class PicassoUtils {
         String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidth(context));
         Picasso.with(imageView.getContext())
                 .load(blockImageUrl)
+                .fit()
                 .into(imageView,  new Callback() {
                     @Override
                     public void onSuccess() {
@@ -132,7 +134,7 @@ public class PicassoUtils {
     public static void loadBackgroundImage(final ImageView imageView, String imageUrl, String imageMode) {
 
         RequestCreator requestCreator = getPicassoRequestCreator(imageView.getContext(), imageUrl, imageMode);
-        requestCreator.into(imageView);
+        requestCreator.fit().into(imageView);
 
         switch(imageMode) {
 
@@ -178,19 +180,30 @@ public class PicassoUtils {
         switch(imageMode) {
 
             case RoverConstants.IMAGE_MODE_STRETCH:
-                requestCreator = Picasso.with(context).load(imageUrl).fit();
+                requestCreator = Picasso.with(context).load(imageUrl);
                 break;
 
             //TODO: Tile mode
             //case RoverConstants.IMAGE_MODE_TILE:
             //    break;
 
-            case RoverConstants.IMAGE_MODE_FILL:
-                requestCreator = Picasso.with(context).load(imageUrl).fit().centerCrop();
-                break;
+//            case RoverConstants.IMAGE_MODE_FILL:
+//
+//                requestCreator = Picasso.with(context).load(imageUrl).centerCrop();
+//
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//                Bitmap bitmap = BitmapFactory.decodeFile(photoPath, options);
+//
+//                Bitmap resizedBitmap = getScaledBitmap(context, bitmap);
+//                BitmapDrawable backgroundDrawable = new BitmapDrawable(context.getResources(), resizedBitmap);
+//
+//                setImageMode(context, bitmap, null, RoverConstants.IMAGE_MODE_STRETCH);
+//
+//                break;
 
             case RoverConstants.IMAGE_MODE_FIT:
-                requestCreator = Picasso.with(context).load(imageUrl).fit().centerInside();
+                requestCreator = Picasso.with(context).load(imageUrl).centerInside();
                 break;
 
             //TODO: Original size
@@ -199,7 +212,7 @@ public class PicassoUtils {
             //    imageView.setScaleType(ImageView.ScaleType.CENTER);
 
             default:
-                requestCreator = Picasso.with(context).load(imageUrl).fit().centerCrop();
+                requestCreator = Picasso.with(context).load(imageUrl).centerCrop();
         }
 
         return requestCreator;
