@@ -112,7 +112,9 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     holder.cardImageLayout.setBackgroundColor(backgroundColor);
                     UiUtils.setBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(holder.cardImageBorder, border);
+
                     PicassoUtils.loadBlockImage(mContext, holder.cardImage, block);
+
                     UiUtils.setPadding(holder.cardImage, padding, border);
                     break;
 

@@ -24,7 +24,6 @@ import co.roverlabs.sdk.utilities.RoverConstants;
 public class CardDetailActivity extends Activity {
 
     public static final String TAG = CardDetailActivity.class.getName();
-    private Picasso mPicasso;
     private RoverView mDetailView;
     //Header block
     private TextView mHeader;
@@ -62,8 +61,6 @@ public class CardDetailActivity extends Activity {
 
         String detailViewString = getIntent().getStringExtra(RoverConstants.VIEW_TYPE_DETAIL);
         mDetailView = new Gson().fromJson(detailViewString, RoverView.class);
-
-        mPicasso = Picasso.with(getApplicationContext());
 
         //Header block
         mHeader = (TextView)findViewById(R.id.detail_header_title);
