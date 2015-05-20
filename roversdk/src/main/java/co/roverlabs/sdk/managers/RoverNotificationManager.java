@@ -63,10 +63,6 @@ public class RoverNotificationManager {
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setAutoCancel(true);
 
-
-        //prefetch images before notifying the use
-        PicassoUtils.prefetchImages(mContext.getApplicationContext());
-
         mNotificationManager.notify(event.getId(), notificationBuilder.build());
     }
 

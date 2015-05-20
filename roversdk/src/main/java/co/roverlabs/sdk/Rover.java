@@ -31,6 +31,7 @@ import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverTouchPoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 import co.roverlabs.sdk.ui.CardListActivity;
+import co.roverlabs.sdk.ui.PicassoUtils;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
@@ -316,8 +317,13 @@ public class Rover {
 //                Log.e(TAG, "Cannot send notification - cannot find launch activity name", e);
 //            }
 
+            //prefetch images before notifying the user
+            PicassoUtils.prefetchImages(mContext.getApplicationContext());
+
             RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, CardListActivity.class);
             RoverEventBus.getInstance().post(notificationEvent);
+
+
         }
 
         if(!mConfigs.getSandBoxMode()) {
