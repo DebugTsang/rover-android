@@ -2,6 +2,7 @@ package co.roverlabs.sdk.ui;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -57,7 +58,7 @@ public class PicassoUtils {
             String imageUrl = listView.getBackgroundImageUrl();
             String imageMode = listView.getBackgroundContentMode();
             if (!TextUtils.isEmpty(imageUrl)) {
-                getPicassoRequestCreator(appContext, imageUrl, imageMode).fetch();
+                Picasso.with(appContext).load(imageUrl).fetch();
             }
 
             //load block images
@@ -99,14 +100,16 @@ public class PicassoUtils {
         String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidthInDp(context));
         Picasso.with(imageView.getContext())
                 .load(blockImageUrl)
-                .into(imageView,  new Callback() {
+                .fit()
+                .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
                         imageView.setAdjustViewBounds(true);
                     }
 
                     @Override
-                    public void onError() {}
+                    public void onError() {
+                    }
                 });
     }
 
@@ -120,13 +123,11 @@ public class PicassoUtils {
      */
     public static void loadBackgroundImage(final ImageView imageView, String imageUrl, String imageMode) {
 
-        RequestCreator requestCreator = getPicassoRequestCreator(imageView.getContext(), imageUrl, imageMode);
-        requestCreator.into(imageView);
-
-        switch(imageMode) {
+        switch (imageMode) {
 
             case RoverConstants.IMAGE_MODE_STRETCH:
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                Picasso.with(imageView.getContext()).load(imageUrl).fit().into(imageView);
                 break;
 
             //TODO: Tile mode
@@ -138,6 +139,7 @@ public class PicassoUtils {
                 break;
 
             case RoverConstants.IMAGE_MODE_FIT:
+                Picasso.with(imageView.getContext()).load(imageUrl).fit().centerInside().into(imageView);
                 break;
 
             //TODO: Original size
@@ -146,52 +148,9 @@ public class PicassoUtils {
             //    imageView.setScaleType(ImageView.ScaleType.CENTER);
 
             default:
+                Picasso.with(imageView.getContext()).load(imageUrl).fit().centerCrop().into(imageView);
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
-    }
-
-    /**
-     *
-     * Util function for creating Picasso RequestCreator so we can use for both pre-fetching and loading the image
-     *
-     * @param context
-     * @param imageUrl
-     * @param imageMode
-     * @return
-     */
-    private static RequestCreator getPicassoRequestCreator(final Context context, String imageUrl, String imageMode) {
-        init(context);
-
-        RequestCreator requestCreator = null;
-
-        switch(imageMode) {
-
-            case RoverConstants.IMAGE_MODE_STRETCH:
-                requestCreator = Picasso.with(context).load(imageUrl).fit();
-                break;
-
-            //TODO: Tile mode
-            //case RoverConstants.IMAGE_MODE_TILE:
-            //    break;
-
-            case RoverConstants.IMAGE_MODE_FILL:
-                requestCreator = Picasso.with(context).load(imageUrl).fit().centerCrop();
-                break;
-
-            case RoverConstants.IMAGE_MODE_FIT:
-                requestCreator = Picasso.with(context).load(imageUrl).fit().centerInside();
-                break;
-
-            //TODO: Original size
-            //case RoverConstants.IMAGE_MODE_ORIGINAL:
-            //    imageView.setImageDrawable(backgroundDrawable);
-            //    imageView.setScaleType(ImageView.ScaleType.CENTER);
-
-            default:
-                requestCreator = Picasso.with(context).load(imageUrl).fit().centerCrop();
-        }
-
-        return requestCreator;
     }
 
 
