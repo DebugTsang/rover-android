@@ -1,30 +1,19 @@
 package co.roverlabs.sdk.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ClipDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
-import com.squareup.picasso.Target;
 
 import java.util.List;
 
-import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverBlock;
 import co.roverlabs.sdk.models.RoverCard;
@@ -73,7 +62,7 @@ public class PicassoUtils {
 
             //load block images
             for (RoverBlock block : listView.getBlocks()) {
-                String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidth(appContext));
+                String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidthInDp(appContext));
 
                 if (blockImageUrl != null){
                     Picasso.with(appContext).load(blockImageUrl).fetch();
@@ -97,7 +86,7 @@ public class PicassoUtils {
         imageView.setAdjustViewBounds(false);
 
         //calculating estimated height of the block using aspect ratio
-        int estimatedWidth = UiUtils.getDeviceWidth(context)
+        int estimatedWidth = UiUtils.getDeviceWidthInDp(context)
                 - block.getPadding(context).left
                 - block.getPadding(context).right
                 - block.getBorderWidth(context).left
@@ -107,7 +96,7 @@ public class PicassoUtils {
         imageView.setMinimumHeight(UiUtils.convertDpToPx(context, estimatedHeight));
 
         //---- we are now ready to load the image
-        String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidth(context));
+        String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidthInDp(context));
         Picasso.with(imageView.getContext())
                 .load(blockImageUrl)
                 .into(imageView,  new Callback() {

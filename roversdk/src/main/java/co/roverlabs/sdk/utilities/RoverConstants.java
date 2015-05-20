@@ -37,4 +37,7 @@ public class RoverConstants {
     public static final String TEXT_ALIGN_LEFT = "left";
     public static final String TEXT_ALIGN_CENTER = "center";
     public static final String URL_SCHEME_ROVER = "rover";
+    public static final String BARCODE_FORMAT_PLU = "plu";
+    public static final String BARCODE_FORMAT_128 = "code128";
+    public static final int BARCODE_HEIGHT = 56;
 }
