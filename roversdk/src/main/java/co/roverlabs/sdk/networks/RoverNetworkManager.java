@@ -15,6 +15,7 @@ import retrofit.RetrofitError;
 import retrofit.client.ApacheClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import retrofit.mime.TypedByteArray;
 
 /**
  * Created by SherryYang on 2015-02-24.
@@ -60,7 +61,6 @@ public class RoverNetworkManager {
             
             @Override
             public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
-
                 networkListener.onNetworkCallSuccess(roverObjectWrapper.get());
             }
 
