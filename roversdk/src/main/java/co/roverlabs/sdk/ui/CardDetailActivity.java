@@ -122,7 +122,7 @@ public class CardDetailActivity extends Activity {
     private void setBackground() {
 
         mBlocksLayout.setBackgroundColor(mDetailView.getBackgroundColor());
-        UiUtils.setBackgroundImage(mBlocksBackground, mDetailView.getBackgroundImageUrl(), mDetailView.getBackgroundContentMode());
+        PicassoUtils.loadBackgroundImage(mBlocksBackground, mDetailView.getBackgroundImageUrl(), mDetailView.getBackgroundContentMode());
     }
 
     private void setContentBlocks() {
@@ -144,7 +144,7 @@ public class CardDetailActivity extends Activity {
                     blockLayout = mTextBlockLayout;
                     mBlocksScrollLayout.addView(mTextBlockLayout);
                     mTextBlockLayout.setBackgroundColor(backgroundColor);
-                    UiUtils.setBackgroundImage(mTextBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    PicassoUtils.loadBackgroundImage(mTextBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(mTextBlockBorder, border);
                     UiUtils.setPadding(mTextLayout, padding, border);
                     UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_TEXT, mTextLayout, block.getTextContent(), block.getTextBlockStyles(getApplicationContext()));
@@ -154,7 +154,7 @@ public class CardDetailActivity extends Activity {
                     blockLayout = mImageBlockLayout;
                     mBlocksScrollLayout.addView(mImageBlockLayout);
                     mImageBlockLayout.setBackgroundColor(backgroundColor);
-                    UiUtils.setBackgroundImage(mImageBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    PicassoUtils.loadBackgroundImage(mImageBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(mImageBlockBorder, border);
                     PicassoUtils.loadBlockImage(getApplicationContext(), mImage, block);
                     UiUtils.setPadding(mImage, padding, border);
@@ -164,7 +164,7 @@ public class CardDetailActivity extends Activity {
                     if(mDetailView.isButtonBlockLast()) {
                         blockLayout = mStickyButtonBlockLayout;
                         mStickyButtonBlockLayout.setBackgroundColor(backgroundColor);
-                        UiUtils.setBackgroundImage(mStickyButtonBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                        PicassoUtils.loadBackgroundImage(mStickyButtonBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                         UiUtils.setBorder(mStickyButtonBlockBorder, border);
                         UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_BUTTON, mStickyButton, block.getButtonLabel(), block.getLabelTextStyle(getApplicationContext()));
                         UiUtils.setPadding(mStickyButton, padding, border);
@@ -174,7 +174,7 @@ public class CardDetailActivity extends Activity {
                         blockLayout = mButtonBlockLayout;
                         mBlocksScrollLayout.addView(mButtonBlockLayout);
                         mButtonBlockLayout.setBackgroundColor(backgroundColor);
-                        UiUtils.setBackgroundImage(mButtonBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                        PicassoUtils.loadBackgroundImage(mButtonBlockBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                         UiUtils.setBorder(mButtonBlockBorder, border);
                         UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_BUTTON, mButton, block.getButtonLabel(), block.getLabelTextStyle(getApplicationContext()));
                         UiUtils.setPadding(mButton, padding, border);

@@ -1,20 +1,32 @@
 package co.roverlabs.sdk.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
+import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverBlock;
 import co.roverlabs.sdk.models.RoverCard;
@@ -56,17 +68,21 @@ public class PicassoUtils {
 
             //load background images
             String imageUrl = listView.getBackgroundImageUrl();
-            String imageMode = listView.getBackgroundContentMode();
             if (!TextUtils.isEmpty(imageUrl)) {
                 Picasso.with(appContext).load(imageUrl).fetch();
             }
 
             //load block images
-            for (RoverBlock block : listView.getBlocks()) {
-                String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidthInDp(appContext));
-
+            List<RoverBlock> blocks = listView.getBlocks();
+            for (RoverBlock block : blocks) {
+                String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidth(appContext));
                 if (blockImageUrl != null){
                     Picasso.with(appContext).load(blockImageUrl).fetch();
+                }
+
+                String blockBgImageUrl = block.getBackgroundImageUrl();
+                if (blockBgImageUrl != null){
+                    Picasso.with(appContext).load(blockBgImageUrl).fetch();
                 }
             }
         }
@@ -87,7 +103,7 @@ public class PicassoUtils {
         imageView.setAdjustViewBounds(false);
 
         //calculating estimated height of the block using aspect ratio
-        int estimatedWidth = UiUtils.getDeviceWidthInDp(context)
+        int estimatedWidth = UiUtils.getDeviceWidth(context)
                 - block.getPadding(context).left
                 - block.getPadding(context).right
                 - block.getBorderWidth(context).left
@@ -97,13 +113,13 @@ public class PicassoUtils {
         imageView.setMinimumHeight(UiUtils.convertDpToPx(context, estimatedHeight));
 
         //---- we are now ready to load the image
-        String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidthInDp(context));
+        String blockImageUrl = block.getImageUrl(UiUtils.getDeviceWidth(context));
         Picasso.with(imageView.getContext())
                 .load(blockImageUrl)
-                .fit()
                 .into(imageView, new Callback() {
                     @Override
                     public void onSuccess() {
+                        imageView.setMinimumHeight(0);
                         imageView.setAdjustViewBounds(true);
                     }
 
@@ -121,7 +137,17 @@ public class PicassoUtils {
      * @param imageUrl
      * @param imageMode
      */
-    public static void loadBackgroundImage(final ImageView imageView, String imageUrl, String imageMode) {
+    public static void loadBackgroundImage(ImageView imageView, String imageUrl, String imageMode) {
+
+        if(imageUrl == null) {
+            imageView.setVisibility(View.GONE);
+            return;
+        }
+
+        imageView.setBackground(null);
+        imageView.setImageDrawable(null);
+        imageView.setImageBitmap(null);
+        imageView.setVisibility(View.VISIBLE);
 
         switch (imageMode) {
 
