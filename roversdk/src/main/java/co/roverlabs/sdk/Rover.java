@@ -318,7 +318,7 @@ public class Rover {
 //            }
 
             //prefetch images before notifying the user
-            PicassoUtils.prefetchImages(mContext.getApplicationContext());
+            PicassoUtils.fetchImages(mContext.getApplicationContext());
 
             RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, CardListActivity.class);
             RoverEventBus.getInstance().post(notificationEvent);

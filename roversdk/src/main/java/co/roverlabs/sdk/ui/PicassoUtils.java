@@ -44,7 +44,7 @@ public class PicassoUtils {
      *
      * @param appContext
      */
-    public static void prefetchImages(final Context appContext) {
+    public static void fetchImages(final Context appContext) {
         init(appContext);
 
         List<RoverCard> cards = RoverVisitManager.getInstance(appContext).getLatestVisit().getAccumulatedCards();
@@ -148,7 +148,8 @@ public class PicassoUtils {
             //    break;
 
             case RoverConstants.IMAGE_MODE_FILL:
-                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                Picasso.with(imageView.getContext()).load(imageUrl).fit().into(imageView);
+                imageView.setScaleType(ImageView.ScaleType.FIT_START);
                 break;
 
             case RoverConstants.IMAGE_MODE_FIT:
