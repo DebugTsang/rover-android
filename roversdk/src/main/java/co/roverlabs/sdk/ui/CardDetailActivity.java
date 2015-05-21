@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.models.RoverBlock;

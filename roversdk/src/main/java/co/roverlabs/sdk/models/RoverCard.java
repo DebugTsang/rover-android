@@ -18,17 +18,21 @@ public class RoverCard extends RoverObject {
     //Local members
     public static final String TAG = RoverCard.class.getSimpleName();
     private boolean mViewed;
+    private boolean mDismissed;
     
     //Constructor
     public RoverCard() {
 
         mObjectName = "card";
         mViewed = false;
+        mDismissed = false;
     }
 
     public boolean hasBeenViewed() { return mViewed; }
+    public boolean hasBeenDismissed() { return mDismissed; }
 
     public void setViewed(boolean viewed) { mViewed = viewed; }
+    public void setDismissed(boolean dismissed) { mDismissed = dismissed; }
 
     //Getters
     public String getTitle() { return mTitle; }

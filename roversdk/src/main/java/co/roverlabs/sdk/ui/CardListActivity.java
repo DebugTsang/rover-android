@@ -17,7 +17,8 @@ import java.util.List;
 
 import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.RoverConfigs;
-import co.roverlabs.sdk.events.RoverCardsAddedEvent;
+import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
+import co.roverlabs.sdk.events.RoverCardDiscardedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.managers.RoverVisitManager;
@@ -84,13 +85,60 @@ public class CardListActivity extends Activity {
                 super.onScrolled(recyclerView, dx, dy);
 
                 if (mCardListLayoutManager.findFirstVisibleItemPosition() == 0) {
-                    if(mNewCardButton.getVisibility() == View.VISIBLE) {
+                    if (mNewCardButton.getVisibility() == View.VISIBLE) {
                         mNewCardButton.startAnimation(mSlidOut);
                         mNewCardButton.setVisibility(View.INVISIBLE);
                     }
                 }
             }
         });
+
+        RecyclerViewOnItemSwipeListener swipeTouchListener =
+                new RecyclerViewOnItemSwipeListener(mCardListRecyclerView,
+                        new RecyclerViewOnItemSwipeListener.SwipeListener() {
+
+                            @Override
+                            public boolean canSwipe(int position) {
+
+                                return true;
+                            }
+
+                            @Override
+                            public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
+
+                                for(int position : reverseSortedPositions) {
+                                    RoverEventBus.getInstance().post(new RoverCardDiscardedEvent(mLatestVisitId, mLatestCards.get(position).getId()));
+                                    mLatestCards.get(position).setDismissed(true);
+                                    mLatestCards.remove(position);
+                                    mCardListAdapter.notifyItemRemoved(position);
+                                }
+
+                                mCardListAdapter.notifyDataSetChanged();
+
+                                if(mLatestCards.isEmpty()) {
+                                    finish();
+                                }
+                            }
+
+                            @Override
+                            public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
+
+                                for(int position : reverseSortedPositions) {
+                                    RoverEventBus.getInstance().post(new RoverCardDiscardedEvent(mLatestVisitId, mLatestCards.get(position).getId()));
+                                    mLatestCards.get(position).setDismissed(true);
+                                    mLatestCards.remove(position);
+                                    mCardListAdapter.notifyItemRemoved(position);
+                                }
+
+                                mCardListAdapter.notifyDataSetChanged();
+
+                                if(mLatestCards.isEmpty()) {
+                                    finish();
+                                }
+                            }
+                        });
+
+        mCardListRecyclerView.addOnItemTouchListener(swipeTouchListener);
 
         mNewCardButton.setOnClickListener(new View.OnClickListener() {
 
@@ -105,15 +153,10 @@ public class CardListActivity extends Activity {
     }
 
     @Subscribe
-    public void onCardsAdded(RoverCardsAddedEvent event) {
+    public void onCardDelivered(RoverCardDeliveredEvent event) {
 
-        List<RoverCard> cards = event.getAddedCards();
-
-        for(RoverCard card : cards) {
-            mLatestCards.add(0, card);
-            mCardListAdapter.notifyItemInserted(0);
-        }
-
+        mLatestCards.add(0, event.getCard());
+        mCardListAdapter.notifyItemInserted(0);
         mNewCardButton.setVisibility(View.VISIBLE);
         mNewCardButton.startAnimation(mSlideIn);
     }
