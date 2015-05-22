@@ -1,6 +1,5 @@
-package co.roverlabs.sdk.ui;
+package co.roverlabs.sdk.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -16,13 +15,19 @@ import com.google.gson.Gson;
 import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.models.RoverBlock;
 import co.roverlabs.sdk.models.RoverView;
+import co.roverlabs.sdk.ui.Border;
+import co.roverlabs.sdk.ui.BorderedView;
+import co.roverlabs.sdk.ui.BoxModelDimens;
+import co.roverlabs.sdk.ui.ImageLoader;
+import co.roverlabs.sdk.ui.TextStyle;
+import co.roverlabs.sdk.ui.UiUtils;
 import co.roverlabs.sdk.utilities.Factory;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
  * Created by SherryYang on 2015-05-14.
  */
-public class CardDetailActivity extends Activity {
+public class CardDetailActivity extends BaseActivity {
 
     public static final String TAG = CardDetailActivity.class.getName();
     private RoverView mDetailView;
@@ -69,6 +74,8 @@ public class CardDetailActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_detail);
 
+        mImageLoader = Factory.getDefaultImageLoader(getApplicationContext());
+
         String detailViewString = getIntent().getStringExtra(RoverConstants.VIEW_TYPE_DETAIL);
         mDetailView = new Gson().fromJson(detailViewString, RoverView.class);
 
@@ -111,7 +118,7 @@ public class CardDetailActivity extends Activity {
         setBackground();
         setContentBlocks();
 
-        mImageLoader = Factory.getDefaultImageLoader(getApplicationContext());
+
     }
 
     private void setHeaderBlock() {
@@ -234,5 +241,11 @@ public class CardDetailActivity extends Activity {
                 });
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setShouldStartService(false);
     }
 }

@@ -42,7 +42,7 @@ public class RoverReceiver extends BroadcastReceiver {
             else {
                 extraStateString = "STATE_ERROR";
             }
-            Log.d(TAG, "The bluetooth state is " + extraStateString);
+            Log.d(TAG, "The bluetooth shouldStartService is " + extraStateString);
             switch(extraStateInt) {
                 case BluetoothAdapter.STATE_ON:
                     break;

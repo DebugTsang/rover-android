@@ -1,5 +1,7 @@
 package co.roverlabs.sdk.utilities;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -10,6 +12,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import co.roverlabs.sdk.RoverService;
 
 /**
  * Created by SherryYang on 2015-01-27.
@@ -120,6 +124,15 @@ public class RoverUtils {
         return result;
     }
 
+    public static boolean isRoverServiceRunning(Activity activity) {
+        ActivityManager manager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (RoverService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
 

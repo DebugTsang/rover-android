@@ -12,7 +12,7 @@ import com.squareup.otto.Subscribe;
 
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverNotificationEvent;
-import co.roverlabs.sdk.ui.CardListActivity;
+import co.roverlabs.sdk.ui.activity.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
@@ -25,6 +25,7 @@ public class RoverNotificationManager {
     private Context mContext;
     private NotificationManager mNotificationManager;
     private int mNotificationIconId;
+    private int mHeadIconId;
     
     private RoverNotificationManager(Context con) {
 
@@ -42,12 +43,14 @@ public class RoverNotificationManager {
     }
     
     public void setNotificationIconId(int id) { mNotificationIconId = id; }
+    public void setHeadIconId(int id) { mHeadIconId = id; }
 
 
     public void showStickyNotification(int id, String title, String message) {
 
         Intent intent = new Intent(mContext, CardListActivity.class);
         intent.setAction(Intent.ACTION_MAIN);
+        intent.putExtra(CardListActivity.EXTRA_HEAD_ICON_ID, mHeadIconId);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);

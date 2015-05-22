@@ -31,7 +31,7 @@
         </receiver>
 
         <activity
-            android:name=".ui.CardListActivity"
+            android:name=".ui.activity.CardListActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:launchMode="singleTop"
@@ -39,7 +39,7 @@
         </activity>
 
         <activity
-            android:name=".ui.CardDetailActivity"
+            android:name=".ui.activity.CardDetailActivity"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait">

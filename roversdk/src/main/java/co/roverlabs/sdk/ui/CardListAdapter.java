@@ -1,5 +1,6 @@
 package co.roverlabs.sdk.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,6 +26,8 @@ import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.models.RoverBlock;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.models.RoverView;
+import co.roverlabs.sdk.ui.activity.CardDetailActivity;
+import co.roverlabs.sdk.ui.activity.CardListActivity;
 import co.roverlabs.sdk.utilities.Factory;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
@@ -37,13 +40,15 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     private String mVisitId;
     private List<RoverCard> mCards;
     private Context mContext;
+    private Activity mActivity;
     private ImageLoader mImageLoader;
 
-    public CardListAdapter(String visitId, List<RoverCard> cards, Context con) {
+    public CardListAdapter(String visitId, List<RoverCard> cards, Activity activity) {
 
         mVisitId = visitId;
         mCards = cards;
-        mContext = con.getApplicationContext();
+        mContext = activity.getApplicationContext();
+        mActivity = activity;
         mImageLoader = Factory.getDefaultImageLoader(mContext);
     }
 
@@ -174,6 +179,8 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
                         if (blockScheme != null) {
                             if(blockScheme.equals(RoverConstants.URL_SCHEME_ROVER)) {
+                                ((CardListActivity)mActivity).setShouldStartService(false);
+
                                 RoverView detailView = card.getDetailView(blockUriString.substring(blockUriString.lastIndexOf("/") + 1));
                                 intent.setClass(mContext, CardDetailActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

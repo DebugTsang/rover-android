@@ -1,8 +1,5 @@
-package co.roverlabs.sdk.ui;
+package co.roverlabs.sdk.ui.activity;
 
-import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,20 +16,22 @@ import java.util.List;
 
 import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.RoverConfigs;
-import co.roverlabs.sdk.RoverService;
 import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
 import co.roverlabs.sdk.events.RoverCardDiscardedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
+import co.roverlabs.sdk.ui.CardListAdapter;
+import co.roverlabs.sdk.ui.RecyclerViewOnItemSwipeListener;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
  * Created by SherryYang on 2015-03-03.
  */
-public class CardListActivity extends Activity {
+public class CardListActivity extends BaseActivity {
 
     public static final String TAG = CardListActivity.class.getSimpleName();
+
     private RecyclerView mCardListRecyclerView;
     private LinearLayoutManager mCardListLayoutManager;
     private CardListAdapter mCardListAdapter;
@@ -49,10 +48,8 @@ public class CardListActivity extends Activity {
         setContentView(R.layout.card_list);
 
         RoverEventBus.getInstance().register(this);
+        mHeadIconId = getIntent().getIntExtra(EXTRA_HEAD_ICON_ID, -1);
 
-
-
-        //stopService(new Intent(getApplication(), ChatHeadService.class));
 
         mCardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
         mNewCardButton = (Button)findViewById(R.id.new_card_button);
@@ -167,35 +164,8 @@ public class CardListActivity extends Activity {
     }
 
     @Override
-    protected void onResume() {
-
-        super.onResume();
-        if (isRoverServiceRunning()){
-            stopService(new Intent(getApplication(), RoverService.class));
-        }
-        //RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
-    }
-
-    @Override
     protected void onStop() {
-
         super.onStop();
         mNewCardButton.setVisibility(View.INVISIBLE);
-        if (!isRoverServiceRunning()){
-            startService(new Intent(getApplication(), RoverService.class));
-
-        }
-        //RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
-    }
-
-
-    private boolean isRoverServiceRunning() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (RoverService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

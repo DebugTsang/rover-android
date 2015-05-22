@@ -11,6 +11,7 @@ public class RoverConfigs {
     private String mUuid;
     private String mAppId;
     private int mNotificationIconId;
+    private int mRoverHeadIconId;
     private String mLaunchActivityName;
     private boolean mSandBoxMode;
 
@@ -29,10 +30,15 @@ public class RoverConfigs {
         }
         return mNotificationIconId;
     }
+    public int getRoverHeadIconId(){
+        return mRoverHeadIconId;
+    }
 
     public void setAppId(String appId) { mAppId = appId; }
     public void setUuid(String uuid) { mUuid = uuid; }
     public void setNotificationIconId(int resourceId) { mNotificationIconId = resourceId; }
+    public void setRoverHeadIconId(int resourceId) { mRoverHeadIconId = resourceId; }
+
     public void setLaunchActivityName(String launchActivityName) { mLaunchActivityName = launchActivityName; }
     public void setSandBoxMode(boolean sandBoxMode) { mSandBoxMode = sandBoxMode; }
 

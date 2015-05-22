@@ -70,6 +70,7 @@ public class RoverRegionManager {
                     mCurrentBeacons.add(beacon);
                     mRangeRegion = new Region("Range Region", beacon.getProximityUUID(), beacon.getMajor(), null);
                     Log.d(TAG, "Region entered - minor " + beacon.getMinor());
+
                     RoverRegion enteredRegion = new RoverRegion(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
                     RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
                 }
@@ -128,15 +129,15 @@ public class RoverRegionManager {
     public void startRanging() {
         
         mBeaconManager.setRangingListener(new BeaconManager.RangingListener() {
-            
+
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> beacons) {
 
                 //TODO: Remove after testing
                 RoverEventBus.getInstance().post(new RoverRangeResultEvent(beacons));
 
-                List<Beacon> addedBeacons = new ArrayList<>();
-                List<Beacon> subtractedBeacons = new ArrayList<>();
+                List<Beacon> addedBeacons;
+                List<Beacon> subtractedBeacons;
                 addedBeacons = RoverUtils.subtractList(mCurrentBeacons, beacons);
                 subtractedBeacons = RoverUtils.subtractList(beacons, mCurrentBeacons);
                 mCurrentBeacons = beacons;

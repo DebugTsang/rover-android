@@ -26,7 +26,7 @@ import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverTouchPoint;
 import co.roverlabs.sdk.models.RoverVisit;
-import co.roverlabs.sdk.ui.CardListActivity;
+import co.roverlabs.sdk.ui.activity.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
