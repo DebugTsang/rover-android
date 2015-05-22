@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import co.roverlabs.sdk.events.RoverCardClickedEvent;
 import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
+import co.roverlabs.sdk.events.RoverCardDiscardedEvent;
 import co.roverlabs.sdk.events.RoverCardViewedEvent;
 import co.roverlabs.sdk.events.RoverEnteredLocationEvent;
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
@@ -424,6 +425,27 @@ public class Rover {
                 public void onSaveFailure() {
 
                     Log.d(TAG, "Event sent unsuccessfully - click card " + event.getCardId());
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void onCardDiscarded(final RoverCardDiscardedEvent event) {
+
+        if(!mConfigs.getSandBoxMode()) {
+            event.send(new RoverEventSaveListener() {
+
+                @Override
+                public void onSaveSuccess() {
+
+                    Log.d(TAG, "Event sent successfully - discard card " + event.getCardId());
+                }
+
+                @Override
+                public void onSaveFailure() {
+
+                    Log.d(TAG, "Event sent unsuccessfully - discard card " + event.getCardId());
                 }
             });
         }
