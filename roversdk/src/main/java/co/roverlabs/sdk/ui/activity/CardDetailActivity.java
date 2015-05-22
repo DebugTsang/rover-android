@@ -114,11 +114,11 @@ public class CardDetailActivity extends BaseActivity {
         mBarcode128 = (ImageView)findViewById(R.id.detail_barcode_block_barcode_128);
         mBarcodeLabel = (TextView)findViewById(R.id.detail_barcode_block_barcode_label);
 
+        mImageLoader = Factory.getDefaultImageLoader(getApplicationContext());
+
         setHeaderBlock();
         setBackground();
         setContentBlocks();
-
-
     }
 
     private void setHeaderBlock() {
