@@ -13,7 +13,10 @@
     <!-- Declaration that this app is usable on phones with Bluetooth Low Energy -->
     <!-- Requirement set to true, will not work on phones without Bluetooth Low Energy -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
-    
+
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+
     <application>
 
         <receiver android:name=".RoverReceiver">
@@ -46,7 +49,8 @@
         <service
             android:name="com.estimote.sdk.service.BeaconService"
             android:exported="false"/>
-
+        <service android:name=".RoverService" >
+        </service>
     </application>
 
 </manifest>

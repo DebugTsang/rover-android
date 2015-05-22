@@ -61,6 +61,7 @@ public class RoverNetworkManager {
             
             @Override
             public void success(RoverObjectWrapper roverObjectWrapper, Response response) {
+                String res = new String(((TypedByteArray) response.getBody()).getBytes());
                 networkListener.onNetworkCallSuccess(roverObjectWrapper.get());
             }
 

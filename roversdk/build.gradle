@@ -32,6 +32,8 @@ dependencies {
     compile files('libs/estimote-sdk-preview.jar')
 
     compile 'com.squareup.picasso:picasso:2.5.2'
+    //compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile files('libs/annotations-10.0.2.jar')
 }
 
 apply plugin: 'maven'

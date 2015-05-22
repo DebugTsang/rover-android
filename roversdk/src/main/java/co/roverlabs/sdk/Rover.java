@@ -20,7 +20,6 @@ import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverExitedLocationEvent;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.events.RoverExitedTouchpointEvent;
-import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.events.RoverRangeEvent;
 import co.roverlabs.sdk.listeners.RoverEventSaveListener;
 import co.roverlabs.sdk.managers.RoverNotificationManager;
@@ -30,8 +29,7 @@ import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverTouchPoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
-import co.roverlabs.sdk.ui.CardListActivity;
-import co.roverlabs.sdk.ui.PicassoUtils;
+import co.roverlabs.sdk.utilities.Factory;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
@@ -50,7 +48,7 @@ public class Rover {
     private boolean mSetUp = false;
     private boolean mMonitorStarted = false;
 
-    private Rover(Context con) { mContext = con; }
+    private Rover(Context con) { mContext = con.getApplicationContext(); }
 
     public static Rover getInstance(Context con) {
 
@@ -302,28 +300,10 @@ public class Rover {
             String title = touchpoint.getTitle();
             String message = touchpoint.getNotification();
 
-//            RoverNotificationEvent notificationEvent = null;
-//            try {
-//                notificationEvent = new RoverNotificationEvent(id, title, message, Class.forName(mConfigs.getLaunchActivityName()));
-//                if(touchpoint.getMinor() != null) {
-//                    Log.d(TAG, "Sending notification - touchpoint minor " + touchpoint.getMinor() + " (" + touchpoint.getTitle() + ")");
-//                }
-//                else {
-//                    Log.d(TAG, "Sending notification - touchpoint wild card (" + touchpoint.getTitle() + ")");
-//                }
-//                RoverEventBus.getInstance().post(notificationEvent);
-//            }
-//            catch (ClassNotFoundException e) {
-//                Log.e(TAG, "Cannot send notification - cannot find launch activity name", e);
-//            }
-
             //prefetch images before notifying the user
-            PicassoUtils.fetchImages(mContext.getApplicationContext());
+            Factory.getDefaultImageLoader(mContext.getApplicationContext()).fetchAll();
 
-            RoverNotificationEvent notificationEvent = new RoverNotificationEvent(id, title, message, CardListActivity.class);
-            RoverEventBus.getInstance().post(notificationEvent);
-
-
+            mNotificationManager.showStickyNotification(id, title, message);
         }
 
         if(!mConfigs.getSandBoxMode()) {

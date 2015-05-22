@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,6 +25,7 @@ import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.models.RoverBlock;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.models.RoverView;
+import co.roverlabs.sdk.utilities.Factory;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
@@ -37,14 +37,14 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
     private String mVisitId;
     private List<RoverCard> mCards;
     private Context mContext;
-    private Picasso mPicasso;
+    private ImageLoader mImageLoader;
 
     public CardListAdapter(String visitId, List<RoverCard> cards, Context con) {
 
         mVisitId = visitId;
         mCards = cards;
         mContext = con.getApplicationContext();
-        mPicasso = Picasso.with(mContext);
+        mImageLoader = Factory.getDefaultImageLoader(mContext);
     }
 
     @Override
@@ -55,6 +55,8 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
     @Override
     public void onBindViewHolder(final CardViewHolder holder, int position) {
+
+        System.out.println("TRACKING: " + position);
 
         holder.setIsRecyclable(false);
 
@@ -102,7 +104,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     blockLayout = holder.cardTextLayout;
                     holder.cardContentLayout.addView(holder.cardTextLayout);
                     holder.cardTextLayout.setBackgroundColor(backgroundColor);
-                    PicassoUtils.loadBackgroundImage(holder.cardTextBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    mImageLoader.loadBackgroundImage(holder.cardTextBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(holder.cardTextBorder, border);
                     UiUtils.setPadding(holder.cardTextContentLayout, padding, border);
                     UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_TEXT, holder.cardTextContentLayout, block.getTextContent(), block.getTextBlockStyles(mContext));
@@ -112,9 +114,9 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     blockLayout = holder.cardImageLayout;
                     holder.cardContentLayout.addView(holder.cardImageLayout);
                     holder.cardImageLayout.setBackgroundColor(backgroundColor);
-                    PicassoUtils.loadBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    mImageLoader.loadBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(holder.cardImageBorder, border);
-                    PicassoUtils.loadBlockImage(mContext, holder.cardImage, block);
+                    mImageLoader.loadBlockImage(holder.cardImage, block);
                     UiUtils.setPadding(holder.cardImage, padding, border);
                     break;
 
@@ -122,7 +124,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     blockLayout = holder.cardButtonLayout;
                     holder.cardContentLayout.addView(holder.cardButtonLayout);
                     holder.cardButtonLayout.setBackgroundColor(backgroundColor);
-                    PicassoUtils.loadBackgroundImage(holder.cardButtonBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    mImageLoader.loadBackgroundImage(holder.cardButtonBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(holder.cardButtonBorder, border);
                     UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_BUTTON, holder.cardButton, block.getButtonLabel(), block.getLabelTextStyle(mContext));
                     UiUtils.setPadding(holder.cardButton, padding, border);
@@ -132,7 +134,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     blockLayout = holder.cardBarcodeLayout;
                     holder.cardContentLayout.addView(holder.cardBarcodeLayout);
                     holder.cardBarcodeLayout.setBackgroundColor(backgroundColor);
-                    UiUtils.setBackgroundImage(holder.cardBarcodeBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+                    mImageLoader.loadBackgroundImage(holder.cardBarcodeBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
                     UiUtils.setBorder(holder.cardBarcodeBorder, border);
                     TextStyle barcodeLabelStyle = new TextStyle();
                     if(block.getBarcodeFormat().equals(RoverConstants.BARCODE_FORMAT_PLU)) {
@@ -193,7 +195,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         //Set background image if there is one
         String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
         if(cardBackgroundImageUrl != null) {
-            PicassoUtils.loadBackgroundImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+            mImageLoader.loadBackgroundImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
             holder.cardBackground.setVisibility(View.VISIBLE);
         }
         else {

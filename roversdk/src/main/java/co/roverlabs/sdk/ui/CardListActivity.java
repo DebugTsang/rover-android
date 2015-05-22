@@ -1,6 +1,8 @@
 package co.roverlabs.sdk.ui;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,12 +19,11 @@ import java.util.List;
 
 import co.roverlabs.sdk.R;
 import co.roverlabs.sdk.RoverConfigs;
+import co.roverlabs.sdk.RoverService;
 import co.roverlabs.sdk.events.RoverCardsAddedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
-import co.roverlabs.sdk.events.RoverNotificationEvent;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
-import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
@@ -47,6 +48,10 @@ public class CardListActivity extends Activity {
         setContentView(R.layout.card_list);
 
         RoverEventBus.getInstance().register(this);
+
+
+
+        //stopService(new Intent(getApplication(), ChatHeadService.class));
 
         mCardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
         mNewCardButton = (Button)findViewById(R.id.new_card_button);
@@ -122,7 +127,10 @@ public class CardListActivity extends Activity {
     protected void onResume() {
 
         super.onResume();
-        RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
+        if (isRoverServiceRunning()){
+            stopService(new Intent(getApplication(), RoverService.class));
+        }
+        //RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
     }
 
     @Override
@@ -130,6 +138,21 @@ public class CardListActivity extends Activity {
 
         super.onStop();
         mNewCardButton.setVisibility(View.INVISIBLE);
-        RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
+        if (!isRoverServiceRunning()){
+            startService(new Intent(getApplication(), RoverService.class));
+
+        }
+        //RoverEventBus.getInstance().post(new RoverNotificationEvent(RoverConstants.NOTIFICATION_ACTION_CANCEL));
+    }
+
+
+    private boolean isRoverServiceRunning() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (RoverService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
