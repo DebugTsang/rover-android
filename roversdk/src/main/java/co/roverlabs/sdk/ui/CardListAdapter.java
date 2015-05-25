@@ -28,6 +28,9 @@ import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.models.RoverView;
 import co.roverlabs.sdk.ui.activity.CardDetailActivity;
 import co.roverlabs.sdk.ui.activity.CardListActivity;
+import co.roverlabs.sdk.ui.widget.Border;
+import co.roverlabs.sdk.ui.widget.BorderedView;
+import co.roverlabs.sdk.ui.widget.BoxModelDimens;
 import co.roverlabs.sdk.utilities.Factory;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
@@ -60,8 +63,6 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
 
     @Override
     public void onBindViewHolder(final CardViewHolder holder, int position) {
-
-        System.out.println("TRACKING: " + position);
 
         holder.setIsRecyclable(false);
 
@@ -129,10 +130,21 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     blockLayout = holder.cardButtonLayout;
                     holder.cardContentLayout.addView(holder.cardButtonLayout);
                     holder.cardButtonLayout.setBackgroundColor(backgroundColor);
-                    mImageLoader.loadBackgroundImage(holder.cardButtonBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
-                    UiUtils.setBorder(holder.cardButtonBorder, border);
+
                     UiUtils.setText(RoverConstants.VIEW_BLOCK_TYPE_BUTTON, holder.cardButton, block.getButtonLabel(), block.getLabelTextStyle(mContext));
+                    UiUtils.setBorder(holder.cardButtonBorder, border);
                     UiUtils.setPadding(holder.cardButton, padding, border);
+                    mImageLoader.loadBackgroundImage(holder.cardButtonBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+
+                    holder.cardButtonBackground.post(new Runnable() {
+                        @Override public void run() {
+                            int height = holder.cardButton.getHeight();
+                            int width = holder.cardButton.getWidth();
+                            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
+                            holder.cardButtonBackground.setLayoutParams(layoutParams);
+                        }
+                    });
+
                     break;
 
                 case RoverConstants.VIEW_BLOCK_TYPE_BARCODE:

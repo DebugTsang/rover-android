@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.ui;
+package co.roverlabs.sdk.ui.widget;
 
 /**
  * Created by SherryYang on 2015-05-01.

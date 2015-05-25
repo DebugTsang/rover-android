@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,7 +17,6 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
-import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,6 +29,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import co.roverlabs.sdk.ui.widget.Border;
+import co.roverlabs.sdk.ui.widget.BorderedView;
+import co.roverlabs.sdk.ui.widget.BoxModelDimens;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
@@ -102,20 +103,6 @@ public class UiUtils {
         }
 
         view.setPadding(padding.left, padding.top, padding.right, padding.bottom);
-    }
-
-    public static void setImageBlockImage(Context con, ImageView imageView, String url, Integer width, Integer height, Float offsetRatio, Float aspectRatio) {
-
-        int deviceWidth = UiUtils.getDeviceWidthInDp(con);
-
-        if(width != null && height != null) {
-            url += "?w=" + deviceWidth + "&rect=0," + (int)((-offsetRatio) * height) + "," + width + ","+ (int)(width / aspectRatio);
-        }
-        else {
-            url += "?w=" + deviceWidth + "&h" + (int)(deviceWidth / aspectRatio);
-        }
-
-        Picasso.with(imageView.getContext()).load(url).into(imageView);
     }
 
     public static void setText(String blockType, LinearLayout layout, String text, List<TextStyle> styles) {
@@ -217,7 +204,6 @@ public class UiUtils {
             textView.setLayoutParams(layoutParams);
         }
     }
-
 
     public static Bitmap generateBarcode(String contents, int width, int height, int color) {
 

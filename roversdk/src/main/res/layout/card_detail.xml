@@ -53,7 +53,7 @@
                         android:visibility="gone"
                         android:adjustViewBounds="true"/>
 
-                    <co.roverlabs.sdk.ui.BorderedView
+                    <co.roverlabs.sdk.ui.widget.BorderedView
                         android:id="@+id/detail_image_block_border"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -79,7 +79,7 @@
                         android:visibility="gone"
                         android:adjustViewBounds="true"/>
 
-                    <co.roverlabs.sdk.ui.BorderedView
+                    <co.roverlabs.sdk.ui.widget.BorderedView
                         android:id="@+id/detail_text_block_border"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -107,7 +107,7 @@
                         android:visibility="gone"
                         android:adjustViewBounds="true"/>
 
-                    <co.roverlabs.sdk.ui.BorderedView
+                    <co.roverlabs.sdk.ui.widget.BorderedView
                         android:id="@+id/detail_button_block_border"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -132,7 +132,7 @@
                         android:visibility="gone"
                         android:adjustViewBounds="true"/>
 
-                    <co.roverlabs.sdk.ui.BorderedView
+                    <co.roverlabs.sdk.ui.widget.BorderedView
                         android:id="@+id/detail_barcode_block_border"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -186,7 +186,7 @@
             android:visibility="gone"
             android:adjustViewBounds="true"/>
 
-        <co.roverlabs.sdk.ui.BorderedView
+        <co.roverlabs.sdk.ui.widget.BorderedView
             android:id="@+id/detail_sticky_button_block_border"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

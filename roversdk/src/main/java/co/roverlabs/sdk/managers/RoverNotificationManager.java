@@ -11,9 +11,8 @@ import android.support.v4.app.NotificationCompat;
 import com.squareup.otto.Subscribe;
 
 import co.roverlabs.sdk.events.RoverEventBus;
-import co.roverlabs.sdk.events.RoverNotificationEvent;
+import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
 import co.roverlabs.sdk.ui.activity.CardListActivity;
-import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
  * Created by SherryYang on 2015-01-26.
@@ -77,12 +76,9 @@ public class RoverNotificationManager {
     }
 
     @Subscribe
-    public void cancelNotification(RoverNotificationEvent event) {
-
-        if(event.getAction().equals(RoverConstants.NOTIFICATION_ACTION_SEND)) {
-            return;
-        }
-
-        //mNotificationManager.cancelAll();
+    public void cancelNotification(RoverVisitExpiredEvent event) {
+        mNotificationManager.cancelAll();
     }
+
+
 }

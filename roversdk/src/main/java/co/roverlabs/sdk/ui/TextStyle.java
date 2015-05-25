@@ -1,5 +1,7 @@
 package co.roverlabs.sdk.ui;
 
+import co.roverlabs.sdk.ui.widget.BoxModelDimens;
+
 /**
  * Created by SherryYang on 2015-05-13.
  */

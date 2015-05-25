@@ -118,9 +118,9 @@ public class PicassoImageLoader implements ImageLoader{
             return;
         }
 
-        imageView.setBackground(null);
-        imageView.setImageDrawable(null);
-        imageView.setImageBitmap(null);
+        //imageView.setBackground(null);
+        //imageView.setImageDrawable(null);
+        //imageView.setImageBitmap(null);
         imageView.setVisibility(View.VISIBLE);
 
         String url = getBackgroundImageUrl(imageView.getContext(), imageUrl, imageMode);

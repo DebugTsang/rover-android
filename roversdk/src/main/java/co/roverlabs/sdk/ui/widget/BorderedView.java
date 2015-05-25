@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.ui;
+package co.roverlabs.sdk.ui.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
