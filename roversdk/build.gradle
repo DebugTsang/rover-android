@@ -29,9 +29,9 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.2'
     compile 'com.google.zxing:core:3.2.0'
     compile files('libs/estimote-sdk-preview.jar')
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.picasso:picasso:2.2.0'
     //compile 'com.squareup.okhttp:okhttp:2.3.0'
-    compile files('libs/annotations-10.0.2.jar')
+    //compile files('libs/annotations-10.0.2.jar')
 }
 
 apply plugin: 'maven'

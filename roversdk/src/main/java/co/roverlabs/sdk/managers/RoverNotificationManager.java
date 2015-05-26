@@ -8,10 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import com.squareup.otto.Subscribe;
-
 import co.roverlabs.sdk.events.RoverEventBus;
-import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
 import co.roverlabs.sdk.ui.activity.CardListActivity;
 
 /**
@@ -25,7 +22,9 @@ public class RoverNotificationManager {
     private NotificationManager mNotificationManager;
     private int mNotificationIconId;
     private int mHeadIconId;
-    
+    private Intent mCardListIntent;
+
+
     private RoverNotificationManager(Context con) {
 
         mContext = con;
@@ -47,12 +46,12 @@ public class RoverNotificationManager {
 
     public void showStickyNotification(int id, String title, String message) {
 
-        Intent intent = new Intent(mContext, CardListActivity.class);
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.putExtra(CardListActivity.EXTRA_HEAD_ICON_ID, mHeadIconId);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        mCardListIntent = new Intent(mContext, CardListActivity.class);
+        mCardListIntent.setAction(Intent.ACTION_MAIN);
+        mCardListIntent.putExtra(CardListActivity.EXTRA_HEAD_ICON_ID, mHeadIconId);
+        mCardListIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, id, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, id, mCardListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(mNotificationIconId)
@@ -75,8 +74,7 @@ public class RoverNotificationManager {
         mNotificationManager.notify(id, n);
     }
 
-    @Subscribe
-    public void cancelNotification(RoverVisitExpiredEvent event) {
+    public void cancelNotification() {
         mNotificationManager.cancelAll();
     }
 

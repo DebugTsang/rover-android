@@ -1,8 +1,10 @@
 package co.roverlabs.sdk.ui;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.List;
 
@@ -118,15 +121,20 @@ public class PicassoImageLoader implements ImageLoader{
             return;
         }
 
-        //imageView.setBackground(null);
-        //imageView.setImageDrawable(null);
-        //imageView.setImageBitmap(null);
+        //reset all values
+        imageView.setBackground(null);
+        imageView.setImageDrawable(null);
+        imageView.setImageBitmap(null);
         imageView.setVisibility(View.VISIBLE);
 
         String url = getBackgroundImageUrl(imageView.getContext(), imageUrl, imageMode);
-        Picasso.with(imageView.getContext()).load(url).into(imageView, new Callback() {
+
+        //TODO: make the anonymous class Target and a static class
+        Picasso.with(imageView.getContext()).load(url).into(new Target() {
             @Override
-            public void onSuccess() {
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                imageView.setImageBitmap(bitmap);
+
                 switch (imageMode) {
 
                     case RoverConstants.IMAGE_MODE_STRETCH:
@@ -134,10 +142,13 @@ public class PicassoImageLoader implements ImageLoader{
                         break;
 
                     case RoverConstants.IMAGE_MODE_TILE:
-                        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+                        //reset image bitmap
+                        imageView.setImageBitmap(null);
+
+                        BitmapDrawable drawable = new BitmapDrawable(imageView.getContext().getResources(), bitmap);
                         drawable.setTileModeXY(Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+
                         imageView.setBackground(drawable);
-                        imageView.setImageDrawable(null);
                         break;
 
                     case RoverConstants.IMAGE_MODE_FILL:
@@ -157,10 +168,16 @@ public class PicassoImageLoader implements ImageLoader{
             }
 
             @Override
-            public void onError() {
+            public void onBitmapFailed(Drawable errorDrawable) {
                 Log.e(getClass().getCanonicalName(), "Error loading " + imageUrl + " with mode " + imageMode);
             }
-         });
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+
+        });
     }
 
 

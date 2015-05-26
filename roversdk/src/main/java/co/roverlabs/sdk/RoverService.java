@@ -75,11 +75,12 @@ public class RoverService extends Service {
                         params.y = initialY
                                 + (int) (event.getRawY() - initialTouchY);
 
-                        if (params.y > 800) {
-                            RoverService.this.stopSelf();
-                        } else {
+
+//                        if (params.y > 800) {
+//                            RoverService.this.stopSelf();
+//                        } else {
                             windowManager.updateViewLayout(roverHead, params);
-                        }
+//                        }
                         isMoving = Math.abs((params.y - initialY) + (params.x - initialX)) > 5;
 
                         return true;
@@ -107,6 +108,9 @@ public class RoverService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null){
+            return super.onStartCommand(intent, flags, startId);
+        }
 
         int headIconId = intent.getIntExtra(BaseActivity.EXTRA_HEAD_ICON_ID, -1);
         if (headIconId > 0){

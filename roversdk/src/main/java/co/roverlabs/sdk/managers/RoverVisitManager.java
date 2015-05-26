@@ -262,6 +262,7 @@ public class RoverVisitManager {
             Log.d(TAG, "RoverRangeTimer has expired - ranging will now be stopped");
             RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_STOP));
             RoverEventBus.getInstance().post(new RoverVisitExpiredEvent());
+            RoverNotificationManager.getInstance(mContext).cancelNotification();
         }
     }
 }

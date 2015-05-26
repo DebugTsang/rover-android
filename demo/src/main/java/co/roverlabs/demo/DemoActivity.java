@@ -35,11 +35,11 @@ public class DemoActivity extends ActionBarActivity {
 
         RoverConfigs roverConfigs = new RoverConfigs();
         //Sean's account
-        roverConfigs.setUuid("7931D3AA-299B-4A12-9FCC-D66F2C5D2462");
-        roverConfigs.setAppId("eae9edb6352b8fec6618d3d9cb96f2e795e1c2df1ad5388af807b05d8dfcd7d6");
+        //roverConfigs.setUuid("7931D3AA-299B-4A12-9FCC-D66F2C5D2462");
+        //roverConfigs.setAppId("eae9edb6352b8fec6618d3d9cb96f2e795e1c2df1ad5388af807b05d8dfcd7d6");
         //Personal account for testing
-        //roverConfigs.setUuid("F352DB29-6A05-4EA2-A356-9BFAC2BB3316");
-        //roverConfigs.setAppId("ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0");
+        roverConfigs.setUuid("F352DB29-6A05-4EA2-A356-9BFAC2BB3316");
+        roverConfigs.setAppId("ff259b8f81ba2a2fd227445e2b3dbaca3e9552ff1663fa3f46e89a284bc9aaa0");
         //roverConfigs.setUuid("B435CE53-9EC2-4B20-99D1-070FEF1CDA2E");
         //roverConfigs.setAppId("2d0ca52a350d03b6dcce601088bcdfbb");
         roverConfigs.setLaunchActivityName(this.getClass().getName());
