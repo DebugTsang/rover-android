@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.ui;
+package co.roverlabs.sdk.utilities;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,10 +29,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import co.roverlabs.sdk.ui.TextStyle;
 import co.roverlabs.sdk.ui.widget.Border;
 import co.roverlabs.sdk.ui.widget.BorderedView;
 import co.roverlabs.sdk.ui.widget.BoxModelDimens;
-import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
  * Created by SherryYang on 2015-05-01.

@@ -20,8 +20,8 @@ import co.roverlabs.sdk.ui.widget.BorderedView;
 import co.roverlabs.sdk.ui.widget.BoxModelDimens;
 import co.roverlabs.sdk.ui.ImageLoader;
 import co.roverlabs.sdk.ui.TextStyle;
-import co.roverlabs.sdk.ui.UiUtils;
-import co.roverlabs.sdk.utilities.Factory;
+import co.roverlabs.sdk.utilities.UiUtils;
+import co.roverlabs.sdk.utilities.FactoryUtils;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**
@@ -74,7 +74,7 @@ public class CardDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_detail);
 
-        mImageLoader = Factory.getDefaultImageLoader(getApplicationContext());
+        mImageLoader = FactoryUtils.getDefaultImageLoader(getApplicationContext());
 
         String detailViewString = getIntent().getStringExtra(RoverConstants.VIEW_TYPE_DETAIL);
         mDetailView = new Gson().fromJson(detailViewString, RoverView.class);
@@ -114,7 +114,7 @@ public class CardDetailActivity extends BaseActivity {
         mBarcode128 = (ImageView)findViewById(R.id.detail_barcode_block_barcode_128);
         mBarcodeLabel = (TextView)findViewById(R.id.detail_barcode_block_barcode_label);
 
-        mImageLoader = Factory.getDefaultImageLoader(getApplicationContext());
+        mImageLoader = FactoryUtils.getDefaultImageLoader(getApplicationContext());
 
         setHeaderBlock();
         setBackground();

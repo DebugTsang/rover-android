@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import co.roverlabs.sdk.ui.widget.BoxModelDimens;
-import co.roverlabs.sdk.ui.UiUtils;
+import co.roverlabs.sdk.utilities.UiUtils;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**

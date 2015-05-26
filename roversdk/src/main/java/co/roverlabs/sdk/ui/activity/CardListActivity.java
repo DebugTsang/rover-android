@@ -23,7 +23,7 @@ import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.ui.CardListAdapter;
 import co.roverlabs.sdk.ui.RecyclerViewOnItemSwipeListener;
-import co.roverlabs.sdk.utilities.RoverUtils;
+import co.roverlabs.sdk.utilities.SharedPrefsUtils;
 
 /**
  * Created by SherryYang on 2015-03-03.
@@ -64,7 +64,7 @@ public class CardListActivity extends BaseActivity {
         mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
 
         if(mLatestCards.isEmpty()) {
-            String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
+            String launchActivityName = ((RoverConfigs) SharedPrefsUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
             try {
                 Intent intent = new Intent(this, Class.forName(launchActivityName));
                 intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -168,4 +168,5 @@ public class CardListActivity extends BaseActivity {
         super.onStop();
         mNewCardButton.setVisibility(View.INVISIBLE);
     }
+
 }

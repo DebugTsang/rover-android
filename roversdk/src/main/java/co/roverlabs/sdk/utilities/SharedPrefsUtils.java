@@ -1,7 +1,5 @@
 package co.roverlabs.sdk.utilities;
 
-import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -9,19 +7,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import co.roverlabs.sdk.RoverService;
-
 /**
- * Created by SherryYang on 2015-01-27.
+ * Created by arsent on 15-05-26.
  */
-public class RoverUtils {
-    
-    public static final String TAG = RoverUtils.class.getSimpleName();
-
+public class SharedPrefsUtils {
     public static boolean readBoolFromSharedPrefs(Context con, String key, boolean defaultValue) {
 
         SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
@@ -41,15 +32,15 @@ public class RoverUtils {
         SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         return sharedPrefs.getString(key, defaultValue);
     }
-    
+
     public static void writeStringToSharedPrefs(Context con, String key, String value) {
-        
+
         SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPrefs.edit();
         editor.putString(key, value);
         editor.apply();
     }
-    
+
     public static int readIntFromSharedPrefs(Context con, String key, int defaultValue) {
 
         SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
@@ -82,15 +73,15 @@ public class RoverUtils {
         editor.putString(key, json);
         editor.apply();
     }
-    
+
     public static Object readObjectFromSharedPrefs(Context con, Class customObjectClass, String defaultValue) {
-        
+
         SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = sharedPrefs.getString(customObjectClass.getSimpleName(), defaultValue);
         return gson.fromJson(json, customObjectClass);
     }
-    
+
     public static void writeObjectToSharedPrefs(Context con, Object customObject) {
 
         SharedPreferences sharedPrefs = con.getSharedPreferences(RoverConstants.SHARED_PREFS_NAME, Context.MODE_PRIVATE);
@@ -116,24 +107,4 @@ public class RoverUtils {
         editor.clear();
         editor.apply();
     }
-
-    public static List subtractList(List list1, List list2) {
-
-        List result = new ArrayList(list2);
-        result.removeAll(list1);
-        return result;
-    }
-
-    public static boolean isRoverServiceRunning(Activity activity) {
-        ActivityManager manager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (RoverService.class.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }
-
-

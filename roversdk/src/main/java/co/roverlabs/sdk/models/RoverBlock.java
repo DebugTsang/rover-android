@@ -9,7 +9,7 @@ import java.util.List;
 
 import co.roverlabs.sdk.ui.widget.Border;
 import co.roverlabs.sdk.ui.widget.BoxModelDimens;
-import co.roverlabs.sdk.ui.UiUtils;
+import co.roverlabs.sdk.utilities.UiUtils;
 import co.roverlabs.sdk.ui.TextStyle;
 import co.roverlabs.sdk.utilities.RoverConstants;
 

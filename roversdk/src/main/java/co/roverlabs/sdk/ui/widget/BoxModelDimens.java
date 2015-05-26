@@ -2,7 +2,7 @@ package co.roverlabs.sdk.ui.widget;
 
 import android.content.Context;
 
-import co.roverlabs.sdk.ui.UiUtils;
+import co.roverlabs.sdk.utilities.UiUtils;
 
 /**
  * Created by SherryYang on 2015-05-01.

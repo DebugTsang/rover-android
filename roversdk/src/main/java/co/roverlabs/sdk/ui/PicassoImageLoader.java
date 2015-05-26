@@ -21,6 +21,7 @@ import co.roverlabs.sdk.models.RoverBlock;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.models.RoverView;
 import co.roverlabs.sdk.utilities.RoverConstants;
+import co.roverlabs.sdk.utilities.UiUtils;
 
 /**
  * Created by arsent on 15-05-19.

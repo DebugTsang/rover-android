@@ -8,7 +8,6 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import java.util.Map;
-import java.util.UUID;
 
 import co.roverlabs.sdk.events.RoverCardClickedEvent;
 import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
@@ -30,9 +29,10 @@ import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.models.RoverTouchPoint;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
-import co.roverlabs.sdk.utilities.Factory;
+import co.roverlabs.sdk.utilities.FactoryUtils;
 import co.roverlabs.sdk.utilities.RoverConstants;
-import co.roverlabs.sdk.utilities.RoverUtils;
+import co.roverlabs.sdk.utilities.SharedPrefsUtils;
+import co.roverlabs.sdk.utilities.Utils;
 
 public class Rover {
 
@@ -66,8 +66,8 @@ public class Rover {
     public RoverCustomer resetCustomer() {
 
         mCustomer = new RoverCustomer();
-        mCustomer.setId(createCustomerId());
-        RoverUtils.writeObjectToSharedPrefs(mContext, mCustomer);
+        mCustomer.setId(Utils.getRandomUuid());
+        SharedPrefsUtils.writeObjectToSharedPrefs(mContext, mCustomer);
         if(mVisitManager != null) {
             mVisitManager.resetVisit();
         }
@@ -99,7 +99,7 @@ public class Rover {
             mCustomer.setTraits(traits);
         }
 
-        RoverUtils.writeObjectToSharedPrefs(mContext, mCustomer);
+        SharedPrefsUtils.writeObjectToSharedPrefs(mContext, mCustomer);
     }
 
     public void setConfigurations(RoverConfigs configs) {
@@ -109,7 +109,7 @@ public class Rover {
             return;
         }
         mConfigs = configs;
-        RoverUtils.writeObjectToSharedPrefs(mContext, configs);
+        SharedPrefsUtils.writeObjectToSharedPrefs(mContext, configs);
     }
 
     private void completeSetUp() {
@@ -118,63 +118,39 @@ public class Rover {
         if(mCustomer == null) {
             getCustomer();
         }
-        if(mConfigs == null) {
-            getConfigurations();
-        }
+
         RoverEventBus.getInstance().register(this);
-        setRegionManager(mConfigs.getUuid());
-        setVisitManager(mConfigs.getSandBoxMode());
-        setNetworkManager(mConfigs.getAuthToken());
-        setNotificationManager(mConfigs.getNotificationIconId());
-        mSetUp = true;
-    }
 
-    private void setRegionManager(String uuid) {
+        FactoryUtils.initManagers(mContext);
 
+        mConfigs = FactoryUtils.getConfig();
+
+        //initialize managers
         mRegionManager = RoverRegionManager.getInstance(mContext);
-        mRegionManager.setMonitorRegion(uuid);
-    }
-
-    private void setVisitManager(boolean sandBoxMode) {
+        mRegionManager.setMonitorRegion(mConfigs.getUuid());
 
         mVisitManager = RoverVisitManager.getInstance(mContext);
-        mVisitManager.setSandBoxMode(sandBoxMode);
-    }
+        mVisitManager.setSandBoxMode(mConfigs.getSandBoxMode());
 
-    private void setNetworkManager(String authToken) {
+        mNetworkManager = FactoryUtils.getNetworkManager();
 
-        mNetworkManager = RoverNetworkManager.getInstance();
-        mNetworkManager.setAuthToken(authToken);
-    }
+        mNotificationManager = FactoryUtils.getNotificationManager();
 
-    private void setNotificationManager(int notificationIconId) {
-
-        mNotificationManager = RoverNotificationManager.getInstance(mContext);
-        mNotificationManager.setNotificationIconId(notificationIconId);
-    }
-
-    public RoverConfigs getConfigurations() {
-
-        mConfigs = (RoverConfigs)RoverUtils.readObjectFromSharedPrefs(mContext, RoverConfigs.class, null);
-        return mConfigs;
+        //setup is done
+        mSetUp = true;
     }
 
     public RoverCustomer getCustomer() {
 
-        mCustomer = (RoverCustomer)RoverUtils.readObjectFromSharedPrefs(mContext, RoverCustomer.class, null);
+        mCustomer = (RoverCustomer) SharedPrefsUtils.readObjectFromSharedPrefs(mContext, RoverCustomer.class, null);
         if(mCustomer == null) {
             Log.d(TAG, "Creating a new customer");
             mCustomer = new RoverCustomer();
-            mCustomer.setId(createCustomerId());
-            RoverUtils.writeObjectToSharedPrefs(mContext, mCustomer);
+            mCustomer.setId(Utils.getRandomUuid());
+            SharedPrefsUtils.writeObjectToSharedPrefs(mContext, mCustomer);
             Log.d(TAG, "Customer ID is " + mCustomer.getId());
         }
         return mCustomer;
-    }
-
-    private String createCustomerId() {
-
-        return UUID.randomUUID().toString();
     }
 
     public boolean isMonitoring() {
@@ -302,9 +278,9 @@ public class Rover {
             String message = touchpoint.getNotification();
 
             //prefetch images before notifying the user
-            Factory.getDefaultImageLoader(mContext.getApplicationContext()).fetchAll();
+            FactoryUtils.getDefaultImageLoader(mContext.getApplicationContext()).fetchAll();
 
-            mNotificationManager.showStickyNotification(id, title, message);
+            mNotificationManager.showNotification(id, title, message);
         }
 
         if(!mConfigs.getSandBoxMode()) {

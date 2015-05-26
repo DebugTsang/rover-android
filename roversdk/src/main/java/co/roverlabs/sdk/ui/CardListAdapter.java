@@ -31,8 +31,9 @@ import co.roverlabs.sdk.ui.activity.CardListActivity;
 import co.roverlabs.sdk.ui.widget.Border;
 import co.roverlabs.sdk.ui.widget.BorderedView;
 import co.roverlabs.sdk.ui.widget.BoxModelDimens;
-import co.roverlabs.sdk.utilities.Factory;
+import co.roverlabs.sdk.utilities.FactoryUtils;
 import co.roverlabs.sdk.utilities.RoverConstants;
+import co.roverlabs.sdk.utilities.UiUtils;
 
 /**
  * Created by SherryYang on 2015-03-03.
@@ -52,7 +53,7 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         mCards = cards;
         mContext = activity.getApplicationContext();
         mActivity = activity;
-        mImageLoader = Factory.getDefaultImageLoader(mContext);
+        mImageLoader = FactoryUtils.getDefaultImageLoader(mContext);
     }
 
     @Override

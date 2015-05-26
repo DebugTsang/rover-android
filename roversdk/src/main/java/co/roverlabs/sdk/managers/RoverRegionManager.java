@@ -17,7 +17,7 @@ import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.events.RoverRangeResultEvent;
 import co.roverlabs.sdk.models.RoverRegion;
 import co.roverlabs.sdk.utilities.RoverConstants;
-import co.roverlabs.sdk.utilities.RoverUtils;
+import co.roverlabs.sdk.utilities.Utils;
 
 /**
  * Created by SherryYang on 2015-01-21.
@@ -25,7 +25,9 @@ import co.roverlabs.sdk.utilities.RoverUtils;
 public class RoverRegionManager {
     
     public static final String TAG = RoverRegionManager.class.getSimpleName();
+
     private static RoverRegionManager sRegionManagerInstance;
+
     private BeaconManager mBeaconManager;
     private boolean mIsBeaconServiceReady;
     private Region mMonitorRegion;
@@ -50,9 +52,8 @@ public class RoverRegionManager {
         }
         return sRegionManagerInstance;
     }
-    
-    public void setMonitorRegion(String uuid) {
 
+    public void setMonitorRegion(String uuid) {
         mMonitorRegion = new Region("Monitor Region", uuid, null, null);
     }
     
@@ -138,8 +139,8 @@ public class RoverRegionManager {
 
                 List<Beacon> addedBeacons;
                 List<Beacon> subtractedBeacons;
-                addedBeacons = RoverUtils.subtractList(mCurrentBeacons, beacons);
-                subtractedBeacons = RoverUtils.subtractList(beacons, mCurrentBeacons);
+                addedBeacons = Utils.subtractList(mCurrentBeacons, beacons);
+                subtractedBeacons = Utils.subtractList(beacons, mCurrentBeacons);
                 mCurrentBeacons = beacons;
                 for(Beacon beacon : addedBeacons) {
                     Log.d(TAG, "Region entered - minor " + beacon.getMinor());

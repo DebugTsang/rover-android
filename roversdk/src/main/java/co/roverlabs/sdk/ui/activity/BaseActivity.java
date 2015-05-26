@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import co.roverlabs.sdk.RoverService;
-import co.roverlabs.sdk.utilities.RoverUtils;
+import co.roverlabs.sdk.utilities.Utils;
 
 /**
  * Created by arsent on 15-05-22.
@@ -21,7 +21,7 @@ public class BaseActivity extends Activity{
     protected void onResume() {
         super.onResume();
         shouldStartService = true; //reset service optimizer flag
-        if (RoverUtils.isRoverServiceRunning(this)){
+        if (Utils.isRoverServiceRunning(this)){
             stopService(new Intent(getApplication(), RoverService.class));
         }
     }
@@ -29,15 +29,11 @@ public class BaseActivity extends Activity{
     @Override
     protected void onStop() {
         super.onStop();
-        if (!RoverUtils.isRoverServiceRunning(this) && shouldStartService){
+        if (!Utils.isRoverServiceRunning(this) && shouldStartService){
             Intent intent = new Intent(getApplication(), RoverService.class);
             intent.putExtra(EXTRA_HEAD_ICON_ID, mHeadIconId);
             startService(new Intent(getApplication(), RoverService.class));
         }
-    }
-
-    public boolean shouldStartService() {
-        return shouldStartService;
     }
 
     public void setShouldStartService(boolean shouldStartService) {

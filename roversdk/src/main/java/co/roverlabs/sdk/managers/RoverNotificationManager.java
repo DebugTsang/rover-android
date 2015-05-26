@@ -17,7 +17,8 @@ import co.roverlabs.sdk.ui.activity.CardListActivity;
 public class RoverNotificationManager {
     
     public static final String TAG = RoverNotificationManager.class.getSimpleName();
-    private static RoverNotificationManager sNotificationManagerInstance;
+
+    private static RoverNotificationManager sSharedInstance;
     private Context mContext;
     private NotificationManager mNotificationManager;
     private int mNotificationIconId;
@@ -25,26 +26,27 @@ public class RoverNotificationManager {
     private Intent mCardListIntent;
 
 
-    private RoverNotificationManager(Context con) {
+    private RoverNotificationManager(Context context) {
 
-        mContext = con;
-        mNotificationManager = (NotificationManager)con.getSystemService(Context.NOTIFICATION_SERVICE);
+        mContext = context;
+
+        mNotificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         RoverEventBus.getInstance().register(this);
     }
 
-    public static RoverNotificationManager getInstance(Context con) {
+    public synchronized static RoverNotificationManager getInstance(Context context) {
 
-        if(sNotificationManagerInstance == null) {
-            sNotificationManagerInstance = new RoverNotificationManager(con);
+        if(sSharedInstance == null) {
+            sSharedInstance = new RoverNotificationManager(context);
         }
-        return sNotificationManagerInstance;
+        return sSharedInstance;
     }
     
     public void setNotificationIconId(int id) { mNotificationIconId = id; }
     public void setHeadIconId(int id) { mHeadIconId = id; }
 
 
-    public void showStickyNotification(int id, String title, String message) {
+    public void showNotification(int id, String title, String message) {
 
         mCardListIntent = new Intent(mContext, CardListActivity.class);
         mCardListIntent.setAction(Intent.ACTION_MAIN);
@@ -60,7 +62,7 @@ public class RoverNotificationManager {
                 .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setAutoCancel(false);
+                .setAutoCancel(true);
 
         Notification n;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -69,12 +71,12 @@ public class RoverNotificationManager {
             n = builder.getNotification();
         }
 
-        n.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+        //n.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
 
         mNotificationManager.notify(id, n);
     }
 
-    public void cancelNotification() {
+    public void cancelAllNotifications() {
         mNotificationManager.cancelAll();
     }
 

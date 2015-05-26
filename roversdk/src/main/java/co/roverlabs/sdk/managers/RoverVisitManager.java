@@ -20,8 +20,6 @@ import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverExitedLocationEvent;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.events.RoverExitedTouchpointEvent;
-import co.roverlabs.sdk.events.RoverRangeEvent;
-import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverRegion;
@@ -29,7 +27,7 @@ import co.roverlabs.sdk.models.RoverTouchPoint;
 import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.ui.activity.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverConstants;
-import co.roverlabs.sdk.utilities.RoverUtils;
+import co.roverlabs.sdk.utilities.SharedPrefsUtils;
 
 /**
  * Created by SherryYang on 2015-01-21.
@@ -67,7 +65,7 @@ public class RoverVisitManager {
     public void resetVisit() {
 
         mLatestVisit = null;
-        RoverUtils.removeObjectFromSharedPrefs(mContext, RoverVisit.class);
+        SharedPrefsUtils.removeObjectFromSharedPrefs(mContext, RoverVisit.class);
     }
 
     //TODO: Remove after testing
@@ -104,7 +102,7 @@ public class RoverVisitManager {
         Calendar now = Calendar.getInstance();
         mLatestVisit = new RoverVisit();
         mLatestVisit.setSimulation(mSandBoxMode);
-        mLatestVisit.setCustomer((RoverCustomer)RoverUtils.readObjectFromSharedPrefs(mContext, RoverCustomer.class, null));
+        mLatestVisit.setCustomer((RoverCustomer) SharedPrefsUtils.readObjectFromSharedPrefs(mContext, RoverCustomer.class, null));
         mLatestVisit.setRegion(mainRegion);
         mLatestVisit.setTimeStamp(now.getTime());
         mLatestVisit.setLastBeaconDetectionTime(now);
@@ -119,8 +117,7 @@ public class RoverVisitManager {
                 if(!mLatestVisit.isInSubRegion(subRegion)) {
                     didEnterSubRegion(subRegion);
                 }
-                RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_START));
-                RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
+                SharedPrefsUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             }
 
             @Override
@@ -143,7 +140,7 @@ public class RoverVisitManager {
             if(mLatestVisit.currentlyContainsTouchpoints()) {
                 exitAllTouchpoints();
             }
-            RoverUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
+            SharedPrefsUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             RoverEventBus.getInstance().post(new RoverExitedLocationEvent(mLatestVisit));
             if(mRangeTimer == null) {
                 mRangeTimer = new RoverTimer(mLatestVisit.getKeepAliveTime(), COUNT_DOWN_INTERVAL);
@@ -225,7 +222,7 @@ public class RoverVisitManager {
     public RoverVisit getLatestVisit() {
         
         if(mLatestVisit == null) {
-            mLatestVisit = (RoverVisit)RoverUtils.readObjectFromSharedPrefs(mContext, RoverVisit.class, null);
+            mLatestVisit = (RoverVisit) SharedPrefsUtils.readObjectFromSharedPrefs(mContext, RoverVisit.class, null);
         }
         return mLatestVisit;
     }
@@ -260,9 +257,7 @@ public class RoverVisitManager {
         public void onFinish() {
 
             Log.d(TAG, "RoverRangeTimer has expired - ranging will now be stopped");
-            RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_STOP));
-            RoverEventBus.getInstance().post(new RoverVisitExpiredEvent());
-            RoverNotificationManager.getInstance(mContext).cancelNotification();
+            RoverNotificationManager.getInstance(mContext).cancelAllNotifications();
         }
     }
 }
