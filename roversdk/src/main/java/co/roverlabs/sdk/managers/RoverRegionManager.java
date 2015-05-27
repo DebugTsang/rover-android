@@ -64,7 +64,7 @@ public class RoverRegionManager {
             public void onEnteredRegion(Region region, List<Beacon> beacons) {
 
                 Log.d(TAG, "Region entered - main");
-                if(beacons.size() != 0) {
+                if (beacons.size() != 0) {
                     Beacon beacon = beacons.get(0);
                     mCurrentBeacons = new ArrayList<>();
                     mCurrentBeacons.add(beacon);
@@ -136,9 +136,11 @@ public class RoverRegionManager {
                 //TODO: Remove after testing
                 RoverEventBus.getInstance().post(new RoverRangeResultEvent(beacons));
 
-                List<Beacon> addedBeacons;
+                List<Beacon> addedBeacons = beacons;
                 List<Beacon> subtractedBeacons;
-                addedBeacons = RoverUtils.subtractList(mCurrentBeacons, beacons);
+                if (mCurrentBeacons != null) {
+                    addedBeacons = RoverUtils.subtractList(mCurrentBeacons, beacons);
+                }
                 subtractedBeacons = RoverUtils.subtractList(beacons, mCurrentBeacons);
                 mCurrentBeacons = beacons;
                 for(Beacon beacon : addedBeacons) {

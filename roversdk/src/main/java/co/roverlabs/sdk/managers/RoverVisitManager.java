@@ -116,7 +116,7 @@ public class RoverVisitManager {
 
                 Log.d(TAG, "Visit object save successful");
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
-                if(!mLatestVisit.isInSubRegion(subRegion)) {
+                if (!mLatestVisit.isInSubRegion(subRegion)) {
                     didEnterSubRegion(subRegion);
                 }
                 RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_START));
@@ -125,7 +125,7 @@ public class RoverVisitManager {
 
             @Override
             public void onSaveFailure() {
-
+                RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_STOP));
                 Log.d(TAG, "Visit object save failed");
             }
         });

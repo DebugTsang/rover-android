@@ -212,9 +212,18 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         }
 
         //Set background image if there is one
-        String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
+        final String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
         if(cardBackgroundImageUrl != null) {
-            mImageLoader.loadBackgroundImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+            holder.cardBackground.post(new Runnable() {
+                @Override
+                public void run() {
+                    int height = holder.cardLayout.getHeight();
+                    int width = holder.cardLayout.getWidth();
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
+                    holder.cardBackground.setLayoutParams(layoutParams);
+                    mImageLoader.loadBackgroundImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+                }
+            });
             holder.cardBackground.setVisibility(View.VISIBLE);
         }
         else {

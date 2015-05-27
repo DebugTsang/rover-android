@@ -60,7 +60,7 @@ public class RoverNotificationManager {
                 .setContentIntent(pendingIntent)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setAutoCancel(false);
+                .setAutoCancel(true);
 
         Notification n;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
