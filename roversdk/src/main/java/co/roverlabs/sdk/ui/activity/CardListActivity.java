@@ -19,6 +19,7 @@ import co.roverlabs.sdk.RoverConfigs;
 import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
 import co.roverlabs.sdk.events.RoverCardDiscardedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.ui.CardListAdapter;
@@ -50,7 +51,6 @@ public class CardListActivity extends BaseActivity {
         RoverEventBus.getInstance().register(this);
         mHeadIconId = getIntent().getIntExtra(EXTRA_HEAD_ICON_ID, -1);
 
-
         mCardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
         mNewCardButton = (Button)findViewById(R.id.new_card_button);
         mSlideIn = AnimationUtils.loadAnimation(this, R.anim.button_slide_in);
@@ -61,23 +61,8 @@ public class CardListActivity extends BaseActivity {
         mCardListRecyclerView.setLayoutManager(mCardListLayoutManager);
 
         mLatestVisitId = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getId();
-        mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
 
-        if(mLatestCards.isEmpty()) {
-            String launchActivityName = ((RoverConfigs) SharedPrefsUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
-            try {
-                Intent intent = new Intent(this, Class.forName(launchActivityName));
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
-            }
-            catch (ClassNotFoundException e) {
-                Log.e(TAG, "Cannot launch application - cannot find launch activity name", e);
-            }
-            finish();
-        }
-
-        mCardListAdapter = new CardListAdapter(mLatestVisitId, mLatestCards, this);
-        mCardListRecyclerView.setAdapter(mCardListAdapter);
+        initAdapter();
 
         mCardListRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -154,6 +139,27 @@ public class CardListActivity extends BaseActivity {
         });
     }
 
+    private void initAdapter(){
+        mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
+
+        if(mLatestCards.isEmpty()) {
+            String launchActivityName = ((RoverConfigs) SharedPrefsUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
+            try {
+                Intent intent = new Intent(this, Class.forName(launchActivityName));
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+            }
+            catch (ClassNotFoundException e) {
+                Log.e(TAG, "Cannot launch application - cannot find launch activity name", e);
+            }
+            finish();
+        }
+
+        mCardListAdapter = new CardListAdapter(mLatestVisitId, mLatestCards, this);
+        mCardListRecyclerView.setAdapter(mCardListAdapter);
+        mCardListAdapter.notifyDataSetChanged();
+    }
+
     @Subscribe
     public void onCardDelivered(RoverCardDeliveredEvent event) {
 
@@ -167,5 +173,11 @@ public class CardListActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         mNewCardButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Subscribe
+    public void didExitRegion(RoverExitedRegionEvent event) {
+        //reset the adapter when the customer leaves the region and still has the list open
+        initAdapter();
     }
 }

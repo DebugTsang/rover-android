@@ -121,7 +121,9 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     blockLayout = holder.cardImageLayout;
                     holder.cardContentLayout.addView(holder.cardImageLayout);
                     holder.cardImageLayout.setBackgroundColor(backgroundColor);
+
                     mImageLoader.loadBackgroundImage(holder.cardImageBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+
                     UiUtils.setBorder(holder.cardImageBorder, border);
                     mImageLoader.loadBlockImage(holder.cardImage, block);
                     UiUtils.setPadding(holder.cardImage, padding, border);
@@ -152,7 +154,9 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
                     blockLayout = holder.cardBarcodeLayout;
                     holder.cardContentLayout.addView(holder.cardBarcodeLayout);
                     holder.cardBarcodeLayout.setBackgroundColor(backgroundColor);
+
                     mImageLoader.loadBackgroundImage(holder.cardBarcodeBackground, blockBackgroundImageUrl, blockBackgroundImageMode);
+
                     UiUtils.setBorder(holder.cardBarcodeBorder, border);
                     TextStyle barcodeLabelStyle = new TextStyle();
                     if(block.getBarcodeFormat().equals(RoverConstants.BARCODE_FORMAT_PLU)) {
@@ -213,9 +217,21 @@ public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardVi
         }
 
         //Set background image if there is one
-        String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
+        final String cardBackgroundImageUrl = listView.getBackgroundImageUrl();
         if(cardBackgroundImageUrl != null) {
-            mImageLoader.loadBackgroundImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+            holder.cardBackground.setBackgroundColor(mContext.getResources().getColor(android.R.color.background_light));
+            holder.cardBackground.post(new Runnable() {
+                @Override
+                public void run() {
+                    int height = holder.cardLayout.getHeight();
+                    int width = holder.cardLayout.getWidth();
+                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(width, height);
+                    holder.cardBackground.setLayoutParams(layoutParams);
+                    mImageLoader.loadBackgroundImage(holder.cardBackground, cardBackgroundImageUrl, listView.getBackgroundContentMode());
+                }
+            });
+
+
             holder.cardBackground.setVisibility(View.VISIBLE);
         }
         else {

@@ -59,6 +59,14 @@ public class RoverRegionManager {
     
     public void startMonitoring() {
 
+        mBeaconManager.setErrorListener(new BeaconManager.ErrorListener() {
+            @Override
+            public void onError(Integer integer) {
+                Log.d(TAG, "Estimote ERROR");
+            }
+        });
+
+
         mBeaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
 
             @Override

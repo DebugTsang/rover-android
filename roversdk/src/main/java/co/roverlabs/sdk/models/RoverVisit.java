@@ -8,11 +8,13 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
+import co.roverlabs.sdk.events.RoverExitedTouchpointEvent;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
@@ -181,7 +183,7 @@ public class RoverVisit extends RoverObject {
         return elapsedTime < keepAliveTimeInMillis;
     }
 
-    public boolean currentlyContainsWildCardTouchpoints() {
+    public boolean containsWildCardTouchpoints() {
 
         for(RoverTouchPoint touchpoint : mCurrentTouchpoints) {
             if(touchpoint.getTrigger().equals(RoverConstants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
@@ -189,11 +191,6 @@ public class RoverVisit extends RoverObject {
             }
         }
         return false;
-    }
-
-    public boolean currentlyContainsTouchpoints() {
-
-        return mCurrentTouchpoints.isEmpty();
     }
 
     public void save(RoverObjectSaveListener saveListener) {
@@ -214,5 +211,17 @@ public class RoverVisit extends RoverObject {
         mLocation = visit.getLocation();
         mCustomer = visit.getCustomer();
         mTouchpoints = visit.getTouchpoints();
+    }
+
+    public void resetAllTouchPoints(){
+
+        Iterator<RoverTouchPoint> iterator = mCurrentTouchpoints.iterator();
+        while(iterator.hasNext()) {
+            RoverTouchPoint touchpoint = iterator.next();
+            RoverEventBus.getInstance().post(new RoverExitedTouchpointEvent(mId, touchpoint));
+        }
+
+        //mVisitedTouchpoints.clear();
+        mCurrentTouchpoints.clear();
     }
 }

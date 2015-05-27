@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
-import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import co.roverlabs.sdk.R;
@@ -116,15 +115,19 @@ public class RoverVisitManager {
 
                 Log.d(TAG, "Visit object save successful");
                 RoverEventBus.getInstance().post(new RoverEnteredLocationEvent(mLatestVisit));
-                if(!mLatestVisit.isInSubRegion(subRegion)) {
+                if (!mLatestVisit.isInSubRegion(subRegion)) {
                     didEnterSubRegion(subRegion);
                 }
+
+                RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_START));
+
                 SharedPrefsUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
             }
 
             @Override
             public void onSaveFailure() {
-
+                RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_STOP));
+                RoverEventBus.getInstance().post(new RoverVisitExpiredEvent());
                 Log.d(TAG, "Visit object save failed");
             }
         });
@@ -136,50 +139,28 @@ public class RoverVisitManager {
         mLatestVisit.setLastBeaconDetectionTime(Calendar.getInstance());
 
         if(event.getRegionType().equals(RoverConstants.REGION_TYPE_MAIN)) {
-            if(mLatestVisit.currentlyContainsWildCardTouchpoints()) {
-                exitAllWildCardTouchpoints();
-            }
-            if(mLatestVisit.currentlyContainsTouchpoints()) {
-                exitAllTouchpoints();
-            }
+
+            //reset the list of cards
+            mLatestVisit.resetAllTouchPoints();
+
             SharedPrefsUtils.writeObjectToSharedPrefs(mContext, mLatestVisit);
+ 
             RoverEventBus.getInstance().post(new RoverExitedLocationEvent(mLatestVisit));
+
             if(mRangeTimer == null) {
                 mRangeTimer = new RoverTimer(mLatestVisit.getKeepAliveTime(), COUNT_DOWN_INTERVAL);
             }
             mRangeTimer.start();
             mRangeTimer.setCountDownStarted(true);
-        }
-        else if(event.getRegionType().equals(RoverConstants.REGION_TYPE_SUB)) {
+        }else if(event.getRegionType().equals(RoverConstants.REGION_TYPE_SUB)) {
             RoverRegion subRegion = event.getRegion();
             didExitSubRegion(subRegion);
         }
     }
 
-    public void exitAllWildCardTouchpoints() {
-
-        Iterator<RoverTouchPoint> iterator = mLatestVisit.getCurrentTouchpoints().iterator();
-        while(iterator.hasNext()) {
-            RoverTouchPoint touchpoint = iterator.next();
-            if(touchpoint.getTrigger().equals(RoverConstants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
-                RoverEventBus.getInstance().post(new RoverExitedTouchpointEvent(mLatestVisit.getId(), touchpoint));
-                iterator.remove();
-            }
-        }
-    }
-
-    public void exitAllTouchpoints() {
-
-        Iterator<RoverTouchPoint> iterator = mLatestVisit.getCurrentTouchpoints().iterator();
-        while(iterator.hasNext()) {
-            RoverEventBus.getInstance().post(new RoverExitedTouchpointEvent(mLatestVisit.getId(), iterator.next()));
-            iterator.remove();
-        }
-    }
-
     public void didEnterSubRegion(RoverRegion subRegion) {
 
-        if(!mLatestVisit.currentlyContainsWildCardTouchpoints()) {
+        if(!mLatestVisit.containsWildCardTouchpoints()) {
             for(RoverTouchPoint wildCardTouchpoint : mLatestVisit.getWildCardTouchpoints()) {
                 RoverEnteredTouchpointEvent enteredTouchpointEvent = new RoverEnteredTouchpointEvent(mLatestVisit.getId(), wildCardTouchpoint);
                 if(!mLatestVisit.getVisitedTouchpoints().contains(wildCardTouchpoint)) {

@@ -23,7 +23,6 @@ public class RoverNotificationManager {
     private NotificationManager mNotificationManager;
     private int mNotificationIconId;
     private int mHeadIconId;
-    private Intent mCardListIntent;
 
 
     private RoverNotificationManager(Context context) {
@@ -48,12 +47,15 @@ public class RoverNotificationManager {
 
     public void showNotification(int id, String title, String message) {
 
-        mCardListIntent = new Intent(mContext, CardListActivity.class);
+        Intent mCardListIntent = new Intent(mContext, CardListActivity.class);
         mCardListIntent.setAction(Intent.ACTION_MAIN);
         mCardListIntent.putExtra(CardListActivity.EXTRA_HEAD_ICON_ID, mHeadIconId);
         mCardListIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        mCardListIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(mContext, id, mCardListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(mContext)
                 .setSmallIcon(mNotificationIconId)
