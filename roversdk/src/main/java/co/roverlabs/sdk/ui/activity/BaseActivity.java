@@ -3,7 +3,10 @@ package co.roverlabs.sdk.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.squareup.otto.Subscribe;
+
 import co.roverlabs.sdk.RoverService;
+import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
 import co.roverlabs.sdk.utilities.Utils;
 
 /**
@@ -30,13 +33,19 @@ public class BaseActivity extends Activity{
     protected void onStop() {
         super.onStop();
         if (!Utils.isRoverServiceRunning(this) && shouldStartService){
-            Intent intent = new Intent(getApplication(), RoverService.class);
-            intent.putExtra(EXTRA_HEAD_ICON_ID, mHeadIconId);
-            startService(new Intent(getApplication(), RoverService.class));
+            stopService();
         }
     }
 
     public void setShouldStartService(boolean shouldStartService) {
         this.shouldStartService = shouldStartService;
     }
+
+    protected void stopService(){
+        Intent intent = new Intent(getApplication(), RoverService.class);
+        intent.putExtra(EXTRA_HEAD_ICON_ID, mHeadIconId);
+        startService(new Intent(getApplication(), RoverService.class));
+    }
+
+
 }

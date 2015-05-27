@@ -45,6 +45,7 @@ public class Rover {
     private RoverNotificationManager mNotificationManager;
     private RoverConfigs mConfigs;
     private RoverCustomer mCustomer;
+
     //TODO: Get rid of temp fix
     private boolean mSetUp = false;
     private boolean mMonitorStarted = false;
@@ -108,7 +109,10 @@ public class Rover {
             Log.d(TAG, "Rover cannot be set up - configurations incomplete");
             return;
         }
+
         mConfigs = configs;
+
+        //Q: what's the point of writing this to sharedprefs ?
         SharedPrefsUtils.writeObjectToSharedPrefs(mContext, configs);
     }
 
@@ -125,15 +129,10 @@ public class Rover {
 
         mConfigs = FactoryUtils.getConfig();
 
-        //initialize managers
-        mRegionManager = RoverRegionManager.getInstance(mContext);
-        mRegionManager.setMonitorRegion(mConfigs.getUuid());
-
-        mVisitManager = RoverVisitManager.getInstance(mContext);
-        mVisitManager.setSandBoxMode(mConfigs.getSandBoxMode());
-
+        //initialize manager variable
+        mRegionManager = FactoryUtils.getRegionManager();
+        mVisitManager = FactoryUtils.getVisitManager();
         mNetworkManager = FactoryUtils.getNetworkManager();
-
         mNotificationManager = FactoryUtils.getNotificationManager();
 
         //setup is done
@@ -154,7 +153,6 @@ public class Rover {
     }
 
     public boolean isMonitoring() {
-
         return mMonitorStarted;
     }
 
@@ -164,6 +162,7 @@ public class Rover {
             Log.d(TAG, "Setting up Rover before monitoring can start");
             completeSetUp();
         }
+
         if(!mMonitorStarted) {
             Log.d(TAG, "Monitoring is being started by Rover");
             mRegionManager.startMonitoring();
@@ -190,28 +189,6 @@ public class Rover {
             Log.d(TAG, "Rover has not been set up yet - do nothing");
         }
     }
-
-    //TODO: Remove, used for testing
-    public void showCards() {
-
-        if(mVisitManager != null) {
-            mVisitManager.showCards();
-        }
-        else {
-            Toast.makeText(mContext, R.string.no_cards_text, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //TODO: Remove, used for testing
-    public void simulate() {
-
-        stopMonitoring();
-        RoverRegion enteredRegion = new RoverRegion("7931D3AA-299B-4A12-9FCC-D66F2C5D2462", 18347, 11111);
-        RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
-        RoverRegion exitedMainRegion = new RoverRegion("7931D3AA-299B-4A12-9FCC-D66F2C5D2462", null, null);
-        RoverEventBus.getInstance().post(new RoverExitedRegionEvent(exitedMainRegion, RoverConstants.REGION_TYPE_MAIN));
-    }
-
     @Subscribe
     public void onEnteredLocation(final RoverEnteredLocationEvent event) {
 
@@ -426,4 +403,30 @@ public class Rover {
             });
         }
     }
+
+
+
+
+
+    //TODO: Remove, used for testing
+    public void showCards() {
+
+        if(mVisitManager != null) {
+            mVisitManager.showCards();
+        }
+        else {
+            Toast.makeText(mContext, R.string.no_cards_text, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //TODO: Remove, used for testing
+    public void simulate() {
+
+        stopMonitoring();
+        RoverRegion enteredRegion = new RoverRegion("7931D3AA-299B-4A12-9FCC-D66F2C5D2462", 18347, 11111);
+        RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
+        RoverRegion exitedMainRegion = new RoverRegion("7931D3AA-299B-4A12-9FCC-D66F2C5D2462", null, null);
+        RoverEventBus.getInstance().post(new RoverExitedRegionEvent(exitedMainRegion, RoverConstants.REGION_TYPE_MAIN));
+    }
+
 }

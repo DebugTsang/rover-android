@@ -168,5 +168,4 @@ public class CardListActivity extends BaseActivity {
         super.onStop();
         mNewCardButton.setVisibility(View.INVISIBLE);
     }
-
 }

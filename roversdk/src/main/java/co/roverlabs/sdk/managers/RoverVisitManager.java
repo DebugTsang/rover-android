@@ -20,6 +20,8 @@ import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverExitedLocationEvent;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.events.RoverExitedTouchpointEvent;
+import co.roverlabs.sdk.events.RoverRangeEvent;
+import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.models.RoverCustomer;
 import co.roverlabs.sdk.models.RoverRegion;
@@ -257,6 +259,9 @@ public class RoverVisitManager {
         public void onFinish() {
 
             Log.d(TAG, "RoverRangeTimer has expired - ranging will now be stopped");
+            RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_STOP));
+            RoverEventBus.getInstance().post(new RoverVisitExpiredEvent());
+
             RoverNotificationManager.getInstance(mContext).cancelAllNotifications();
         }
     }

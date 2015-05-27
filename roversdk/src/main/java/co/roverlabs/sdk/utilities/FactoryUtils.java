@@ -4,6 +4,8 @@ import android.content.Context;
 
 import co.roverlabs.sdk.RoverConfigs;
 import co.roverlabs.sdk.managers.RoverNotificationManager;
+import co.roverlabs.sdk.managers.RoverRegionManager;
+import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.networks.RoverNetworkManager;
 import co.roverlabs.sdk.ui.ImageLoader;
 import co.roverlabs.sdk.ui.PicassoImageLoader;
@@ -15,6 +17,8 @@ public class FactoryUtils {
     private static ImageLoader mImageLoader;
     private static RoverNotificationManager sNotifManager;
     private static RoverNetworkManager sNetworkManager;
+    private static RoverVisitManager sVisitManager;
+    private static RoverRegionManager sRegionManager;
     private static RoverConfigs sConfigs;
 
     private static boolean sIsInitialized;
@@ -30,6 +34,12 @@ public class FactoryUtils {
 
         sNetworkManager = RoverNetworkManager.getInstance();
         sNetworkManager.setAuthToken(sConfigs.getAuthToken());
+
+        sVisitManager = RoverVisitManager.getInstance(context);
+        sVisitManager.setSandBoxMode(sConfigs.getSandBoxMode());
+
+        sRegionManager = RoverRegionManager.getInstance(context);
+        sRegionManager.setMonitorRegion(sConfigs.getUuid());
 
         sIsInitialized = true;
     }
@@ -51,4 +61,14 @@ public class FactoryUtils {
     public static RoverConfigs getConfig(){
         return sConfigs;
     }
+
+    public static RoverVisitManager getVisitManager(){
+        return sVisitManager;
+    }
+
+    public static RoverRegionManager getRegionManager(){
+        return sRegionManager;
+    }
+
+
 }
