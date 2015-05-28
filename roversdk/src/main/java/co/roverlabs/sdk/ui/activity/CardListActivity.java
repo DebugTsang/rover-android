@@ -21,6 +21,7 @@ import co.roverlabs.sdk.events.RoverCardDiscardedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.managers.RoverVisitManager;
 import co.roverlabs.sdk.models.RoverCard;
+import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.ui.CardListAdapter;
 import co.roverlabs.sdk.ui.RecyclerViewOnItemSwipeListener;
 import co.roverlabs.sdk.utilities.RoverUtils;
@@ -60,10 +61,12 @@ public class CardListActivity extends BaseActivity {
         mCardListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mCardListRecyclerView.setLayoutManager(mCardListLayoutManager);
 
-        mLatestVisitId = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getId();
+        RoverVisit visit = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit();
+        mLatestVisitId = visit.getId();
         mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
 
-        if(mLatestCards.isEmpty()) {
+        if(mLatestCards.isEmpty() || !visit.isAlive()) {
+            shouldStartService = false;
             String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
             try {
                 Intent intent = new Intent(this, Class.forName(launchActivityName));
