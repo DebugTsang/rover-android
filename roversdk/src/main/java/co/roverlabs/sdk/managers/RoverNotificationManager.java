@@ -69,7 +69,7 @@ public class RoverNotificationManager {
             n = builder.getNotification();
         }
 
-        //n.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+        n.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
 
         mNotificationManager.notify(id, n);
     }

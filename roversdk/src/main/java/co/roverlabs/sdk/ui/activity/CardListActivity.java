@@ -65,7 +65,7 @@ public class CardListActivity extends BaseActivity {
         mLatestVisitId = visit.getId();
         mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
 
-        if(mLatestCards.isEmpty() || !visit.isAlive()) {
+        if(mLatestCards.isEmpty()) {
             shouldStartService = false;
             String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
             try {
