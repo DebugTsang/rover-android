@@ -125,7 +125,6 @@ public class RoverVisitManager {
 
             @Override
             public void onSaveFailure() {
-                RoverEventBus.getInstance().post(new RoverRangeEvent(RoverConstants.RANGE_ACTION_STOP));
                 Log.d(TAG, "Visit object save failed");
             }
         });

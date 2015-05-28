@@ -10,6 +10,7 @@ import com.estimote.sdk.Region;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
@@ -50,13 +51,14 @@ public class RoverRegionManager {
         }
         return sRegionManagerInstance;
     }
-    
+
     public void setMonitorRegion(String uuid) {
 
         mMonitorRegion = new Region("Monitor Region", uuid, null, null);
     }
     
     public void startMonitoring() {
+        mBeaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(1), 0);
 
         mBeaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
 
@@ -73,6 +75,7 @@ public class RoverRegionManager {
 
                     RoverRegion enteredRegion = new RoverRegion(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
                     RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
+
                 }
             }
 

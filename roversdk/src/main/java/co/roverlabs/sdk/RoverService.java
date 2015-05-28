@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.squareup.otto.Subscribe;
 
+import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
 import co.roverlabs.sdk.ui.activity.BaseActivity;
 import co.roverlabs.sdk.ui.activity.CardListActivity;
@@ -30,7 +31,7 @@ public class RoverService extends Service {
 
 		windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-
+        RoverEventBus.getInstance().register(this);
 
 		roverHead = new ImageView(this);
 
