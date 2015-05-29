@@ -85,7 +85,7 @@ public class RoverService extends Service {
 //                        } else {
                             windowManager.updateViewLayout(roverHead, params);
 //                        }
-                        isMoving = Math.abs((params.y - initialY) + (params.x - initialX)) > 5;
+                        isMoving = Math.abs((params.y - initialY) + (params.x - initialX)) > 15;
 
                         return true;
 
