@@ -42,7 +42,6 @@ public class Rover {
     private ILocationHelper mLocationHelper;
     private VisitManager mVisitManager;
 
-    //logging
     volatile boolean isLoggingEnabled;
 
     private Rover(Context context) {
