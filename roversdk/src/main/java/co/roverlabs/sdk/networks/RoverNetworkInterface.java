@@ -19,10 +19,5 @@ public interface RoverNetworkInterface {
                      @Body RoverObject object,
                      Callback<RoverObjectWrapper> callback);
 
-    @POST("/visits/{id}/events")
-    void sendEvent(@Header("Authorization") String authToken,
-                   @Path("id") String objectId,
-                   @Body RoverEvent event,
-                   Callback<Object> callback);
 }
 
