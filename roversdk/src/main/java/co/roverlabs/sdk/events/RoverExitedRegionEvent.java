@@ -1,6 +1,6 @@
 package co.roverlabs.sdk.events;
 
-import co.roverlabs.sdk.models.RoverRegion;
+import co.roverlabs.sdk.model.RoverRegion;
 
 /**
  * Created by SherryYang on 2015-03-06.

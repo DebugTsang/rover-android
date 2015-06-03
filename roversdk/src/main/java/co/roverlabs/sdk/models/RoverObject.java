@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.models;
+package co.roverlabs.sdk.model;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
-import co.roverlabs.sdk.networks.RoverNetworkManager;
-import co.roverlabs.sdk.networks.RoverNetworkObjectSaveListener;
+import co.roverlabs.sdk.network.RoverNetworkManager;
+import co.roverlabs.sdk.network.RoverNetworkObjectSaveListener;
 
 /**
  * Created by SherryYang on 2015-02-20.

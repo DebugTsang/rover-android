@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Calendar;
 
-import co.roverlabs.sdk.models.RoverTouchPoint;
+import co.roverlabs.sdk.model.RoverTouchPoint;
 
 /**
  * Created by SherryYang on 2015-03-09.

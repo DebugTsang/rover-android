@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Calendar;
 
-import co.roverlabs.sdk.models.RoverCard;
+import co.roverlabs.sdk.model.RoverCard;
 
 /**
  * Created by SherryYang on 2015-05-19.

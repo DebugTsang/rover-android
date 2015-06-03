@@ -15,8 +15,8 @@ import com.squareup.otto.Subscribe;
 
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
-import co.roverlabs.sdk.ui.activity.BaseActivity;
-import co.roverlabs.sdk.ui.activity.CardListActivity;
+import co.roverlabs.sdk.ui.activities.BaseActivity;
+import co.roverlabs.sdk.ui.activities.CardListActivity;
 
 
 public class RoverService extends Service {

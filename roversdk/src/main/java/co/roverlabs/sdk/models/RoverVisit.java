@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.models;
+package co.roverlabs.sdk.model;
 
 import android.os.Build;
 import android.util.Log;

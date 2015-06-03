@@ -1,8 +1,8 @@
-package co.roverlabs.sdk.networks;
+package co.roverlabs.sdk.network;
 
 import co.roverlabs.sdk.events.RoverEvent;
-import co.roverlabs.sdk.models.RoverObject;
-import co.roverlabs.sdk.models.RoverObjectWrapper;
+import co.roverlabs.sdk.model.RoverObject;
+import co.roverlabs.sdk.model.RoverObjectWrapper;
 import retrofit.Callback;
 import retrofit.http.Body;
 import retrofit.http.Header;

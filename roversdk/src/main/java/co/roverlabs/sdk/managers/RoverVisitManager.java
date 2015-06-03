@@ -23,11 +23,11 @@ import co.roverlabs.sdk.events.RoverExitedTouchpointEvent;
 import co.roverlabs.sdk.events.RoverRangeEvent;
 import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
 import co.roverlabs.sdk.listeners.RoverObjectSaveListener;
-import co.roverlabs.sdk.models.RoverCustomer;
-import co.roverlabs.sdk.models.RoverRegion;
-import co.roverlabs.sdk.models.RoverTouchPoint;
-import co.roverlabs.sdk.models.RoverVisit;
-import co.roverlabs.sdk.ui.activity.CardListActivity;
+import co.roverlabs.sdk.model.RoverCustomer;
+import co.roverlabs.sdk.model.RoverRegion;
+import co.roverlabs.sdk.model.RoverTouchPoint;
+import co.roverlabs.sdk.model.RoverVisit;
+import co.roverlabs.sdk.ui.activities.CardListActivity;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 

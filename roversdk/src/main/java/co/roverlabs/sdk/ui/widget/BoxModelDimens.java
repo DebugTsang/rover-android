@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.ui.widget;
+package co.roverlabs.sdk.ui.widgets;
 
 import android.content.Context;
 

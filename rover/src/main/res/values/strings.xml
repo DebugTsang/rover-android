@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Rover</string>
+
+    <string name="app_name">RoverSDK</string>
+    <string name="no_cards_text">There are no cards yet!</string>
+    <string name="new_card_button_text">↑ New Cards!</string>
+
 </resources>

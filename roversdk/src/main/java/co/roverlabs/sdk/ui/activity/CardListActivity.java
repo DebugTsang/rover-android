@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.ui.activity;
+package co.roverlabs.sdk.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,8 +20,8 @@ import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
 import co.roverlabs.sdk.events.RoverCardDiscardedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.managers.RoverVisitManager;
-import co.roverlabs.sdk.models.RoverCard;
-import co.roverlabs.sdk.models.RoverVisit;
+import co.roverlabs.sdk.model.RoverCard;
+import co.roverlabs.sdk.model.RoverVisit;
 import co.roverlabs.sdk.ui.CardListAdapter;
 import co.roverlabs.sdk.ui.RecyclerViewOnItemSwipeListener;
 import co.roverlabs.sdk.utilities.RoverUtils;

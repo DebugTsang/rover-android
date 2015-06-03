@@ -8,7 +8,7 @@ import net.hockeyapp.android.CrashManager;
 
 import co.roverlabs.sdk.Config;
 import co.roverlabs.sdk.Rover;
-import co.roverlabs.sdk.models.Customer;
+import co.roverlabs.sdk.model.Customer;
 
 
 public class DemoActivity extends ActionBarActivity {

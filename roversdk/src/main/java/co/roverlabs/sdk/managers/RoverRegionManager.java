@@ -16,7 +16,7 @@ import co.roverlabs.sdk.events.RoverEnteredRegionEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.events.RoverRangeResultEvent;
-import co.roverlabs.sdk.models.RoverRegion;
+import co.roverlabs.sdk.model.RoverRegion;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import co.roverlabs.sdk.utilities.RoverUtils;
 

@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.ui.activity;
+package co.roverlabs.sdk.ui.activities;
 
 import android.app.Activity;
 import android.content.Intent;

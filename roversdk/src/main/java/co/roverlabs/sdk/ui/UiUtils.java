@@ -29,9 +29,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import co.roverlabs.sdk.ui.widget.Border;
-import co.roverlabs.sdk.ui.widget.BorderedView;
-import co.roverlabs.sdk.ui.widget.BoxModelDimens;
+import co.roverlabs.sdk.ui.widgets.Border;
+import co.roverlabs.sdk.ui.widgets.BorderedView;
+import co.roverlabs.sdk.ui.widgets.BoxModelDimens;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**

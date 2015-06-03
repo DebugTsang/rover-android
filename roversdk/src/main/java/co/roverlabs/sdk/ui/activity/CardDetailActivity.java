@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.ui.activity;
+package co.roverlabs.sdk.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,11 +13,11 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import co.roverlabs.sdk.R;
-import co.roverlabs.sdk.models.RoverBlock;
-import co.roverlabs.sdk.models.RoverView;
-import co.roverlabs.sdk.ui.widget.Border;
-import co.roverlabs.sdk.ui.widget.BorderedView;
-import co.roverlabs.sdk.ui.widget.BoxModelDimens;
+import co.roverlabs.sdk.model.RoverBlock;
+import co.roverlabs.sdk.model.RoverView;
+import co.roverlabs.sdk.ui.widgets.Border;
+import co.roverlabs.sdk.ui.widgets.BorderedView;
+import co.roverlabs.sdk.ui.widgets.BoxModelDimens;
 import co.roverlabs.sdk.ui.ImageLoader;
 import co.roverlabs.sdk.ui.TextStyle;
 import co.roverlabs.sdk.ui.UiUtils;

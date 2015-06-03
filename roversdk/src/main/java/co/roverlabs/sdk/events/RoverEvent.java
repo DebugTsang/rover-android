@@ -5,8 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 import co.roverlabs.sdk.listeners.RoverEventSaveListener;
-import co.roverlabs.sdk.networks.RoverNetworkEventSaveListener;
-import co.roverlabs.sdk.networks.RoverNetworkManager;
+import co.roverlabs.sdk.network.RoverNetworkEventSaveListener;
+import co.roverlabs.sdk.network.RoverNetworkManager;
 import retrofit.client.Response;
 
 /**

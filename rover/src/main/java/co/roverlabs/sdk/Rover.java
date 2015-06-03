@@ -19,8 +19,8 @@ package co.roverlabs.sdk;
 import android.content.Context;
 import android.util.Log;
 
-import co.roverlabs.sdk.models.Customer;
-import co.roverlabs.sdk.utils.SharedPrefUtils;
+import co.roverlabs.sdk.model.Customer;
+import co.roverlabs.sdk.model.TouchPoint;
 
 /**
  * Beacon discovery and card view rendering manager
@@ -39,16 +39,18 @@ public class Rover {
     Customer customer;
 
     //beacon monitoring management
-    private ILocationHelper mLocationHelper;
-    private VisitManager mVisitManager;
+    private CoreHelper mCoreHelper;
+    private UiHelper mUiManager;
 
     volatile boolean isLoggingEnabled;
 
     private Rover(Context context) {
         this.context = context.getApplicationContext();
-        mVisitManager = new VisitManager(this);
-        mLocationHelper = FactoryUtils.getDefaultLocationHelper(context, mVisitManager.handler);
+        mCoreHelper = new CoreHelper(this);
+        mUiManager = new UiHelper(this);
 
+        Factory.setUiHelper(mUiManager);
+        Factory.setCoreHelper(mCoreHelper);
     }
     public static Rover getInstance(Context context) {
         if(singleton == null) {
@@ -72,10 +74,7 @@ public class Rover {
         setConfig(config);
 
         //restart monitoring as the UUID might have been changed in the new config
-        if (mLocationHelper != null && mLocationHelper.isMonitoringStarted()){
-            stopMonitoring();
-            startMonitoring();
-        }
+        mCoreHelper.reStartMonitoring();
 
         return this;
     }
@@ -85,15 +84,33 @@ public class Rover {
      */
     public void startMonitoring() {
         checkConfig(config);
-        mLocationHelper.startMonitoring(config.getUuid());
+        mCoreHelper.startMonitoring();
     }
 
     /**
      * Starts searching for beacons in the background
      */
     public void stopMonitoring() {
-        mLocationHelper.stopMonitoring();
+        mCoreHelper.stopMonitoring();
     }
+
+
+    /**
+     * Methods for handling beacon events
+     */
+
+    /**
+     * Notifies the user about the touchpoint and prepares the ui
+     *
+     * @param touchPoint
+     */
+    void onEnterTouchPoint(TouchPoint touchPoint){
+
+        mUiManager.prepareViews();
+
+        mUiManager.showNotificationForTouchPoint(touchPoint);
+    }
+
 
     /**
      * makes sure the config is complete and throws RuntimeException otherwise
@@ -102,6 +119,7 @@ public class Rover {
      * @param config
      */
     private void checkConfig(Config config){
+
         if (config == null){
             Log.e(TAG, "Unable to proceed with null config");
             throw new RuntimeException("Rover config cannot be null");
@@ -122,6 +140,6 @@ public class Rover {
      */
     private void setConfig(Config config){
         this.config = config;
-        SharedPrefUtils.writeObjectToSharedPrefs(context, config);
+        Factory.setConfig(context, config);
     }
 }

@@ -1,4 +1,4 @@
-package co.roverlabs.sdk.networks;
+package co.roverlabs.sdk.network;
 
 import android.util.Log;
 
@@ -6,8 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import co.roverlabs.sdk.events.RoverEvent;
-import co.roverlabs.sdk.models.RoverObject;
-import co.roverlabs.sdk.models.RoverObjectWrapper;
+import co.roverlabs.sdk.model.RoverObject;
+import co.roverlabs.sdk.model.RoverObjectWrapper;
 import co.roverlabs.sdk.utilities.RoverConstants;
 import retrofit.Callback;
 import retrofit.RestAdapter;

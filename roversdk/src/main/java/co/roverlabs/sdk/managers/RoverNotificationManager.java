@@ -9,7 +9,7 @@ import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import co.roverlabs.sdk.events.RoverEventBus;
-import co.roverlabs.sdk.ui.activity.CardListActivity;
+import co.roverlabs.sdk.ui.activities.CardListActivity;
 
 /**
  * Created by SherryYang on 2015-01-26.

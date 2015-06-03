@@ -2,7 +2,7 @@ package co.roverlabs.sdk.ui;
 
 import android.widget.ImageView;
 
-import co.roverlabs.sdk.models.RoverBlock;
+import co.roverlabs.sdk.model.RoverBlock;
 
 /**
  * Created by arsent on 15-05-22.

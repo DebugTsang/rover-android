@@ -1,6 +1,6 @@
-package co.roverlabs.sdk.networks;
+package co.roverlabs.sdk.network;
 
-import co.roverlabs.sdk.models.RoverObject;
+import co.roverlabs.sdk.model.RoverObject;
 
 /**
  * Created by SherryYang on 2015-02-26.

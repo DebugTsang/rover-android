@@ -17,9 +17,9 @@ import com.squareup.picasso.Target;
 import java.util.List;
 
 import co.roverlabs.sdk.managers.RoverVisitManager;
-import co.roverlabs.sdk.models.RoverBlock;
-import co.roverlabs.sdk.models.RoverCard;
-import co.roverlabs.sdk.models.RoverView;
+import co.roverlabs.sdk.model.RoverBlock;
+import co.roverlabs.sdk.model.RoverCard;
+import co.roverlabs.sdk.model.RoverView;
 import co.roverlabs.sdk.utilities.RoverConstants;
 
 /**

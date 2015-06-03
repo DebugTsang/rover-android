@@ -2,7 +2,7 @@ package co.roverlabs.sdk.events;
 
 import java.util.Calendar;
 
-import co.roverlabs.sdk.models.RoverVisit;
+import co.roverlabs.sdk.model.RoverVisit;
 
 /**
  * Created by SherryYang on 2015-03-25.
