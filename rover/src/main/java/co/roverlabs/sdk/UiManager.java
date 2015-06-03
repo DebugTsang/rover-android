@@ -6,20 +6,21 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-
-import co.roverlabs.sdk.model.TouchPoint;
-import co.roverlabs.sdk.ui.activities.CardListActivity;
-
 import android.support.v4.app.NotificationCompat;
+
+import java.util.List;
+
+import co.roverlabs.sdk.model.Touchpoint;
+import co.roverlabs.sdk.ui.activities.CardListActivity;
 /**
  * Created by ars on 15-06-03.
  */
-public class UiHelper {
+public class UiManager {
     final Rover rover;
 
     private NotificationManager mNotificationManager;
 
-    public UiHelper(Rover rover){
+    UiManager(Rover rover){
         this.rover = rover;
         mNotificationManager = (NotificationManager)rover.context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
@@ -28,25 +29,28 @@ public class UiHelper {
         Factory.getDefaultImageLoader(rover.context).fetchAll();
     }
 
-    void showNotificationForTouchPoint(TouchPoint touchPoint){
+    void showNotificationForTouchPoint(List<Touchpoint> touchpoints, Config config){
+        //TODO: show notifications for all touchpoints
+        Touchpoint touchpoint = touchpoints.get(0);
 
         //prepare notification title and message
-        String touchPointId = touchPoint.getId();
+        String touchPointId = touchpoint.getId();
 
         String numberOnlyId = touchPointId.replaceAll("[^0-9]", "");
         numberOnlyId = numberOnlyId.substring(Math.max(0, numberOnlyId.length() - 7));
 
         int notifiactionId = Integer.valueOf(numberOnlyId);
-        String title = touchPoint.getTitle();
-        String message = touchPoint.getNotification();
+        String title = touchpoint.getTitle();
+        String message = touchpoint.getNotification();
 
         //prepare the icon
-        int headIcon = Factory.getConfig().getRoverHeadIconId();
-        int notificationIcon = Factory.getConfig().getNotificationIconId();
+        int headIcon = config.getRoverHeadIconId();
+        int notificationIcon = config.getNotificationIconId();
 
         //start the notification
         Intent cardListIntent = new Intent(rover.context, CardListActivity.class);
         cardListIntent.setAction(Intent.ACTION_MAIN);
+
         cardListIntent.putExtra(CardListActivity.EXTRA_HEAD_ICON_ID, headIcon);
         cardListIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 

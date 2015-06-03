@@ -37,15 +37,13 @@ import co.roverlabs.sdk.ui.UiUtils;
 public class CardListAdapter extends RecyclerView.Adapter<CardListAdapter.CardViewHolder> {
 
     public static final String TAG = CardListAdapter.class.getSimpleName();
-    private String mVisitId;
-    private List<Card> mCards;
+    private List<Card>  mCards;
     private Context mContext;
     private Activity mActivity;
     private ImageLoader mImageLoader;
 
-    public CardListAdapter(String visitId, List<Card> cards, Activity activity) {
+    public CardListAdapter(List<Card> cards, Activity activity) {
 
-        mVisitId = visitId;
         mCards = cards;
         mContext = activity.getApplicationContext();
         mActivity = activity;

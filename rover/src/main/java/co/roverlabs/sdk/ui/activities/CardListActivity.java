@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 
+import java.util.Arrays;
 import java.util.List;
 
 import co.roverlabs.sdk.R;
@@ -19,12 +20,12 @@ import co.roverlabs.sdk.ui.RecyclerViewOnItemSwipeListener;
 public class CardListActivity extends BaseActivity {
 
     public static final String TAG = CardListActivity.class.getSimpleName();
+    public static final String EXTRA_KEY_CARDS = "co.roverlabs.sdk.ui.activities.CardListActivity:EXTRA_KEY_CARDS";
 
     private RecyclerView mCardListRecyclerView;
     private LinearLayoutManager mCardListLayoutManager;
     private CardListAdapter mCardListAdapter;
-    private String mLatestVisitId;
-    private List<Card> mLatestCards;
+    private List<Card> mCards;
     private Button mNewCardButton;
     private Animation mSlideIn;
     private Animation mSlidOut;
@@ -37,7 +38,13 @@ public class CardListActivity extends BaseActivity {
 
         //RoverEventBus.getInstance().register(this);
         mHeadIconId = getIntent().getIntExtra(EXTRA_HEAD_ICON_ID, -1);
+        Card[] cards = (Card[])getIntent().getParcelableArrayExtra(EXTRA_KEY_CARDS);
+        mCards = Arrays.asList(cards);
 
+        //we have nothing to do if there are no cards
+        if(mCards.size() == 0) {
+            finish();
+        }
 
         mCardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
         mNewCardButton = (Button)findViewById(R.id.new_card_button);
@@ -48,26 +55,9 @@ public class CardListActivity extends BaseActivity {
         mCardListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mCardListRecyclerView.setLayoutManager(mCardListLayoutManager);
 
-//        Visit visit = Factory.getCoreHelper().getLatestVisit();
-//        mLatestVisitId = visit.getId();
-//        mLatestCards = VisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
-//
-//        if(mLatestCards.isEmpty()) {
-//            String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
-//            try {
-//                Intent intent = new Intent(this, Class.forName(launchActivityName));
-//                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-//                startActivity(intent);
-//            }
-//            catch (ClassNotFoundException e) {
-//                Log.e(TAG, "Cannot launch application - cannot find launch activity name", e);
-//            }
-//            finish();
-//        }
+        mCardListAdapter = new CardListAdapter(mCards, this);
 
-        mCardListAdapter = new CardListAdapter(mLatestVisitId, mLatestCards, this);
         mCardListRecyclerView.setAdapter(mCardListAdapter);
-
         mCardListRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -98,15 +88,15 @@ public class CardListActivity extends BaseActivity {
                             public void onDismissedBySwipeLeft(RecyclerView recyclerView, int[] reverseSortedPositions) {
 
                                 for(int position : reverseSortedPositions) {
-                                    //RoverEventBus.getInstance().post(new CardDiscardedEvent(mLatestVisitId, mLatestCards.get(position).getId()));
-                                    mLatestCards.get(position).setDismissed(true);
-                                    mLatestCards.remove(position);
+                                    //RoverEventBus.getInstance().post(new CardDiscardedEvent(mLatestVisitId, mCards.get(position).getId()));
+                                    mCards.get(position).setDismissed(true);
+                                    mCards.remove(position);
                                     mCardListAdapter.notifyItemRemoved(position);
                                 }
 
                                 mCardListAdapter.notifyDataSetChanged();
 
-                                if(mLatestCards.isEmpty()) {
+                                if(mCards.isEmpty()) {
                                     finish();
                                 }
                             }
@@ -115,15 +105,15 @@ public class CardListActivity extends BaseActivity {
                             public void onDismissedBySwipeRight(RecyclerView recyclerView, int[] reverseSortedPositions) {
 
                                 for(int position : reverseSortedPositions) {
-                                    //RoverEventBus.getInstance().post(new CardDiscardedEvent(mLatestVisitId, mLatestCards.get(position).getId()));
-                                    mLatestCards.get(position).setDismissed(true);
-                                    mLatestCards.remove(position);
+                                    //RoverEventBus.getInstance().post(new CardDiscardedEvent(mLatestVisitId, mCards.get(position).getId()));
+                                    mCards.get(position).setDismissed(true);
+                                    mCards.remove(position);
                                     mCardListAdapter.notifyItemRemoved(position);
                                 }
 
                                 mCardListAdapter.notifyDataSetChanged();
 
-                                if(mLatestCards.isEmpty()) {
+                                if(mCards.isEmpty()) {
                                     finish();
                                 }
                             }
@@ -142,15 +132,6 @@ public class CardListActivity extends BaseActivity {
             }
         });
     }
-
-//    @Subscribe
-//    public void onCardDelivered(CardDeliveredEvent event) {
-//
-//        mLatestCards.add(0, event.getCard());
-//        mCardListAdapter.notifyItemInserted(0);
-//        mNewCardButton.setVisibility(View.VISIBLE);
-//        mNewCardButton.startAnimation(mSlideIn);
-//    }
 
     @Override
     protected void onStop() {

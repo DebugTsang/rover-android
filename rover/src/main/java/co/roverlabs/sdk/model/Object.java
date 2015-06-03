@@ -35,30 +35,7 @@ public abstract class Object {
     public void setId(String id) { mId = id; }
     public void setMeta(Map<String, java.lang.Object> meta) { mMeta = meta; }
 
-    
-//    public void save(final RoverObjectSaveListener objectSaveListener) {
-//        // instead of this, broadcast event: RoverVisitNeedsValidation -> THIS ()RoverVisit)
-//        final Object self = this;
-//
-//        mNetworkManager.sendObjectSaveRequest(this, new RoverNetworkObjectSaveListener() {
-//
-//            @Override
-//            public void onNetworkCallSuccess(Object object) {
-//
-//                if (object != null) {
-//                    self.update(object);
-//                }
-//                objectSaveListener.onSaveSuccess();
-//            }
-//
-//            @Override
-//            public void onNetworkCallFailure() {
-//
-//                objectSaveListener.onSaveFailure();
-//            }
-//        });
-//    }
-    
+
     public void update(Object object) {
         
         mId = object.getId();

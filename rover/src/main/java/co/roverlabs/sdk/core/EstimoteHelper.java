@@ -1,6 +1,5 @@
 package co.roverlabs.sdk.core;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
@@ -15,23 +14,24 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by arsent on 15-06-01.
  */
-public class EstimoteManager implements ILocationManager {
+public class EstimoteHelper implements IBeaconHelper {
 
-    static final String TAG = EstimoteManager.class.getSimpleName();
+    static final String TAG = EstimoteHelper.class.getSimpleName();
 
     volatile boolean isLoggingEnabled = false;
 
-    final Context context;
+    final VisitManager visitManager;
+
     private BeaconManager mEstimoteManager;
     private Handler mHandler;
 
     volatile boolean isMonitoringStarted = false;
 
-    public EstimoteManager(Context context, Handler handler){
-        this.context = context;
-        this.mHandler = handler;
+    public EstimoteHelper(VisitManager visitManager){
+        this.visitManager = visitManager;
 
-        mEstimoteManager = new BeaconManager(context);
+        mEstimoteManager = new BeaconManager(visitManager.context);
+
         mEstimoteManager.setRangingListener(rangingListener);
         mEstimoteManager.setMonitoringListener(monitoringListener);
 
@@ -125,7 +125,7 @@ public class EstimoteManager implements ILocationManager {
                 co.roverlabs.sdk.model.Region rangingRegion = new co.roverlabs.sdk.model.Region(beacon.getProximityUUID(), beacon.getMajor(), null);
 
                 //let the visitmanager know that we entered a region
-                mHandler.sendMessage(mHandler.obtainMessage(ENTERED_REGION, rangingRegion));
+                visitManager.enteredRegion(rangingRegion);
 
                 if (isLoggingEnabled) {
                     Log.d(TAG, "Region entered - minor " + beacon.getMinor());

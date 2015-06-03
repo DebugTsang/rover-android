@@ -11,14 +11,14 @@ public class ObjectWrapper {
 
     //JSON members
     @SerializedName("visit") private Visit mVisit;
-    @SerializedName("touchpoint") private TouchPoint mTouchpoint;
+    @SerializedName("touchpoint") private Touchpoint mTouchpoint;
     
     //Local members
     public static final String TAG = ObjectWrapper.class.getSimpleName();
 
     //Getters
     public Visit getVisit() { return mVisit; }
-    public TouchPoint getTouchpoint() { return mTouchpoint; }
+    public Touchpoint getTouchpoint() { return mTouchpoint; }
     
     public Object get() {
 
@@ -33,7 +33,7 @@ public class ObjectWrapper {
 
     //Setters
     public void setVisit(Visit visit) { mVisit = visit; }
-    public void setTouchpoint(TouchPoint touchpoint) { mTouchpoint = touchpoint; }
+    public void setTouchpoint(Touchpoint touchpoint) { mTouchpoint = touchpoint; }
     
     public void set(Object object) {
 
@@ -46,7 +46,7 @@ public class ObjectWrapper {
                 break;
 
             case "touchpoint":
-                setTouchpoint((TouchPoint)object);
+                setTouchpoint((Touchpoint)object);
                 break;
 
             default:

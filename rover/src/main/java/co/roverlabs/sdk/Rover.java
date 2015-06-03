@@ -19,8 +19,15 @@ package co.roverlabs.sdk;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.List;
+
+import co.roverlabs.sdk.core.VisitManager;
 import co.roverlabs.sdk.model.Customer;
-import co.roverlabs.sdk.model.TouchPoint;
+import co.roverlabs.sdk.model.Location;
+import co.roverlabs.sdk.model.Touchpoint;
+import co.roverlabs.sdk.model.Visit;
+import co.roverlabs.sdk.network.listeners.RoverObjectSaveListener;
+import co.roverlabs.sdk.util.SharedPrefUtils;
 
 /**
  * Beacon discovery and card view rendering manager
@@ -34,23 +41,24 @@ public class Rover {
     static final String TAG = "Rover";
     private static Rover singleton;
 
+    //package accessible so helpers can get access and use it
     Config config;
     final Context context;
     Customer customer;
 
-    //beacon monitoring management
-    private CoreHelper mCoreHelper;
-    private UiHelper mUiManager;
+    //managers
+    private VisitManager mVisitManager;
+    private UiManager mUiManager;
 
     volatile boolean isLoggingEnabled;
 
     private Rover(Context context) {
         this.context = context.getApplicationContext();
-        mCoreHelper = new CoreHelper(this);
-        mUiManager = new UiHelper(this);
+        mVisitManager = new VisitManager(context);
+        mVisitManager.setVisitListener(new RoverVisitListener());
 
-        Factory.setUiHelper(mUiManager);
-        Factory.setCoreHelper(mCoreHelper);
+        mUiManager = new UiManager(this);
+
     }
     public static Rover getInstance(Context context) {
         if(singleton == null) {
@@ -74,7 +82,7 @@ public class Rover {
         setConfig(config);
 
         //restart monitoring as the UUID might have been changed in the new config
-        mCoreHelper.reStartMonitoring();
+        mVisitManager.reStartMonitoring(config.getUuid());
 
         return this;
     }
@@ -84,31 +92,14 @@ public class Rover {
      */
     public void startMonitoring() {
         checkConfig(config);
-        mCoreHelper.startMonitoring();
+        mVisitManager.startMonitoring(config.getUuid());
     }
 
     /**
      * Starts searching for beacons in the background
      */
     public void stopMonitoring() {
-        mCoreHelper.stopMonitoring();
-    }
-
-
-    /**
-     * Methods for handling beacon events
-     */
-
-    /**
-     * Notifies the user about the touchpoint and prepares the ui
-     *
-     * @param touchPoint
-     */
-    void onEnterTouchPoint(TouchPoint touchPoint){
-
-        mUiManager.prepareViews();
-
-        mUiManager.showNotificationForTouchPoint(touchPoint);
+        mVisitManager.stopMonitoring();
     }
 
 
@@ -140,6 +131,59 @@ public class Rover {
      */
     private void setConfig(Config config){
         this.config = config;
-        Factory.setConfig(context, config);
+    }
+
+
+
+    /**
+     * Listen for visit state changes and dispatch to ui or network accordingly
+     */
+    class RoverVisitListener implements VisitManager.IVisitListener{
+
+        @Override
+        public boolean shouldCreateVisit(Visit visit) {
+            return false;
+        }
+
+        @Override
+        public void onEnterLocation(final Visit visit) {
+
+            NetworkManager.save(new RoverObjectSaveListener() {
+                @Override
+                public void onSaveSuccess() {
+
+                    SharedPrefUtils.writeObjectToSharedPrefs(context, visit);
+                }
+
+                @Override
+                public void onSaveFailure() {
+
+                }
+            }, visit);
+
+        }
+
+        @Override
+        public void onPotentiallyExitLocation(Location location) {
+
+        }
+
+        @Override
+        public void onExpireVisit(Visit visit) {
+
+        }
+
+        @Override
+        public void onEnterTouchpoint(List<Touchpoint> touchPoints) {
+            mUiManager.prepareViews();
+
+            //TODO: make sure to cover all touchpoints
+            mUiManager.showNotificationForTouchPoint(touchPoints, config);
+        }
+
+        @Override
+        public void onExitTouchpoints(List<Touchpoint> touchPoints) {
+
+        }
     }
 }

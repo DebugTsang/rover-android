@@ -8,7 +8,7 @@ import co.roverlabs.sdk.network.listeners.*;
 /**
  * Created by ars on 15-06-02.
  */
-public class NetworkHelper {
+public class NetworkManager {
     public static void save(final RoverObjectSaveListener objectSaveListener, Object object) {
         // instead of this, broadcast event: RoverVisitNeedsValidation -> THIS ()RoverVisit)
 

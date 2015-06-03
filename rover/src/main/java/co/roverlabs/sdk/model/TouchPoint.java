@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by SherryYang on 2015-02-20.
  */
-public class TouchPoint extends Object {
+public class Touchpoint extends Object {
     
     //JSON members
     @SerializedName("title") private String mTitle;
@@ -17,7 +17,7 @@ public class TouchPoint extends Object {
     @SerializedName("cards") private List<Card> mCards;
 
     //Constructor
-    public TouchPoint() { mObjectName = "touchpoint"; }
+    public Touchpoint() { mObjectName = "touchpoint"; }
     
     //Getters
     public String getTitle() { return mTitle; }
@@ -46,7 +46,7 @@ public class TouchPoint extends Object {
             return false;
         }
 
-        TouchPoint touchpoint = (TouchPoint)o;
+        Touchpoint touchpoint = (Touchpoint)o;
 
         if(mId != null ? !mId.equals(touchpoint.getId()) : touchpoint.getId() != null) {
             return false;

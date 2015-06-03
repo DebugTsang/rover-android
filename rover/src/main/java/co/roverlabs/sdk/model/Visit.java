@@ -23,7 +23,7 @@ public class Visit extends Object {
     @SerializedName("organization") private Organization mOrganization;
     @SerializedName("location") private Location mLocation;
     @SerializedName("customer") private Customer mCustomer;
-    @SerializedName("touchpoints") private List<TouchPoint> mTouchpoints;
+    @SerializedName("touchpoints") private List<Touchpoint> mTouchpoints;
     @SerializedName("uuid") private String mUuid;
     @SerializedName("majorNumber") private Integer mMajor;
     @SerializedName("device") private String mDevice;
@@ -37,8 +37,8 @@ public class Visit extends Object {
     public static final String TAG = Visit.class.getSimpleName();
     private Region mRegion;
     private Calendar mLastBeaconDetectionTime;
-    private List<TouchPoint> mCurrentTouchpoints;
-    private List<TouchPoint> mVisitedTouchpoints;
+    private List<Touchpoint> mCurrentTouchpoints;
+    private List<Touchpoint> mVisitedTouchpoints;
     
     //Constructor
     public Visit() {
@@ -57,7 +57,7 @@ public class Visit extends Object {
     public Organization getOrganization() { return mOrganization; }
     public Location getLocation() { return mLocation; }
     public Customer getCustomer() { return mCustomer; }
-    public List<TouchPoint> getTouchpoints() { return mTouchpoints; }
+    public List<Touchpoint> getTouchpoints() { return mTouchpoints; }
     public String getUuid() { return mUuid; }
     public Integer getMajor() { return mMajor; }
     public String getDevice() { return mDevice; }
@@ -67,15 +67,15 @@ public class Visit extends Object {
     public Date getTimeStamp() { return mTimeStamp; }
     public Region getRegion() { return mRegion; }
     public Calendar getLastBeaconDetectionTime() { return mLastBeaconDetectionTime; }
-    public List<TouchPoint> getCurrentTouchpoints() { return mCurrentTouchpoints; }
-    public List<TouchPoint> getVisitedTouchpoints() { return mVisitedTouchpoints; }
+    public List<Touchpoint> getCurrentTouchpoints() { return mCurrentTouchpoints; }
+    public List<Touchpoint> getVisitedTouchpoints() { return mVisitedTouchpoints; }
     public boolean getIsSimulation() { return mIsSimulation; }
 
-    public List<TouchPoint> getWildCardTouchpoints() {
+    public List<Touchpoint> getWildCardTouchpoints() {
 
-        List<TouchPoint> wildCardTouchpoints = new ArrayList<>();
+        List<Touchpoint> wildCardTouchpoints = new ArrayList<>();
         if(mTouchpoints != null) {
-            for(TouchPoint touchpoint : mTouchpoints) {
+            for(Touchpoint touchpoint : mTouchpoints) {
                 if(touchpoint.getTrigger().equals(Constants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
                     wildCardTouchpoints.add(touchpoint);
                 }
@@ -84,10 +84,10 @@ public class Visit extends Object {
         return wildCardTouchpoints;
     }
     
-    public TouchPoint getTouchpoint(Region region) {
+    public Touchpoint getTouchpoint(Region region) {
 
         if(mTouchpoints != null) {
-            for(TouchPoint touchpoint : mTouchpoints) {
+            for(Touchpoint touchpoint : mTouchpoints) {
                 if(touchpoint.getMinor() != null) {
                     if ((touchpoint.getMinor()).equals(region.getMinor())) {
                         Log.d(TAG, "Minor " + region.getMinor() + " corresponds to a valid touchpoint");
@@ -104,7 +104,7 @@ public class Visit extends Object {
 
         List<Card> accumulatedCards = new ArrayList<>();
         if(mVisitedTouchpoints != null) {
-            for(TouchPoint touchpoint : mVisitedTouchpoints) {
+            for(Touchpoint touchpoint : mVisitedTouchpoints) {
                 if(touchpoint.getCards() != null) {
                     for(Card card : touchpoint.getCards()) {
                         if(!card.hasBeenDismissed()) {
@@ -122,7 +122,7 @@ public class Visit extends Object {
     public void setOrganization(Organization organization) { mOrganization = organization; }
     public void setLocation(Location location) { mLocation = location; }
     public void setCustomer(Customer customer) { mCustomer = customer; }
-    public void setTouchpoints(List<TouchPoint> touchpoints) { mTouchpoints = touchpoints; }
+    public void setTouchpoints(List<Touchpoint> touchpoints) { mTouchpoints = touchpoints; }
     public void setUuid(String uuid) { mUuid = uuid; }
     public void setMajor(Integer major) { mMajor = major; }
     public void setDevice(String device) { mDevice = device; }
@@ -134,7 +134,7 @@ public class Visit extends Object {
     public void setLastBeaconDetectionTime(Calendar lastBeaconDetectionTime) { mLastBeaconDetectionTime = lastBeaconDetectionTime; }
     public void setSimulation(boolean isSimulation) { mIsSimulation = isSimulation; }
     
-    public void addToCurrentTouchpoints(TouchPoint touchpoint) {
+    public void addToCurrentTouchpoints(Touchpoint touchpoint) {
 
         mCurrentTouchpoints.add(touchpoint);
         if(!mVisitedTouchpoints.contains(touchpoint)) {
@@ -148,7 +148,7 @@ public class Visit extends Object {
         }
     }
 
-    public void removeFromCurrentTouchpoints(TouchPoint touchpoint) {
+    public void removeFromCurrentTouchpoints(Touchpoint touchpoint) {
 
         mCurrentTouchpoints.remove(touchpoint);
     }
@@ -160,7 +160,7 @@ public class Visit extends Object {
 
     public boolean isInSubRegion(Region region) {
 
-        for(TouchPoint touchpoint : mCurrentTouchpoints) {
+        for(Touchpoint touchpoint : mCurrentTouchpoints) {
             if(touchpoint.getMinor() != null) {
                 if(touchpoint.getMinor().equals(region.getMinor())) {
                     return true;
@@ -180,7 +180,7 @@ public class Visit extends Object {
 
     public boolean currentlyContainsWildCardTouchpoints() {
 
-        for(TouchPoint touchpoint : mCurrentTouchpoints) {
+        for(Touchpoint touchpoint : mCurrentTouchpoints) {
             if(touchpoint.getTrigger().equals(Constants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
                 return true;
             }
