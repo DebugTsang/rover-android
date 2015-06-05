@@ -1,10 +1,8 @@
 package co.roverlabs.sdk.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,7 +13,6 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 import co.roverlabs.sdk.R;
-import co.roverlabs.sdk.RoverConfigs;
 import co.roverlabs.sdk.events.RoverCardDeliveredEvent;
 import co.roverlabs.sdk.events.RoverCardDiscardedEvent;
 import co.roverlabs.sdk.events.RoverEventBus;
@@ -24,7 +21,6 @@ import co.roverlabs.sdk.models.RoverCard;
 import co.roverlabs.sdk.models.RoverVisit;
 import co.roverlabs.sdk.ui.CardListAdapter;
 import co.roverlabs.sdk.ui.RecyclerViewOnItemSwipeListener;
-import co.roverlabs.sdk.utilities.RoverUtils;
 
 /**
  * Created by SherryYang on 2015-03-03.
@@ -46,7 +42,7 @@ public class CardListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.card_list);
+        setContentView(R.layout.roverlabs_card_list);
 
         RoverEventBus.getInstance().register(this);
         mHeadIconId = getIntent().getIntExtra(EXTRA_HEAD_ICON_ID, -1);
@@ -54,8 +50,8 @@ public class CardListActivity extends BaseActivity {
 
         mCardListRecyclerView = (RecyclerView)findViewById(R.id.card_list_recycler_view);
         mNewCardButton = (Button)findViewById(R.id.new_card_button);
-        mSlideIn = AnimationUtils.loadAnimation(this, R.anim.button_slide_in);
-        mSlidOut = AnimationUtils.loadAnimation(this, R.anim.button_slide_out);
+        mSlideIn = AnimationUtils.loadAnimation(this, R.anim.roverlabs_button_slide_in);
+        mSlidOut = AnimationUtils.loadAnimation(this, R.anim.roverlabs_button_slide_out);
 
         mCardListLayoutManager = new LinearLayoutManager(this);
         mCardListLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -66,15 +62,15 @@ public class CardListActivity extends BaseActivity {
         mLatestCards = RoverVisitManager.getInstance(getApplicationContext()).getLatestVisit().getAccumulatedCards();
 
         if(mLatestCards.isEmpty()) {
-            String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
-            try {
-                Intent intent = new Intent(this, Class.forName(launchActivityName));
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(intent);
-            }
-            catch (ClassNotFoundException e) {
-                Log.e(TAG, "Cannot launch application - cannot find launch activity name", e);
-            }
+//            String launchActivityName = ((RoverConfigs)RoverUtils.readObjectFromSharedPrefs(getApplicationContext(), RoverConfigs.class, null)).getLaunchActivityName();
+//            try {
+//                Intent intent = new Intent(this, Class.forName(launchActivityName));
+//                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+//                startActivity(intent);
+//            }
+//            catch (ClassNotFoundException e) {
+//                Log.e(TAG, "Cannot launch application - cannot find launch activity name", e);
+//            }
             finish();
         }
 

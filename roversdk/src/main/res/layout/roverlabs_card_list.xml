@@ -22,7 +22,7 @@
         android:text="@string/new_card_button_text"
         android:layout_gravity="center_horizontal|top"
         android:visibility="invisible"
-        android:background="@drawable/new_cards_pill"
+        android:background="@drawable/roverlabs_new_cards_pill"
         android:textSize="14sp"
         android:textColor="@android:color/white"
         android:paddingLeft="20dp"

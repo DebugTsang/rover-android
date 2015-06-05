@@ -120,7 +120,7 @@ public class RoverService extends Service {
         if (headIconId > 0){
             roverHead.setImageResource(headIconId);
         }else{
-            roverHead.setBackgroundResource(R.drawable.rover_head_appear);
+            roverHead.setBackgroundResource(R.drawable.roverlabs_head_appear);
             roverHead.setVisibility(View.VISIBLE);
             AnimationDrawable headAnimation = (AnimationDrawable) roverHead.getBackground();
             headAnimation.start();

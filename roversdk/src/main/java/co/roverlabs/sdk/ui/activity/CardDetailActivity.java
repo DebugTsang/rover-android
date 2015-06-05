@@ -72,7 +72,7 @@ public class CardDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.card_detail);
+        setContentView(R.layout.roverlabs_card_detail);
 
         mImageLoader = Factory.getDefaultImageLoader(getApplicationContext());
 

@@ -22,6 +22,7 @@ import co.roverlabs.sdk.events.RoverExitedLocationEvent;
 import co.roverlabs.sdk.events.RoverExitedRegionEvent;
 import co.roverlabs.sdk.events.RoverExitedTouchpointEvent;
 import co.roverlabs.sdk.events.RoverRangeEvent;
+import co.roverlabs.sdk.events.RoverVisitExpiredEvent;
 import co.roverlabs.sdk.listeners.RoverEventSaveListener;
 import co.roverlabs.sdk.managers.RoverNotificationManager;
 import co.roverlabs.sdk.managers.RoverRegionManager;
@@ -159,6 +160,10 @@ public class Rover {
         return mConfigs;
     }
 
+    public void stopHeadService(){
+        RoverEventBus.getInstance().post(new RoverVisitExpiredEvent());
+    }
+
     public RoverCustomer getCustomer() {
 
         mCustomer = (RoverCustomer)RoverUtils.readObjectFromSharedPrefs(mContext, RoverCustomer.class, null);
@@ -218,6 +223,8 @@ public class Rover {
     //TODO: Remove, used for testing
     public void showCards() {
 
+        Log.d(TAG, "Monitoring was already started by Rover - do nothing");
+
         if(mVisitManager != null) {
             mVisitManager.showCards();
         }
@@ -230,6 +237,9 @@ public class Rover {
     public void simulate() {
 
         stopMonitoring();
+
+        Log.d(TAG, "Simulating");
+
         RoverRegion enteredRegion = new RoverRegion("7931D3AA-299B-4A12-9FCC-D66F2C5D2462", 18347, 11111);
         RoverEventBus.getInstance().post(new RoverEnteredRegionEvent(enteredRegion));
         RoverRegion exitedMainRegion = new RoverRegion("7931D3AA-299B-4A12-9FCC-D66F2C5D2462", null, null);

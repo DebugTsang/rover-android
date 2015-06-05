@@ -26,7 +26,7 @@ public class RoverConfigs {
     public int getNotificationIconId() {
 
         if(mNotificationIconId == 0) {
-            mNotificationIconId = R.drawable.rover_icon;
+            mNotificationIconId = R.drawable.roverlabs_icon;
         }
         return mNotificationIconId;
     }
@@ -55,11 +55,11 @@ public class RoverConfigs {
         if(mNotificationIconId == 0) {
             missing += ", Notification Icon ID";
         }
-        if(mLaunchActivityName == null) {
-            missing += ", Launch Activity Name";
-        }
+//        if(mLaunchActivityName == null) {
+//            missing += ", Launch Activity Name";
+//        }
 
-        if(mUuid != null && mAppId != null && mNotificationIconId != 0 && mLaunchActivityName != null) {
+        if(mUuid != null && mAppId != null && mNotificationIconId != 0) {
             return true;
         }
         else {
