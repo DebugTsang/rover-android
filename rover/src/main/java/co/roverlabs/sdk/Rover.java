@@ -66,21 +66,21 @@ public class Rover implements VisitManager.IVisitListener {
         
         mVisitManager = new VisitManager(context);
         mVisitManager.setVisitListener(this);
-        mVisitManager.regionManager.setUUID(config.UUID);
+        mVisitManager.getRegionManager.setUUID(config.UUID);
     }
     
     /**
      * Starts searching for beacons in the background
      */
     public void startMonitoring() {
-        mVisitManager.regionManager.startMonitoring();
+        mVisitManager.getRegionManager.startMonitoring();
     }
 
     /**
      * Starts searching for beacons in the background
      */
     public void stopMonitoring() {
-        mVisitManager.regionManager.stopMonitoring();
+        mVisitManager.getRegionManager.stopMonitoring();
     }
 
     
