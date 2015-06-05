@@ -29,161 +29,95 @@ import co.roverlabs.sdk.model.Visit;
 import co.roverlabs.sdk.network.listeners.RoverObjectSaveListener;
 import co.roverlabs.sdk.util.SharedPrefUtils;
 
-/**
- * Beacon discovery and card view rendering manager
- * <p>
- * Use {@link #getInstance(android.content.Context)} for the global singleton instance. Chain it
- * using {@link #with(co.roverlabs.sdk.Config)} to setup the config before using it.
- *
- */
-public class Rover {
+
+public class Rover implements VisitManager.IVisitListener {
 
     static final String TAG = "Rover";
-    private static Rover singleton;
+    private static Rover sharedInstance;
 
     //package accessible so helpers can get access and use it
     Config config;
-    final Context context;
-    Customer customer;
 
     //managers
     private VisitManager mVisitManager;
-    private UiManager mUiManager;
 
-    volatile boolean isLoggingEnabled;
-
-    private Rover(Context context) {
-        this.context = context.getApplicationContext();
-        mVisitManager = new VisitManager(context);
-        mVisitManager.setVisitListener(new RoverVisitListener());
-
-        mUiManager = new UiManager(this);
-
-    }
-    public static Rover getInstance(Context context) {
-        if(singleton == null) {
-            singleton = new Rover(context);
+    public static Rover setup(Context context, Config config) {
+        if (sharedInstance != nil) {
+            Log.e(TAG, "ERROR: Rover was already setup!");\
+            return sharedInstance;
         }
-        return singleton;
+        
+        sharedInstance = new Rover(context, config);
+    }
+    
+    
+    public static Rover getInstance(Context context) {
+        if(sharedInstance == null) {
+            Log.e(TAG, "ERROR: getInstance() called before setup()");
+        }
+        return sharedInstance;
     }
 
-    /**
-     * Setup config values before starting monitoring.
-     *
-     * @throws RuntimeException if the config is not complete
-     * @param config
-     * @return {@link Rover}
-     */
-    public Rover with(Config config) {
-        //make sure config is not null and it is complete
-        checkConfig(config);
 
-        //save config
-        setConfig(config);
-
-        //restart monitoring as the UUID might have been changed in the new config
-        mVisitManager.reStartMonitoring(config.getUuid());
-
-        return this;
+    private Rover(Context context, Config config) {
+        this.context = context.getApplicationContext();
+        
+        this.config = config;
+        
+        mVisitManager = new VisitManager(context);
+        mVisitManager.setVisitListener(this);
+        mVisitManager.regionManager.setUUID(config.UUID);
     }
-
+    
     /**
      * Starts searching for beacons in the background
      */
     public void startMonitoring() {
-        checkConfig(config);
-        mVisitManager.startMonitoring(config.getUuid());
+        mVisitManager.regionManager.startMonitoring();
     }
 
     /**
      * Starts searching for beacons in the background
      */
     public void stopMonitoring() {
-        mVisitManager.stopMonitoring();
+        mVisitManager.regionManager.stopMonitoring();
     }
 
+    
+    //================================================================================
+    // VisitManager.IVisitListener
+    //================================================================================
 
-    /**
-     * makes sure the config is complete and throws RuntimeException otherwise
-     *
-     * @throws RuntimeException (config incomplete or null)
-     * @param config
-     */
-    private void checkConfig(Config config){
-
-        if (config == null){
-            Log.e(TAG, "Unable to proceed with null config");
-            throw new RuntimeException("Rover config cannot be null");
-        }
-
-        if(!config.isComplete()) {
-            Log.e(TAG, "Unable to proceed with incomplete config");
-
-            //TODO: add a smarter message to tell the client what's missing in config
-            throw new RuntimeException("Rover cannot be set up - configurations incomplete");
-        }
+    @Override
+    public boolean shouldCreateVisit(VisitManager manager, Visit visit) {
+        visit.setSimulate(this.config.sandboxMode);
+        NetworkManager.postVisitSynchronously(visit);
+        return true;
     }
 
-    /**
-     * Update the local config variable and stores it in the local storage
-     *
-     * @param config
-     */
-    private void setConfig(Config config){
-        this.config = config;
+    @Override
+    public void onEnterLocation(VisitManager manager, Visit visit) {
+
     }
 
+    @Override
+    public void onPotentiallyExitLocation(VisitManager manager, Location location, Visit visit) {
 
-
-    /**
-     * Listen for visit state changes and dispatch to ui or network accordingly
-     */
-    class RoverVisitListener implements VisitManager.IVisitListener{
-
-        @Override
-        public boolean shouldCreateVisit(Visit visit) {
-            return false;
-        }
-
-        @Override
-        public void onEnterLocation(final Visit visit) {
-
-            NetworkManager.save(new RoverObjectSaveListener() {
-                @Override
-                public void onSaveSuccess() {
-
-                    SharedPrefUtils.writeObjectToSharedPrefs(context, visit);
-                }
-
-                @Override
-                public void onSaveFailure() {
-
-                }
-            }, visit);
-
-        }
-
-        @Override
-        public void onPotentiallyExitLocation(Location location) {
-
-        }
-
-        @Override
-        public void onExpireVisit(Visit visit) {
-
-        }
-
-        @Override
-        public void onEnterTouchpoint(List<Touchpoint> touchPoints) {
-            mUiManager.prepareViews();
-
-            //TODO: make sure to cover all touchpoints
-            mUiManager.showNotificationForTouchPoint(touchPoints, config);
-        }
-
-        @Override
-        public void onExitTouchpoints(List<Touchpoint> touchPoints) {
-
-        }
     }
+
+    @Override
+    public void onExpireVisit(VisitManager manager, Visit visit) {
+
+    }
+
+    @Override
+    public void onEnterTouchpoint(VisitManager manager, List<Touchpoint> touchpoints, Visit visit) {
+
+    }
+
+    @Override
+    public void onExitTouchpoints(VisitManager manager, List<Touchpoint> touchpoints, Visit visit) {
+
+    }
+
 }
