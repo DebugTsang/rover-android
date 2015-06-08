@@ -22,11 +22,11 @@ public class UiManager {
 
     UiManager(Rover rover){
         this.rover = rover;
-        mNotificationManager = (NotificationManager)rover.context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager = (NotificationManager)rover.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     void prepareViews(){
-        Factory.getDefaultImageLoader(rover.context).fetchAll();
+        Factory.getDefaultImageLoader(rover.getContext()).fetchAll();
     }
 
     void showNotificationForTouchPoint(List<Touchpoint> touchpoints, Config config){
@@ -48,15 +48,15 @@ public class UiManager {
         int notificationIcon = config.getNotificationIconId();
 
         //start the notification
-        Intent cardListIntent = new Intent(rover.context, CardListActivity.class);
+        Intent cardListIntent = new Intent(rover.getContext(), CardListActivity.class);
         cardListIntent.setAction(Intent.ACTION_MAIN);
 
         cardListIntent.putExtra(CardListActivity.EXTRA_HEAD_ICON_ID, headIcon);
         cardListIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(rover.context, notifiactionId, cardListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(rover.getContext(), notifiactionId, cardListIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(rover.context)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(rover.getContext())
                 .setSmallIcon(notificationIcon)
                 .setContentTitle(title)
                 .setContentText(message)

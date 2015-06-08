@@ -32,6 +32,7 @@ public class Rover implements VisitManager.IVisitManagerListener {
 
     public static final String TAG = Rover.class.getSimpleName();
     private static Rover sSharedInstance;
+    private Context mContext;
     private Config mConfig;
     private VisitManager mVisitManager;
 
@@ -55,10 +56,16 @@ public class Rover implements VisitManager.IVisitManagerListener {
 
     private Rover(Context context, Config config) {
 
+        mContext = context.getApplicationContext();
         mConfig = config;
         mVisitManager = new VisitManager(context.getApplicationContext());
         mVisitManager.setListener(this);
         mVisitManager.getRegionManager().setUuid(config.getUuid());
+    }
+
+    public Context getContext() {
+
+        return mContext;
     }
     
     public void startMonitoring() {
