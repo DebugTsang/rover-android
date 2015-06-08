@@ -3,9 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/demo/demo.iml" filepath="$PROJECT_DIR$/demo/demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/picasso/picasso.iml" filepath="$PROJECT_DIR$/picasso/picasso.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rover/rover.iml" filepath="$PROJECT_DIR$/rover/rover.iml" />
       <module fileurl="file://$PROJECT_DIR$/rover-android.iml" filepath="$PROJECT_DIR$/rover-android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/roversdk/roversdk.iml" filepath="$PROJECT_DIR$/roversdk/roversdk.iml" />
     </modules>
   </component>
 </project>
-

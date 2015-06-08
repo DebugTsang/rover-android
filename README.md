@@ -1,5 +1,10 @@
 # rover-android
 
+<<<<<<< HEAD
+=======
+# rover-android
+
+>>>>>>> feature/modules
 ##Setting up
 
 
@@ -18,11 +23,19 @@
         RoverConfigs roverConfigs = new RoverConfigs();
         roverConfigs.setUuid(<UUID>);
         roverConfigs.setAppId(<APP ID>);
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> feature/modules
         roverConfigs.setLaunchActivityName(this.getClass().getName());
         roverConfigs.setNotificationIconId(<YOUR APP ICON RESOURCE ID>); //R.drawable.ic_launcher
         rover.setConfigurations(roverConfigs);
 
         rover.startMonitoring();
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> feature/modules
 5. You are all set! Run the app.
