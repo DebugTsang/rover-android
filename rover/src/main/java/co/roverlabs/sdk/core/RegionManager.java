@@ -69,6 +69,11 @@ public class RegionManager {
         mBeaconManager.setForegroundScanPeriod(scanTimeMillis, waitTimeMillis);
     }
 
+    public Set<Region> getCurrentRegions() {
+
+        return mCurrentRegions;
+    }
+
     public void setMonitoringListeners() {
 
         BeaconManager.MonitoringListener monitoringListener = new BeaconManager.MonitoringListener() {
@@ -105,23 +110,29 @@ public class RegionManager {
             public void onBeaconsDiscovered(com.estimote.sdk.Region region, List<Beacon> beacons) {
 
                 if(Utils.hasIdenticalBeaconMajors(beacons)) {
+
                     if(mCurrentRegions == null) {
                         mCurrentRegions = new HashSet<>();
                     }
+
                     Set<Region> detectedRegions = new HashSet<>();
                     Set<Region> enteredRegions = new HashSet<>();
                     Set<Region> exitedRegions = new HashSet<>();
+
                     for(Beacon beacon : beacons) {
                         Region beaconRegion = new Region(beacon.getProximityUUID(), beacon.getMajor(), beacon.getMinor());
                         detectedRegions.add(beaconRegion);
                     }
+
                     enteredRegions = Utils.subtractSet(mCurrentRegions, detectedRegions);
                     exitedRegions = Utils.subtractSet(detectedRegions, mCurrentRegions);
                     mCurrentRegions = detectedRegions;
+
                     if(exitedRegions.size() > 0) {
                         mRegionManagerListener.onExitRegions(self, exitedRegions);
                     }
-                    if (enteredRegions.size() > 0) {
+
+                    if(enteredRegions.size() > 0) {
                         mRegionManagerListener.onEnterRegions(self, enteredRegions);
                     }
                 }

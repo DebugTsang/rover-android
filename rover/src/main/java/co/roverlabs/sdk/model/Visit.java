@@ -83,13 +83,26 @@ public class Visit extends Object {
         }
         return wildCardTouchpoints;
     }
+
+    public List<Touchpoint> getCurrentWildCardTouchpoints() {
+
+        List<Touchpoint> currentWildCardTouchpoints = new ArrayList<>();
+        if(mCurrentTouchpoints != null) {
+            for(Touchpoint touchpoint : mCurrentTouchpoints) {
+                if(touchpoint.getTrigger().equals(Constants.WILD_CARD_TOUCHPOINT_TRIGGER)) {
+                    currentWildCardTouchpoints.add(touchpoint);
+                }
+            }
+        }
+        return currentWildCardTouchpoints;
+    }
     
     public Touchpoint getTouchpoint(Region region) {
 
         if(mTouchpoints != null) {
             for(Touchpoint touchpoint : mTouchpoints) {
                 if(touchpoint.getMinor() != null) {
-                    if ((touchpoint.getMinor()).equals(region.getMinor())) {
+                    if((touchpoint.getMinor()).equals(region.getMinor())) {
                         Log.d(TAG, "Minor " + region.getMinor() + " corresponds to a valid touchpoint");
                         return touchpoint;
                     }
@@ -155,15 +168,17 @@ public class Visit extends Object {
 
     public boolean isInMajorRegion(Region region) {
 
-        return mRegion.equals(region);
+        return (region.getUuid().equals(mUuid)) && (region.getMajor().equals(mMajor));
     }
 
     public boolean isInMinorRegion(Region region) {
 
-        for(Touchpoint touchpoint : mCurrentTouchpoints) {
-            if(touchpoint.getMinor() != null) {
-                if(touchpoint.getMinor().equals(region.getMinor())) {
-                    return true;
+        if(isInMajorRegion(region)) {
+            for(Touchpoint touchpoint : mCurrentTouchpoints) {
+                if(touchpoint.getMinor() != null) {
+                    if(touchpoint.getMinor().equals(region.getMinor())) {
+                        return true;
+                    }
                 }
             }
         }

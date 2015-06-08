@@ -22,7 +22,6 @@ import android.util.Log;
 import java.util.List;
 
 import co.roverlabs.sdk.core.VisitManager;
-import co.roverlabs.sdk.model.Location;
 import co.roverlabs.sdk.model.Touchpoint;
 import co.roverlabs.sdk.model.Visit;
 import co.roverlabs.sdk.network.listeners.RoverObjectSaveListener;
@@ -108,12 +107,12 @@ public class Rover implements VisitManager.IVisitManagerListener {
     }
 
     @Override
-    public void onPotentiallyExitLocation(VisitManager manager, Location location, Visit visit) {
+    public void onPotentiallyExitLocation(VisitManager manager, Visit visit) {
 
     }
 
     @Override
-    public void onExpireVisit(VisitManager manager, Visit visit) {
+    public void onVisitExpire(VisitManager manager, Visit visit) {
 
     }
 
