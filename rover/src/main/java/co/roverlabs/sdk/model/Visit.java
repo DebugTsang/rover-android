@@ -153,12 +153,12 @@ public class Visit extends Object {
         mCurrentTouchpoints.remove(touchpoint);
     }
 
-    public boolean isInRegion(Region region) {
+    public boolean isInMajorRegion(Region region) {
 
         return mRegion.equals(region);
     }
 
-    public boolean isInSubRegion(Region region) {
+    public boolean isInMinorRegion(Region region) {
 
         for(Touchpoint touchpoint : mCurrentTouchpoints) {
             if(touchpoint.getMinor() != null) {

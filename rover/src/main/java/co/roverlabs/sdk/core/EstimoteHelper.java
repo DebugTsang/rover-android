@@ -1,5 +1,6 @@
 package co.roverlabs.sdk.core;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
@@ -27,10 +28,10 @@ public class EstimoteHelper implements IBeaconHelper {
 
     volatile boolean isMonitoringStarted = false;
 
-    public EstimoteHelper(VisitManager visitManager){
+    public EstimoteHelper(Context context, VisitManager visitManager){
         this.visitManager = visitManager;
 
-        mEstimoteManager = new BeaconManager(visitManager.context);
+        mEstimoteManager = new BeaconManager(context);
 
         mEstimoteManager.setRangingListener(rangingListener);
         mEstimoteManager.setMonitoringListener(monitoringListener);
@@ -125,7 +126,7 @@ public class EstimoteHelper implements IBeaconHelper {
                 co.roverlabs.sdk.model.Region rangingRegion = new co.roverlabs.sdk.model.Region(beacon.getProximityUUID(), beacon.getMajor(), null);
 
                 //let the visitmanager know that we entered a region
-                visitManager.enteredRegion(rangingRegion);
+                //visitManager.onEnterRegions(rangingRegion);
 
                 if (isLoggingEnabled) {
                     Log.d(TAG, "Region entered - minor " + beacon.getMinor());

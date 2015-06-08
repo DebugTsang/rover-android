@@ -22,76 +22,76 @@ import android.util.Log;
 import java.util.List;
 
 import co.roverlabs.sdk.core.VisitManager;
-import co.roverlabs.sdk.model.Customer;
 import co.roverlabs.sdk.model.Location;
 import co.roverlabs.sdk.model.Touchpoint;
 import co.roverlabs.sdk.model.Visit;
 import co.roverlabs.sdk.network.listeners.RoverObjectSaveListener;
-import co.roverlabs.sdk.util.SharedPrefUtils;
 
 
-public class Rover implements VisitManager.IVisitListener {
+public class Rover implements VisitManager.IVisitManagerListener {
 
-    static final String TAG = "Rover";
-    private static Rover sharedInstance;
-
-    //package accessible so helpers can get access and use it
-    Config config;
-
-    //managers
+    public static final String TAG = Rover.class.getSimpleName();
+    private static Rover sSharedInstance;
+    private Config mConfig;
     private VisitManager mVisitManager;
 
     public static Rover setup(Context context, Config config) {
-        if (sharedInstance != nil) {
-            Log.e(TAG, "ERROR: Rover was already setup!");\
-            return sharedInstance;
+
+        if(sSharedInstance != null) {
+            Log.e(TAG, "ERROR: Rover was already setup!");
+            return sSharedInstance;
         }
-        
-        sharedInstance = new Rover(context, config);
+        sSharedInstance = new Rover(context, config);
+        return sSharedInstance;
     }
     
-    
-    public static Rover getInstance(Context context) {
-        if(sharedInstance == null) {
+    public static Rover getInstance() {
+
+        if(sSharedInstance == null) {
             Log.e(TAG, "ERROR: getInstance() called before setup()");
         }
-        return sharedInstance;
+        return sSharedInstance;
     }
-
 
     private Rover(Context context, Config config) {
-        this.context = context.getApplicationContext();
-        
-        this.config = config;
-        
-        mVisitManager = new VisitManager(context);
-        mVisitManager.setVisitListener(this);
-        mVisitManager.getRegionManager.setUUID(config.UUID);
+
+        mConfig = config;
+        mVisitManager = new VisitManager(context.getApplicationContext());
+        mVisitManager.setListener(this);
+        mVisitManager.getRegionManager().setUuid(config.getUuid());
     }
     
-    /**
-     * Starts searching for beacons in the background
-     */
     public void startMonitoring() {
-        mVisitManager.getRegionManager.startMonitoring();
+
+        mVisitManager.getRegionManager().startMonitoring();
     }
 
-    /**
-     * Starts searching for beacons in the background
-     */
     public void stopMonitoring() {
-        mVisitManager.getRegionManager.stopMonitoring();
-    }
 
+        mVisitManager.getRegionManager().stopMonitoring();
+    }
     
-    //================================================================================
-    // VisitManager.IVisitListener
-    //================================================================================
+    /********************************************************************************
+    /* VisitManager.IVisitListener
+    ********************************************************************************/
 
     @Override
     public boolean shouldCreateVisit(VisitManager manager, Visit visit) {
-        visit.setSimulate(this.config.sandboxMode);
-        NetworkManager.postVisitSynchronously(visit);
+
+        visit.setSimulation(mConfig.getSandBoxMode());
+
+        NetworkManager.save(new RoverObjectSaveListener() {
+
+            @Override
+            public void onSaveSuccess() {
+
+            }
+
+            @Override
+            public void onSaveFailure() {
+
+            }
+        }, visit);
         return true;
     }
 
@@ -111,7 +111,7 @@ public class Rover implements VisitManager.IVisitListener {
     }
 
     @Override
-    public void onEnterTouchpoint(VisitManager manager, List<Touchpoint> touchpoints, Visit visit) {
+    public void onEnterTouchpoints(VisitManager manager, List<Touchpoint> touchpoints, Visit visit) {
 
     }
 
